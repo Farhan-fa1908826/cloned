@@ -50,7 +50,8 @@ def get_user_info_after_auth(request):
   (resp_headers, content) = http.request("https://people.googleapis.com/v1/people/me?personFields=names", "GET")
 
   response = utils.from_json(content.decode('utf-8'))
-
+  print("RESPONSE")
+  print(response)
   name = response['names'][0]['displayName']
   
   # watch out, response also contains email addresses, but not sure whether thsoe are verified or not

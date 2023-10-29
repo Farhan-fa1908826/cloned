@@ -4,8 +4,14 @@ Testing Helios Features
 
 import uuid
 
-from helios.models import Voter
+from models import Voter
 from helios_auth.models import User
+
+import os
+import django
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', '../settings.py')
+django.setup()
 
 
 def generate_voters(election, num_voters=1000, start_with=1):
@@ -20,3 +26,6 @@ def generate_voters(election, num_voters=1000, start_with=1):
 def delete_voters(election):
     for v in Voter.get_by_election(election):
         v.delete()
+
+
+

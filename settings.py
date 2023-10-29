@@ -8,6 +8,9 @@ import os
 import ldap
 from django_auth_ldap.config import LDAPSearch
 
+#I ADDED THIS
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 TESTING = 'test' in sys.argv
 
 # go through environment variables and override them
@@ -43,11 +46,16 @@ SHOW_USER_INFO = (get_from_env('SHOW_USER_INFO', '1') == '1')
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',  # or 'django.db.backends.postgresql' depending on your setup
         'NAME': 'helios',
-        'CONN_MAX_AGE': 600,
+        'USER': 'postgres',
+        'PASSWORD': 'lightening789',  # Replace with your actual password
+        'HOST': 'localhost',  # This is the default if your PostgreSQL is running on the same machine
+        'PORT': '5432',  # This is the default PostgreSQL port
+        'CONN_MAX_AGE': 600,  # Optional setting for database connection timeout
     },
 }
+
 
 # override if we have an env variable
 if get_from_env('DATABASE_URL', None):
@@ -74,12 +82,16 @@ USE_I18N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = ''
+
+# MEDIA_ROOT = ''
+# I ADDED THIS
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL = '/media/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -93,7 +105,9 @@ SECRET_KEY = get_from_env('SECRET_KEY', 'replaceme')
 # If in production, you got a bad request (400) error
 #More info: https://docs.djangoproject.com/en/1.7/ref/settings/#allowed-hosts (same for 1.6)
 
-ALLOWED_HOSTS = get_from_env('ALLOWED_HOSTS', 'localhost').split(",")
+# ALLOWED_HOSTS = get_from_env('ALLOWED_HOSTS', 'localhost').split(",")
+ALLOWED_HOSTS = ['localhost','a4c8-2a07-23c0-8-e000-00-7a01.ngrok-free.app', '127.0.0.1']
+
 
 # Secure Stuff
 if get_from_env('SSL', '0') == '1':
@@ -229,8 +243,13 @@ AUTH_ENABLED_SYSTEMS = get_from_env('AUTH_ENABLED_SYSTEMS',
 AUTH_DEFAULT_SYSTEM = get_from_env('AUTH_DEFAULT_SYSTEM', get_from_env('AUTH_DEFAULT_AUTH_SYSTEM', None))
 
 # google
-GOOGLE_CLIENT_ID = get_from_env('GOOGLE_CLIENT_ID', '')
-GOOGLE_CLIENT_SECRET = get_from_env('GOOGLE_CLIENT_SECRET', '')
+GOOGLE_CLIENT_ID = get_from_env('GOOGLE_CLIENT_ID', '838666080601-j3vielcaa1p94jad4u8m47r0dgp8ik8j.apps.googleusercontent.com')
+GOOGLE_CLIENT_SECRET = get_from_env('GOOGLE_CLIENT_SECRET', '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')
+
+
+# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '838666080601-j3vielcaa1p94jad4u8m47r0dgp8ik8j.apps.googleusercontent.com'
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+
 
 # facebook
 FACEBOOK_APP_ID = get_from_env('FACEBOOK_APP_ID','')

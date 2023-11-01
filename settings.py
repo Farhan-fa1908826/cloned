@@ -67,6 +67,7 @@ DATABASES = {
         'CONN_MAX_AGE': 600,  # Optional setting for database connection timeout
     },
 }
+#lightening789',
 
 
 

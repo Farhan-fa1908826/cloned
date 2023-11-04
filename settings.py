@@ -34,7 +34,7 @@ else:
 MANAGERS = ADMINS
 
 # is this the master Helios web site?
-MASTER_HELIOS = (get_from_env('MASTER_HELIOS', '0') == '1')
+MASTER_HELIOS = (get_from_env('MASTER_HELIOS', '1') == '1')
 
 # show ability to log in? (for example, if the site is mostly used by voters)
 # if turned off, the admin will need to know to go to /auth/login manually
@@ -44,17 +44,31 @@ SHOW_LOGIN_OPTIONS = (get_from_env('SHOW_LOGIN_OPTIONS', '1') == '1')
 # to display who created the election
 SHOW_USER_INFO = (get_from_env('SHOW_USER_INFO', '1') == '1')
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',  # or 'django.db.backends.postgresql' depending on your setup
+#         'NAME': 'helios2',
+#         'USER': 'postgres',
+#         'PASSWORD': '123',  # Replace with your actual password
+#         'HOST': 'localhost',  # This is the default if your PostgreSQL is running on the same machine
+#         'PORT': '5432',  # This is the default PostgreSQL port
+#         'CONN_MAX_AGE': 600,  # Optional setting for database connection timeout
+#     },
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',  # or 'django.db.backends.postgresql' depending on your setup
-        'NAME': 'helios2',
+        'NAME': 'helios',
         'USER': 'postgres',
-        'PASSWORD': '123',  # Replace with your actual password
+        'PASSWORD': 'lightening789',  # Replace with your actual password
         'HOST': 'localhost',  # This is the default if your PostgreSQL is running on the same machine
         'PORT': '5432',  # This is the default PostgreSQL port
         'CONN_MAX_AGE': 600,  # Optional setting for database connection timeout
     },
 }
+#lightening789',
+
 
 
 # override if we have an env variable
@@ -238,7 +252,7 @@ HELIOS_PRIVATE_DEFAULT = False
 # authentication systems enabled
 # AUTH_ENABLED_SYSTEMS = ['password','facebook','twitter', 'google', 'yahoo']
 AUTH_ENABLED_SYSTEMS = get_from_env('AUTH_ENABLED_SYSTEMS',
-                                    get_from_env('AUTH_ENABLED_AUTH_SYSTEMS', 'password,google,facebook')
+                                    get_from_env('AUTH_ENABLED_AUTH_SYSTEMS', 'password,google,github')
                                     ).split(",")
 AUTH_DEFAULT_SYSTEM = get_from_env('AUTH_DEFAULT_SYSTEM', get_from_env('AUTH_DEFAULT_AUTH_SYSTEM', None))
 

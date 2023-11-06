@@ -9,7 +9,8 @@ import ldap
 from django_auth_ldap.config import LDAPSearch
 
 #I ADDED THIS
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/Untitled' + '/helios'
+print("BASE_DIR: ", BASE_DIR)
 
 TESTING = 'test' in sys.argv
 
@@ -111,6 +112,9 @@ MEDIA_URL = '/media/'
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
 STATIC_URL = '/media/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'media')
+]
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = get_from_env('SECRET_KEY', 'replaceme')

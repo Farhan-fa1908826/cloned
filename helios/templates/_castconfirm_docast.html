@@ -2,7 +2,7 @@
   {% if not election.voting_has_stopped %}
 
 <div id="cast_form">
-<form id="cast_confirm_form" method="post" action="" onsubmit="show_waiting()">
+<form id="cast_confirm_form" method="POST" action="" onsubmit="show_waiting()">
     <input type="hidden" name="csrf_token" value="{{csrf_token}}" />
     
 {% if status_update_label %}

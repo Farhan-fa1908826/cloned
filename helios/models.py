@@ -101,8 +101,8 @@ class Election(HeliosModel):
   # dates for the election steps, as scheduled
   # these are always UTC
   registration_starts_at = models.DateTimeField(auto_now_add=False, default=None, null=True)
-  voting_starts_at = models.DateTimeField(auto_now_add=False, default=None, null=True)
-  voting_ends_at = models.DateTimeField(auto_now_add=False, default=None, null=True)
+  voting_starts_at = models.DateTimeField(null=True, blank=True)
+  voting_ends_at = models.DateTimeField(null=True, blank=True)
 
   # if this is non-null, then a complaint period, where people can cast a quarantined ballot.
   # we do NOT call this a "provisional" ballot, since provisional implies that the voter has not

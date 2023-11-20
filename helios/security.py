@@ -191,10 +191,11 @@ def trustee_check(func):
     
     trustee = Trustee.get_by_election_and_uuid(election, trustee_uuid)
     
-    if trustee == get_logged_in_trustee(request):
-      return func(request, election, trustee, *args, **kwargs)
-    else:
-      raise PermissionDenied()
+    # if trustee == get_logged_in_trustee(request):
+    #trustee doesn't have to login to generate and upload his/her keys
+    return func(request, election, trustee, *args, **kwargs)
+    # else:
+      # raise PermissionDenied()
   
   return update_wrapper(trustee_check_wrapper, func)
 

@@ -2,98 +2,102 @@
 
 {% block title %}Voters &amp; Ballot Tracking Center for {{election.name}}{% endblock %}
 {% block content %}
-  <h3 class="title">{{election.name}} &mdash; Voters and Ballot Tracking Center <span style="font-size:0.7em;">[<a href="{% url "election@view" election.uuid %}">back to election</a>]</span></h3>
+
+<h3 class="title">{{election.name}} &mdash; Voters and Ballot Tracking Center <span style="font-size:0.7em;"></span></h3>
 
 <p>
-<b>Who can vote?</b>
-{% if election.openreg %}
-{{election.pretty_eligibility|safe}}
-{% else %}
-<em>Only the voters listed here</em>.
-{% endif %}
+  <b>Who can vote?</b>
+  {% if election.private_p %}
+    {{election.pretty_eligibility|safe}}
+  {% else %}
+    <em>Only the voters listed here</em>.
+  {% endif %}
 </p>
 
 {% if admin_p and not election.frozen_at %}
-{% if election.private_p %}
-<em>Your election is marked private, which means you cannot open registration up more widely</em>.<br />
-{% else %}
-<form method="post" action="{% url "election@voters@eligibility" election.uuid %}">
-<input type="hidden" name="csrf_token" value="{{csrf_token}}" />
-<input type="radio" name="eligibility" value="openreg" {% if election.openreg and not election.eligibility %}CHECKED{% endif %} /> anyone can vote ${{election.openreg}}<br />
-<input type="radio" name="eligibility" value="closedreg" {% if not election.openreg %}CHECKED{% endif %} /> only voters listed explicitly below can vote<br />
-{% if categories %}
-<input type="radio" name="eligibility" value="limitedreg" {% if election.eligibility %}CHECKED{% endif %} /> only voters who are members of 
-<select name="category_id">
-{% for category in categories %}
-<option value="{{category.id}}" {% if eligibility_category_id == category.id %}SELECTED{% endif %}> {{category.name}}</option>
-{% endfor %}
-</select>
-<br />
-{% endif %}
-<input class="button" type="submit" value="update" />
-</form>
-{% endif %}
+  {% if election.private_p%}
+    <em>Your election is marked private, which means you cannot open registration up more widely</em>.<br />
+  {% else %}
+    <form method="post" action="{% url "election@voters@eligibility" election.uuid %}">
+
+      <input type="hidden" name="csrf_token" value="{{csrf_token}}" />
+      <input type="radio" name="eligibility" value="openreg" {% if election.openreg and not election.eligibility %}CHECKED{% endif %} /> anyone can vote<br />
+      <input type="radio" name="eligibility" value="closedreg" {% if not election.openreg %}CHECKED{% endif %} /> only voters listed explicitly below can vote<br />
+
+      {% if categories %}
+        <input type="radio" name="eligibility" value="limitedreg" {% if election.eligibility %}CHECKED{% endif %} /> only voters who are members of 
+        <select name="category_id">
+          {% for category in categories %}
+            <option value="{{category.id}}" {% if eligibility_category_id == category.id %}SELECTED{% endif %}> {{category.name}}</option>
+          {% endfor %}
+        </select>
+        <br />
+      {% endif %}
+      <input class="button" type="submit" value="update" />
+    </form>
+
+  {% endif %}
 {% endif %}
 
+
 {% if email_voters and election.frozen_at and admin_p %}
-<p><a class="button" href="{% url "election@voters@email" election.uuid %}">email voters</a></p>
+  <p><a class="button" href="{% url "election@voters@email" election.uuid %}">email voters</a></p>
 {% endif %}
 
 {% if election.num_voters > 20 %}
-<p>
-{% if q %}
-<p><em>searching for <u>{{q}}</u>.</em> [<a href="?">clear search</a>]</p>
-{% else %}
-<form method="get" action="{% url "election@voters@list-pretty" election.uuid %}"><b>search</b>: <input type="text" name="q" /> <input type="submit" value="search" /></form>
+  <p>
+    {% if q %}
+      <p><em>searching for <u>{{q}}</u>.</em> [<a href="?">clear search</a>]</p>
+    {% else %}
+      <form method="get" action="{% url "election@voters@list-pretty" election.uuid %}"><b>search</b>: <input type="text" name="q" /> <input type="submit" value="search" /></form>
+    {% endif %}
+  </p>
 {% endif %}
-</p>
-{% endif %}
+
 
 {% if admin_p %}
-<!-- Add a Voter: WORK HERE-->
-{% if upload_p and not election.openreg %}
-<p>
-<a class="button" href="{% url "election@voters@upload" election_uuid=election.uuid %}">bulk upload voters</a>
-</p>
+  <!-- Add a Voter: WORK HERE-->
+  {% if upload_p and not election.openreg %}
+    <p>
+      <a class="button" href="{% url "election@voters@upload" election_uuid=election.uuid %}">bulk upload voters</a>
+    </p>
 
-{% if voter_files %}
-Prior Bulk Uploads:
-<ul>
-{% for vf in voter_files %}
-<li>
-{% if vf.voter_file %}
-{{vf.voter_file.size}}
-{% else %}
-{{vf.voter_file_content|length}}
-{% endif %}
- bytes, at {{vf.uploaded_at}}:
-{% if vf.processing_finished_at %}
-<em>done processing: {{vf.num_voters}} voters loaded</em>
-{% else %}
+    {% if voter_files %}
+      Prior Bulk Uploads:
+      <ul>
+        {% for vf in voter_files %}
+          <li>
+            {% if vf.voter_file %}
+              {{vf.voter_file.size}}
+            {% else %}
+              {{vf.voter_file_content|length}}
+            {% endif %}
+            bytes, at {{vf.uploaded_at}}:
+            {% if vf.processing_finished_at %}
+              <em>done processing: {{vf.num_voters}} voters loaded</em>
+            {% else %}
 
-{% if vf.processing_started_at %}
-<em>currently processing</em>
-{% else %}
-<em>not yet processed</em>
-{% endif %}
-
-{% endif %}
-</li>
-{% endfor %}
-</ul>
-{% endif %}
-{% endif %}
+              {% if vf.processing_started_at %}
+                <em>currently processing</em>
+              {% else %}
+                <em>not yet processed</em>
+              {% endif %}
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %} 
+  {% endif %}
 {% endif %}
 
 {% if voters %}
-
-<p>
-<b>
-{% if election.num_cast_votes %}
-{{election.num_cast_votes}} cast vote{% ifequal election.num_cast_votes 1 %}{% else %}s{% endifequal %}
-{% else %}
-no votes yet
-{% endif %}
+  <p>
+    <b>
+    {% if election.num_cast_votes %}
+      {{election.num_cast_votes}} cast vote{% ifequal election.num_cast_votes 1 %}{% else %}s{% endifequal %}
+    {% else %}
+      no votes yet
+    {% endif %}
 </b>
 </p>
 
@@ -152,4 +156,38 @@ Voters {{voters_page.start_index}} - {{voters_page.end_index}} (of {{total_voter
 <em>no voters.</em>
 {% endif %}
 
+<button class="button_class next_button" onclick="redirectToTrustees()">Proceed</button>
+
+  <!-- Button to go back based on the previous URL -->
+<button class="button_class view_back" onclick="goBack()">Election View</button>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var previousURL = document.referrer;
+    var nextButton = document.querySelector('.next_button');
+
+    var viewButton = document.querySelector('.view_back');
+
+    // Check if the previous URL contains 'view'
+    if (previousURL.includes('view')) {
+      nextButton.style.display = 'none';
+      viewButton.innerText = 'Back';
+    }
+    else {
+      backButton.style.display = 'none';
+    }
+  });
+  function redirectToTrustees() {
+    var redirectURL = "{% url 'election@trustees@view' election.uuid %}";
+    window.location.href = redirectURL;
+  }
+
+  function goBack() {
+    var redirectURL = "{% url 'election@view' election.uuid %}";
+    window.location.href = redirectURL;
+    
+  }
+</script>
+<link rel="stylesheet" type="text/css" href="/static/boothcss/forms.css">
 {% endblock %}

@@ -10,20 +10,38 @@
   <head>
     <title>{% block title %}{% endblock %} - Helios</title>
     {% block css %}
-<!--       
-          <link rel="stylesheet" type="text/css"  media="screen, projection" href="{{ MEDIA_URL }}combined-{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}.css" />
-      -->
-      {% comment %} <link rel="stylesheet" type="text/css" media="screen" href="/static/helios/main.css" /> {% endcomment %}
-      {% comment %} <link rel="stylesheet" type="text/css" media="screen" href="{{HELIOS_STATIC}}/background_Helios.png"> {% endcomment %}
+      <!-- Include Flatpickr stylesheet -->
+      <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+      <link rel="stylesheet" type="text/css" href="/static/boothcss/forms.css">
+      <!-- Flatpickr stylesheet -->
+      
 
+<!-- Flatpickr script -->
+      <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+
+
+      {% comment %}
+      <link rel="stylesheet" type="text/css"  media="screen, projection" href="{{ MEDIA_URL }}combined-{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}.css" />
+      <link rel="stylesheet" type="text/css" media="screen" href="/static/helios/main.css" />
+      <link rel="stylesheet" type="text/css" media="screen" href="{{HELIOS_STATIC}}/background_Helios.png">
       <link type="text/css" href="{{HELIOS_STATIC}}/css/ui-lightness/jquery-ui-1.8.1.custom.css" />
-      {% comment %} <link rel="stylesheet" type="text/css" media="screen" href="{% media '/main.css' %}"> {% endcomment %}
+      <link rel="stylesheet" href="{% static 'styles.css' %}">
+      <link rel="text/css" href="{{HELIOS_STATIC}}/css/ui-lightness/forms.css">
+      {% endcomment %}
     {% endblock %}
 
-      <script language="javascript" src="{{ HELIOS_STATIC }}/js/jquery-1.4.2.min.js"></script>
-      <script language="javascript" src="{{ HELIOS_STATIC }}/js/jquery-ui-1.8.1.custom.min.js"></script>
-    
+    <!-- Include jQuery scripts -->
+    <script language="javascript" src="{{ HELIOS_STATIC }}/js/jquery-1.4.2.min.js"></script>
+    <script language="javascript" src="{{ HELIOS_STATIC }}/js/jquery-ui-1.8.1.custom.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     {% block js %}
+      <!-- Include Flatpickr script -->
+      
+
+      {% comment %}
+      Include your additional JavaScript logic here
+      {% endcomment %}
     {% endblock %}
 
     {% block extra-head %}{% endblock %}
@@ -31,15 +49,13 @@
 
   <body>
     <div id="content">
-        <div id="header">
-
+      <div id="header">
         {% block header %}
         {% endblock %}
-        </div>
+      </div>
       {% block content %}{% endblock %}
       <div id="footer">
       </div>
     </div>
-    
   </body>
 </html>

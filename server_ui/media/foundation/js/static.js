@@ -4,6 +4,32 @@
 
 
 document.addEventListener('DOMContentLoaded', function () {
+    const election_form = document.querySelector('.pretty');
+    if (election_form){
+        election_form.classList.add('what-and-why');
+        // election_questions.classList.add('what-and-why');
+    }
+    
+    
+    var parentDiv = document.getElementById("question_container");
+    if (parentDiv != null){
+        var childrenDivs = parentDiv.querySelectorAll("div");
+         
+        for (var i = 0; i < childrenDivs.length; i++) {
+            var childDiv = childrenDivs[i];
+            if(childDiv.classList.contains('question_card')){
+                childDiv.classList.add('what-and-why');
+            }
+        
+            console.log(childDiv);
+        }
+    }
+    try{
+    const add_question_div = document.querySelector('.Add_question');
+        add_question_div.classList.add('what-and-why');
+    }catch{
+
+    }
     // print(document.title)
     // console.log(window.location.pathname);
     if(window.location.pathname == '/'){

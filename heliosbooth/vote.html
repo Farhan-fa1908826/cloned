@@ -31,8 +31,8 @@
 <body>
 <div id="wrapper">
 <div id="banner" class="edge">
-  <div style="text-align:center; width: 100%;">Helios Voting Booth
-      <div style="float: right; margin-right: 10px; font-size: 0.8em;"><span><a href="javascript:BOOTH.exit();">exit</a></span></div>
+  <div style="text-align:center; width: 100%; display:flex; justify-content: space-between; align-items: center;">Helios Voting Booth
+      <button style="float: right; margin-right: 10px; font-size: 0.8em;"><span><a href="javascript:BOOTH.exit();">Back to Election Homepage</a></span></button>
   </div>
 </div>
 <div id="content">
@@ -225,6 +225,10 @@ BOOTH.launch_async_encryption_answer = function(question_num) {
    });
 };
 
+BOOTH.back = function(question_num){
+  window.location = BOOTH.election.cast_url;
+};
+
 // check if the current question is ok
 BOOTH.validate_question = function(question_num) {
     // check if enough answers are checked
@@ -312,6 +316,48 @@ BOOTH.show_question = function(question_num) {
   BOOTH.dirty[question_num] = old_dirty;
 };
 
+// BOOTH.click_radio = function(question_num, answer_num) {
+//   BOOTH.dirty[question_num] = true;
+//   BOOTH.ballot.answers[question_num] = [answer_num];
+
+//   $('.ballot_answer').removeClass('selected');
+//   $('#answer_label_' + question_num + "_" + answer_num).addClass('selected');
+
+
+//   $('input[name="answer_' + question_num + '"]').not(':checked').attr('disabled', true);
+//   // i dont want to show the backgroound color after deselcting 
+//   $('input[name="answer_' + question_num + '"]').not(':checked').parent().css('background-color', '#fff');
+//   $('input[name="answer_' + question_num + '"]:checked').parent().css('background-color', '#f0f0f0');
+
+//   $('.ballot_answer').attr('disabled', false);
+
+
+// };
+
+BOOTH.click_radio = function(question_num, answer_num) {
+  BOOTH.dirty[question_num] = true;
+
+  var isSelected = BOOTH.ballot.answers[question_num] && BOOTH.ballot.answers[question_num][0] === answer_num;
+
+  if (isSelected) {
+    BOOTH.ballot.answers[question_num] = [];
+    $('#answer_label_' + question_num + "_" + answer_num).removeClass('selected');
+    $('input[name="answer_' + question_num + '"][value="' + answer_num + '"]').attr('checked', false);
+    $('.ballot_answer').parent().css('background-color', '#fff');
+  } else {
+    BOOTH.ballot.answers[question_num] = [answer_num];
+    $('.ballot_answer').removeClass('selected');
+    $('#answer_label_' + question_num + "_" + answer_num).addClass('selected');
+
+    $('input[name="answer_' + question_num + '"]').not(':checked').attr('disabled', true);
+
+    $('.ballot_answer').parent().css('background-color', '#fff');
+    $('input[name="answer_' + question_num + '"]:checked').parent().css('background-color', '#f0f0f0');
+  }
+
+
+  $('.ballot_answer').attr('disabled', false);
+};
 
 
 BOOTH.click_checkbox_script = function(question_num, answer_num) {

@@ -3,7 +3,7 @@
 {% block title %}Trustees for {{election.name}}{% endblock %}
 
 {% block content %}
-  <h3 class="title">{{election.name}} &mdash; Trustees <span style="font-size:0.7em;">[<a href="{% url "election@view" election.uuid %}">back to election</a>]</span></h3>
+  <h3 class="title">{{election.name}} &mdash; Trustees <span style="font-size:0.7em;"></span></h3>
 
 <p>
     Trustees are responsible for decrypting the election result.<br />
@@ -68,5 +68,26 @@ No public key uploaded yet.
 </ul>
 
 {% endif %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var previousURL = document.referrer;
+    var nextButton = document.querySelector('.next_button');
+
+    // Check if the previous URL contains 'view'
+    if (previousURL.includes('view')) {
+      nextButton.innerText = 'Back';
+      
+    }
+ 
+  });
+
+  function redirectToView(){
+    var redirectURL = "{% url 'election@view' election.uuid %}";
+    window.location.href = redirectURL;
+  }
+</script>
+
+<button class="button_class next_button" onclick="redirectToView()">Done</button>
+<link rel="stylesheet" type="text/css" href="/static/boothcss/forms.css">
 
 {% endblock %}

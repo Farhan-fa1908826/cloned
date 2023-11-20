@@ -42,7 +42,7 @@ urlpatterns = [
         views.trustee_keygenerator, name=names.ELECTION_TRUSTEE_KEY_GENERATOR),
     url(r'^/trustees/(?P<trustee_uuid>[^/]+)/check-sk$',
         views.trustee_check_sk, name=names.ELECTION_TRUSTEE_CHECK_SK),
-    url(r'^/trustees/(?P<trustee_uuid>[^/]+)/upoad-pk$',
+    url(r'^/trustees/(?P<trustee_uuid>[^/]+)/upload-pk$',
         views.trustee_upload_pk, name=names.ELECTION_TRUSTEE_UPLOAD_PK),
     url(r'^/trustees/(?P<trustee_uuid>[^/]+)/decrypt-and-prove$',
         views.trustee_decrypt_and_prove, name=names.ELECTION_TRUSTEE_DECRYPT_AND_PROVE),

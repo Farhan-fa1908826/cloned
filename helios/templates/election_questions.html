@@ -2,7 +2,7 @@
 
 {% block title %}Questions for {{election.name}}{% endblock %}
 {% block content %}
-  <h3 class="title">{{election.name}} &mdash; Questions <span style="font-size:0.7em;">[<a href="{% url "election@view" election.uuid %}">back to election</a>]</span></h3>
+  <h3 class="title">{{election.name}} &mdash; Questions <span style="font-size:0.7em;"></span></h3>
 
   <script language="javascript">
 {% if election.questions %}
@@ -112,12 +112,13 @@
       save_questions(refresh);
   }
 
-  var DEFAULT_NUM_ANSWERS = 5;
+  var DEFAULT_NUM_ANSWERS = 2;
 
   function add_answer(el) {
     el = $(el);
     var num_answers = el.find('input.answer').length + 1;
-    el.find('tbody').append('<tr><th>&nbsp;&nbsp;&nbsp;</th><th>Answer #' + num_answers + '</th><td><input type="text" class="answer" name="answer_' + num_answers + '" size="70" /><br /><nobr>Link (optional, <tt>http</tt> or <tt>https</tt> only): <input type="url" name="answer_url_' + num_answers + '" width="50%" /></nobr></td></tr>');
+    el.find('tbody').append('<tr class="tr_class"><th>Answer #' + num_answers + '</th><td><input type="text" class="answer" name="answer_' + num_answers + '" size="70" /><br /><nobr>Link (optional, <tt>http</tt> or <tt>https</tt> only): <input type="url" name="answer_url_' + num_answers + '" width="50%" /></nobr></td></tr>');
+    
   }
 
   function add_answers(el, num) {
@@ -144,5 +145,40 @@
   <div id="questions">
   </div>
 					
+  <div id="back_div">
+    <button class="button_class back_button" onclick="goToPreviousPage()">Election View<span id="pageType"></span></button>
+    <button class="button_class next_button" onclick="redirectToNextPage()">Proceed<span id="pageType"></span></button>
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var previousURL = document.referrer;
+        var nextButton = document.querySelector('.next_button');
+        var backButton = document.querySelector('.back_button');
+    
+        // Check if the previous URL contains 'view'
+        if (previousURL.includes('view')) {
+          nextButton.style.display = 'none';
+          backButton.innerText = 'Back';
+        }
+        
+      });
+      function redirectToNextPage() {
+        var redirectURL = "{% url 'election@voters@list-pretty' election.uuid %}";
+        window.location.href = redirectURL;
+      }
+    
+      function goToPreviousPage() {
+        var redirectURL = "{% url 'election@view' election.uuid %}";
+        window.location.href = redirectURL;
+      }
+    </script>
+
+  </div>
+  
+  
+ 
+					
 			<!-- end #content -->
+  <link rel="stylesheet" type="text/css" href="/static/boothcss/forms.css">
+
 {% endblock %}

@@ -208,14 +208,18 @@ def election_new(request):
         election_params['cast_url'] = settings.SECURE_URL_HOST + reverse(one_election_cast, args=[election_params['uuid']])
       
         # registration starts closed
-        election_params['openreg'] = False
+        if election_params['private_p']:
+          election_params['openreg'] = False
+        else:
+          election_params['openreg'] = True
 
         user = get_user(request)
         election_params['admin'] = user
         try:
           election = Election.objects.create(**election_params)
           election.generate_trustee(ELGAMAL_PARAMS)
-          return HttpResponseRedirect(settings.SECURE_URL_HOST + reverse(url_names.election.ELECTION_VIEW, args=[election.uuid]))
+          # return HttpResponseRedirect(settings.SECURE_URL_HOST + reverse(url_names.election.ELECTION_VIEW, args=[election.uuid]))
+          return HttpResponseRedirect(settings.SECURE_URL_HOST + reverse(url_names.election.ELECTION_QUESTIONS, args=[election.uuid]))
         except IntegrityError:
           error = "An election with short name %s already exists" % election_params['short_name']
       else:
@@ -768,6 +772,15 @@ def one_election_cast_done(request, election):
     # with a site-wide voter. Definitely remove current_voter
     # checking that voter.user != None is needed because voter.user may now be None if voter is password only
     if voter.user == user and voter.user is not None:
+      # logout = settings.LOGOUT_ON_CONFIRMATION
+      print("==========================")
+      voter.vote_hash = vote_hash
+      voter.vote = votes[0].vote
+      print("voter votes[0]: ", votes[0])
+      print("voter.vote: ", votes[0].vote)
+      print("voter.vote_hash: ", voter.vote_hash)
+      print("==========================")
+      voter.save()
       logout = settings.LOGOUT_ON_CONFIRMATION
     else:
       logout = False

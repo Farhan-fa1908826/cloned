@@ -55,7 +55,7 @@ class Election(HeliosModel):
 
   election_type = models.CharField(max_length=250, null=False, default='election', choices = ELECTION_TYPES)
   private_p = models.BooleanField(default=False, null=False)
-
+ 
   description = models.TextField()
   public_key = LDObjectField(type_hint = 'legacy/EGPublicKey',
                              null=True)
@@ -101,8 +101,8 @@ class Election(HeliosModel):
   # dates for the election steps, as scheduled
   # these are always UTC
   registration_starts_at = models.DateTimeField(auto_now_add=False, default=None, null=True)
-  voting_starts_at = models.DateTimeField(auto_now_add=False, default=None, null=True)
-  voting_ends_at = models.DateTimeField(auto_now_add=False, default=None, null=True)
+  voting_starts_at = models.DateTimeField(null=True, blank=True)
+  voting_ends_at = models.DateTimeField(null=True, blank=True)
 
   # if this is non-null, then a complaint period, where people can cast a quarantined ballot.
   # we do NOT call this a "provisional" ballot, since provisional implies that the voter has not
@@ -292,6 +292,7 @@ class Election(HeliosModel):
     Checks if a user is eligible for this election.
     """
     # registration closed, then eligibility doesn't come into play
+
     if not self.openreg:
       return False
     

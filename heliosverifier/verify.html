@@ -100,7 +100,7 @@ function load_election_and_ballots(election_url) {
         try {
             election = HELIOS.Election.fromJSONString(raw_json);
             result_append("loaded election: " + election.name);
-            result_append("election fingerprint: " + election.get_hash());
+            result_append("election ID: " + election.get_hash());
 
             var tally = [];
 

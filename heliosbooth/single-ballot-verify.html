@@ -32,7 +32,7 @@
 </head>
 <body>
 <script language="javascript">
-$(document).ready(function() {
+$(document).ready(function() { 
     BigInt.setup(function() {
        $('#verifier_loading').hide();
 
@@ -49,13 +49,21 @@ $(document).ready(function() {
     });
 });    
 
-function result_append(str) {
+function result_append(str) { 
     $('#results').append(str).append("<br />");
 }
+
+
+function result_empty() { 
+    $('#results').empty();
+  }
+
 
 function verify_single_ballot(election_url, audit_trail) {
   var encrypted_vote_json = jQuery.secureEvalJSON(audit_trail);
   
+  result_empty()
+
   result_append("loading election...");
 
   // quick and dirty detection of cast ballot
@@ -69,13 +77,19 @@ function verify_single_ballot(election_url, audit_trail) {
   var after_computation = function(overall_result) {
     result_append("<br />");
     
-    $('#loading').hide();
-    
+    $('#loading').hide(); 
+
     if (overall_result) {
-       result_append('SUCCESSFUL VERIFICATION, DONE!');
+      //  result_append('SUCCESSFUL VERIFICATION, DONE!');
+       alert('SUCCESSFUL VERIFICATION, DONE!')
+
     } else {
-       result_append('PROBLEM - THIS BALLOT DOES NOT VERIFY.');        
+      //  result_append('PROBLEM - THIS BALLOT DOES NOT VERIFY.'); 
+       alert('PROBLEM - THIS BALLOT DOES NOT VERIFY.')
+       
     }
+
+
   };
 
   // the hash will be computed within the setup function call now
@@ -99,11 +113,12 @@ function verify_single_ballot(election_url, audit_trail) {
       after_computation(overall_result);
     }
   }, error: function() {
-      result_append('PROBLEM LOADING election. Are you sure you have the right election URL?<br />');
+    result_empty()
+    $('#loading').hide();
+    alert('PROBLEM LOADING election. Are you sure you have the right election URL?' + '\n' + '\n' +'THIS BALLOT DOES NOT VERIFY.');
 
-      $('#loading').hide();
-      
-      result_append('PROBLEM - THIS BALLOT DOES NOT VERIFY.');        
+      // result_append('PROBLEM LOADING election. Are you sure you have the right election URL?<br />');
+      // result_append('PROBLEM - THIS BALLOT DOES NOT VERIFY.');        
   }
   });
 }
@@ -112,7 +127,9 @@ function verify_single_ballot(election_url, audit_trail) {
 </head>
 <body>
 <div id="wrapper">
-<h2 style="padding-left: 10px;">Helios Single-Ballot Verifier</h2>
+<h2 style="text-align: center;">Helios Single-Ballot Verifier</h2>
+<h2 style="text-align: center;">Step 2 of 2 in Auditing your Ballot</h2>
+
 <div id="content">
 
 <div id="verifier_loading">
@@ -131,13 +148,14 @@ At this time, the Java plugin is required for browser-based ballot auditing, alt
 
 <form onsubmit="try {verify_single_ballot(this.election_url.value, this.audit_trail.value);} catch (e) {E = e;} return false;">
 Enter the Election URL:
-    <input type="text" size="50" name="election_url" id="election_url" /><br />
+    <input type="text" size="50" name="election_url" id="election_url" required/><br />
+
 
 <p>
 Your Ballot:
 </p>
 
-<textarea name="audit_trail" cols="80" rows="7">
+<textarea name="audit_trail" cols="80" rows="7" required>
 </textarea><br /><br />
 <input type="submit" class="pretty" value="Verify" />
 </form>

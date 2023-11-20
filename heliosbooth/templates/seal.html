@@ -19,7 +19,10 @@ Question #{$T.question$index + 1}: {$T.question.short_name}<br>
 </div>
 
 <p>Your ballot tracker is <b><tt style="font-size: 1.5em; word-break: break-all;">{$T.encrypted_vote_hash}</tt></b>.
+  <p><b> <u> Note</u>: Ballot tracker </b> uniquely identifies your ballot from others and is used for later verification purposes.
 
+    <!-- NOTE THIS IS FROM chatGPT: -->
+    {% comment %} <p> "The ballot tracker ensures your vote is accurately recorded, providing transparency and confidence in the voting process." <p> {% endcomment %}
 <p>  
   <button id="proceed_button" onclick="BOOTH.cast_ballot();">Submit this Vote</button><span id="loading_div"><img src="loading.gif" id="proceed_loading_img" /></span><br />
 </p>

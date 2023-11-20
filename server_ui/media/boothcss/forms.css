@@ -490,3 +490,13 @@ form.prettyform {
       width: 200px;
       border: #3498db 1px solid;
   }
+
+  .buttons-container{
+    display: flex;
+    justify-content: space-between;
+}
+
+.buttons {
+    display: flex;
+    cursor: pointer
+}

@@ -208,7 +208,10 @@ def election_new(request):
         election_params['cast_url'] = settings.SECURE_URL_HOST + reverse(one_election_cast, args=[election_params['uuid']])
       
         # registration starts closed
-        election_params['openreg'] = False
+        if election_params['private_p']:
+          election_params['openreg'] = False
+        else:
+          election_params['openreg'] = True
 
         user = get_user(request)
         election_params['admin'] = user

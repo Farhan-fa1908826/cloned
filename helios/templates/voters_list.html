@@ -138,8 +138,8 @@ Voters {{voters_page.start_index}} - {{voters_page.end_index}} (of {{total_voter
 {% endif %}
 [<a onclick="return confirm('are you sure you want to remove {{voter.name}} ?');" href="{% url "election@voter@delete" election.uuid voter.uuid %}">x</a>]
 </td>
-<td>{{voter.voter_login_id}}</td>
-<td>{{voter.voter_email}}</td>
+<td>{{voter.voter_type}}</td>
+<td>{{voter.voter_id}}</td>
 {% endif %}
 <td><img class="small-logo" src="/static/auth/login-icons/{{voter.voter_type}}.png" alt="{{voter.voter_type}}" /> {{voter.name}}</td>
 {% endif %}

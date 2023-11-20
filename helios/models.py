@@ -55,7 +55,7 @@ class Election(HeliosModel):
 
   election_type = models.CharField(max_length=250, null=False, default='election', choices = ELECTION_TYPES)
   private_p = models.BooleanField(default=False, null=False)
-
+ 
   description = models.TextField()
   public_key = LDObjectField(type_hint = 'legacy/EGPublicKey',
                              null=True)
@@ -292,6 +292,7 @@ class Election(HeliosModel):
     Checks if a user is eligible for this election.
     """
     # registration closed, then eligibility doesn't come into play
+
     if not self.openreg:
       return False
     

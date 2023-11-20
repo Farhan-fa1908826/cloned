@@ -9,10 +9,12 @@
 
 {% block content %}
 
+
 <div class="row"><div class="large-5 columns large-centered"><a href="/"><img border="0" src="{{ settings.MAIN_LOGO_URL }}" /></a></div></div>
 <div class="row">&nbsp;</div>
 <div class="large-9 columns">
   {% if settings.MASTER_HELIOS %}
+
 <div class="what-and-why">
 <h2>What is Helios?</h2>
 <p>Helios is a system that offers <b>verifiable online elections</b>.</p>
@@ -25,7 +27,7 @@
   Helios elections are:
   <ul class="disc">
   <li><b>private</b>: no one knows how you voted.</li>
-  <li><b>verifiable</b>: each voter gets a tracking number.</li>
+  <li><b>verifiable</b>: each voter gets a tracking number, which he/she can use to ensure that their vote has not been changed.</li>
   <li><b>proven</b>: Helios is open-source, vetted by top-tier experts, and in use by major organizations.</li>
   </ul>
 
@@ -35,7 +37,7 @@
 </div>
 
 {% if create_p %}
-<a class="button" href="{% url "elections@new" %}">create an election</a>
+{% comment %} <a class="button" href="{% url "elections@new" %}">create an election</a> {% endcomment %}
 {% endif %}
 
   {% else %}
@@ -64,35 +66,40 @@
 {% comment %} <div class="panel row"> {% endcomment %}
 {% if user %}
 <!--<div class="row right">{{user.display_html_big|safe}}</div>-->
+
+<div class="logged-right-box what-and-why">
 {% if create_p %}
-<a class="small button" href="{% url "elections@new" %}">create election</a>
-<h5 class="subheader">Administration</h5>
+
+<a class=" button election-btn" href="{% url "elections@new" %}">Create an Election</a>
+<h5>Administrated Elections</h5>
 {% if elections_administered %}
-<ul>
+<ul class="uo-list">
 {% for election in elections_administered %}
 <li> <a href="{% url "election@view" election.uuid %}">{{election.name}}</a></li>
 {% endfor %}
 </ul>
 {% else %}
-<em>none yet</em>
+<em>None yet</em>
 {% endif %}
-<div class="row right">
-<a class="tiny button" href="{% url "elections@administered" %}">see all</a>
+<div class="row">
+<a class="small button see-all" href="{% url "elections@administered" %}">See all Elections Administred</a>
 </div>
 <div class="row"></div>
 {% endif %}
 
-<h5 class="subheader">Recent Votes</h5>
+<h5>Recent Votes</h5>
 {% if elections_voted %}
-<ul>
+<ul class="uo-list">
 {% for election in elections_voted %}
 <li><a href="{% url "election@view" election.uuid %}">{{election.name}}</a></li>
 {% endfor %}
 </ul>
 {% else %}
-<em>none yet</em>
+<em>None yet</em>
 {% endif %}
-<div class="row right"><a class="tiny button" href="{% url "elections@voted" %}">see all</a></div>
+
+<div class="row  see-all"><a class="small button" href="{% url "elections@voted" %}">See all Votes</a></div>
+</div>
 {% comment %} <div class="row"></div> {% endcomment %}
 {% comment %} {% else %} {% endcomment %}
 {% comment %} {% if settings.SHOW_LOGIN_OPTIONS %}
@@ -107,6 +114,7 @@ Select an election to start voting. You will be asked for your voting credential
 </div>
 </div>
 
-
+</div>
 {% endblock %}
+
 

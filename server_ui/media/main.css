@@ -37,10 +37,23 @@ body{
   overflow: hidden;
   margin-left: 460px;
   width: 290px;
-  height: 500px;
-  justify-content:center center;
+  height: 200px;
+  /* justify-content: space-between; */
+  /* border: 1px solid red; */
+  /* height: 100px; */
+  /* background-color: rgb(0, 83, 128); */
 
 }
+
+#login-list-item .logged-out{
+  background-color: rgb(0, 83, 128);
+}
+
+
+
+/* #login-list-item:hover .logged-out{
+  background-color: rgb(0, 83, 128);
+} */
 
 .top-bar{
   display: flex;
@@ -51,6 +64,7 @@ body{
   border-radius: 5rem;
   background-color: rgb(0, 83, 128);
   border: none;
+  /* color: white; */
 } 
 
 .fixed{
@@ -63,12 +77,15 @@ body{
 
 .logged-in{
   /* border: 1px solid red; */
+  height: fit-content;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   gap: 10px;
-  width: 50%;
+  margin-top: 0.5rem;
+  /* width: 50%; */
+
 }
 
 .logged-in:hover{
@@ -80,7 +97,7 @@ body{
   justify-content: center;
   align-items: center;
   gap:20px;
-  border: 1px solid red;
+  /* border: 1px solid red;s */
   /* padding-right: 300px; */
   width: 100%;
   position: absolute;
@@ -88,9 +105,9 @@ body{
   padding: 10px;
 }
 
-.columns{
+/* .columns{
   border: 1px solid red;
-}
+} */
 
 /* .large-9:hover{
   box-shadow: 0px 50px 60px rgba(42, 42, 42, 0.1);
@@ -104,7 +121,7 @@ body{
   align-items: center;
   gap: 10px;
   width: 700px;
-  height: 300px;
+  height: 350px;
   /* border: 1px solid black; */
   border-radius: 4rem;
   /* box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); */
@@ -179,14 +196,15 @@ body{
   /* border-radius: 2rem;
 } */
 .question{
-  position: absolute;
+  position: relative;
   width: 850px;
-  border: 1px solid red;
+  /* border: 1px solid red; */
   display: flex;
   /* gap: 10rem; */
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
   font-size: 1.3rem;
+  /* text-align: left; */
   /* text-align: center center; */
   /* display: block; */
   /* justify-content: center; */
@@ -211,7 +229,7 @@ body{
   position: relative;
   transition: height 0.3s;
   overflow: hidden;
-  border: 1px solid red;
+  /* border: 1px solid red; */
   /* transition: display 0.3s ease-in-out; */
 }
 /* .question-container:hover .question,
@@ -230,15 +248,16 @@ button {
 }
 
 .expander{
-  border: 1px solid green;
+  /* border: 1px solid green; */
   margin-top: 1rem;
-  border: none;
+  /* border: none; */
   background: none;
   box-shadow: none;
   font-size: 0.75rem;
   color: black;
   font-weight: bold;
   left: 0;
+  margin-left: auto;
 }
 .expander:hover, .expander:focus, .expander:active{
   border: none;
@@ -261,6 +280,8 @@ button {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     column-gap: 30px;
   }
+
+
 
 
 /* .doc-card{
@@ -296,14 +317,22 @@ button {
 
 .question-container{
   padding-top: 2rem;
-  position: relative;
+  /* position: relative; */
   height: fit-content;
   /* width: 800px; */
   display: flex;
   gap: 0rem;
   border: 1px solid red;
+  /* justify-content: flex-end; */
+  /* transition: height 0.3s; */
 }
-
+/* .question-container{
+  text-align: right;
+} */
+.question{
+  text-align: left;
+  border: 1px red solid;
+}
 
 /* .log-in:hover + .hidden-login-options {
   height: auto;
@@ -337,3 +366,264 @@ button {
   /* border-radius: 0rem 0rem 2rem 2rem; */
   /* background-color: rgb(88, 153, 174); */
 /* } */
+
+.privacy{
+  width: fit-content;
+  height: fit-content;
+  border: 1px solid rebeccapurple;
+
+}
+
+.privacy-container{
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+}
+
+.what-and-why-logged{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 3rem;
+  gap: 2rem;
+  /* border: 1px solid blue; */
+  margin-left: 3rem;
+  width: fit-content;
+}
+
+/* .logged-right-box{
+  border: 1px solid green;
+} */
+
+.logged-right-box-logged{
+  /* border: 1px solid green; */
+  text-align: center;
+  position: relative;
+}
+.logged-right-box{
+  width: 100%;
+  margin-top: 6rem;
+  height: fit-content;
+  /* margin-right: 5rem; */
+}
+
+.see-all{
+  justify-content: center;
+  align-items: center;
+}
+
+.election-btn{
+  width: 80%;
+  height: 60px;
+  font-size: 20px;
+}
+
+/* .button{
+  border: 1px solid red;
+} */
+
+/* .large-3{
+  border: 1px solid red;
+}
+.what-and-why-logged{
+  border: 1px solid red;
+} */
+
+.logged-main-content{
+  /* display: flex; */
+  height: fit-content;
+  /* border: 10px solid orange; */
+  width: fit-content;
+}
+.large-3{
+  margin-right: -9rem;
+
+  /* border: 10px solid orange ; */
+  width: 50%;
+}
+
+/* .trustee-description{
+  border: 1px solid red;
+} */
+
+.trustee-important-info{
+  /* flex-direction: row; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: fit-content;
+  width: fit-content;
+  text-wrap: nowrap;
+  gap: 0px;
+  /* flex: 1; */
+}
+
+.trustee-important-info .delete-btn{
+  margin-left: auto;
+}
+
+.trustee-important-info h4{
+  text-align: center;
+} 
+
+.trustee-important-info h5{
+  text-align: left;
+}
+
+.center{
+  text-align: center;
+}
+
+.trustee-main-content{
+  /* display: grid; */
+  /* grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); */
+  width: 100%;
+  display: flex;
+  gap: 2rem;
+  /* flex-direction: column; */
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid red;
+  /* max-width: 1500px; The main content will span the whole page width */
+}
+
+.seperator{
+  width: 90%; /* Set the width to 100% to span the full width of the container */
+  height: 1px; /* Adjust the height as needed for the thickness of the separator */
+  background-color: grey; /* Set the background color of the separator (e.g., black) */
+  margin: 10px 0;
+}
+
+.send-login-btn-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.send-login-btn{
+  /* margin-top: 1rem; */
+}
+
+.delete-btn{
+  left: 0;
+  margin-left: auto;
+}
+
+.trustee-title{
+  /* border: 1px solid red; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid red;
+  /* height: fit-content; */
+}
+
+.back-to-election{
+  font-size:0.6em; 
+  text-align: center; 
+  height: 1.5rem; 
+  display: flex; 
+  align-items: center; 
+  border: 1px solid red; 
+}
+.back-to-election a{
+  margin: 0 auto; 
+  line-height: 1.5rem; 
+  display: block;
+}
+
+.trustee-card{
+  /* border: 1px solid red;
+  width: 100%;
+  display:flex;
+  flex-direction: column;
+  height: min-content;
+  justify-content: center;
+  align-items: center; */
+  /* border: 1px solid red;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; */
+  width: 100%;
+  height: fit-content; 
+}
+
+.trustee-card h5{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%; 
+  height: fit-content; 
+  /* border: 1px solid red; */
+}
+
+.trustee-card .delete-btn{
+  margin-top: 1rem;
+  /* border: 1px solid red; */
+
+}
+
+.add-trustee-form{
+  width: 100%;
+  text-align: left;
+  height: fit-content;
+}
+
+.two-buttons-seperate{
+  display: flex;
+  width: 100%;
+  /* border: 1px solid red; */
+  justify-content: space-between;
+}
+
+.input-new-trustee{
+  width: 100%;
+  /* border: 1px solid red; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+.input-new-trustee input{
+  margin-top: 1rem;
+  border-radius: 2rem;
+}
+
+.setup-btn{
+  /* border: 1px solid red; */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.trustee-home-status{
+  /* border:1px solid red; */
+  text-align: center;
+  width: 100rem;
+}
+
+.single-container{
+  display: flex;
+  justify-content: center;
+  align-items: center ;
+}
+
+.single-container-col{
+  flex-direction: column;
+  height: fit-content;
+  width: 100%;
+}
+
+.generate-btn{
+  border: 1px solid red;
+  margin-left: 4rem;
+}
+
+.title{
+  text-align: center;
+}

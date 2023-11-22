@@ -810,6 +810,7 @@ margin: 50px;
 .fit-card{
   height: fit-content;
   width: fit-content;
+}
 .election_overview td{
   border: none;
   border-right: silver 1px solid;

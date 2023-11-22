@@ -107,15 +107,15 @@ Note: this {{election.election_type}} is <u>not</u> featured on the front page.
 <p style="font-size:1.5em;">[<a target="_blank" href="{{election.election_info_url}}" rel="noopener noreferrer">download candidate bios &amp; statements</a>]</p>
 {% endif %}
 <div class="req-container">
-  <div class="req_card question_div what-and-why">
+  <div class="what-and-why req_card question_div">
       <a href="{% url "election@questions" election.uuid %}">Questions ({% if election.questions %}{{election.questions|length}}{% else %}0{% endif %})</a>
   </div>
 
-  <div class="req_card voters_div what-and-why">
+  <div class="what-and-why req_card voters_div">
     <a href="{% url "election@voters@list-pretty" election.uuid %}">Voters &amp; Ballots</a>
   </div>
 
-  <div class="req_card trustee_div what-and-why">
+  <div class="what-and-why req_card trustee_div">
     <a href="{% url "election@trustees@view" election.uuid %}">Trustees ({{trustees|length}})</a>
   </div>
 </div>

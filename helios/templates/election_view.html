@@ -2,14 +2,14 @@
 {% block title %}{{election.name}}{% endblock %}
 {% block content %}
 <div style="float: left; margin-right: 50px;">
-  <h3 class="title">{{ election.name }}
+  <h3 class="title">Election: {{ election.name }}
 {% if admin_p %}
 {% if not election.frozen_at %}
 <small><a class="button_class" href="{% url "election@edit" election.uuid %}">edit</a></small>
 {% endif %}
 {% endif %}</h3>
 <p style="padding-top:0px; margin-top:0px">
-<em>{% if election.private_p %}private{%else%}public{% endif %}</em> {{ election.election_type }}{% if settings.SHOW_USER_INFO %} created by <u><b>{{election.admin.display_html_small|safe}}</b></u>{% endif %}
+<b>This is the main page for a <em>{% if election.private_p %}private{%else%}public{% endif %}</em> {{ election.election_type }}{% if settings.SHOW_USER_INFO %} created by <u></b><b>{{election.admin.display_html_small|safe}}</b></u>{% endif %}
 {% if election.is_archived %}
 [archived]
 {% endif %}
@@ -56,12 +56,13 @@ this {{election.election_type}} is <u>not</u> featured on the front page.
 <p style="font-size:1.5em;">[<a target="_blank" href="{{election.election_info_url}}" rel="noopener noreferrer">download candidate bios &amp; statements</a>]</p>
 {% endif %}
 
+
 <p align="center" style="font-size: 1.5em;">
-<a href="{% url "election@questions" election.uuid %}">questions ({% if election.questions %}{{election.questions|length}}{% else %}0{% endif %})</a>
-&nbsp;&nbsp;|&nbsp;&nbsp;
-<a href="{% url "election@voters@list-pretty" election.uuid %}">voters &amp; ballots</a>
-&nbsp;&nbsp;|&nbsp;&nbsp;
-<a href="{% url "election@trustees@view" election.uuid %}">trustees ({{trustees|length}})</a>
+<a class="button_class" href="{% url "election@questions" election.uuid %}">Questions ({% if election.questions %}{{election.questions|length}}{% else %}0{% endif %})</a>
+&nbsp;&nbsp; &nbsp;&nbsp;
+<a class="button_class" href="{% url "election@voters@list-pretty" election.uuid %}">Voters &amp; Ballots</a>
+&nbsp;&nbsp; &nbsp;&nbsp;
+<a class="button_class" href="{% url "election@trustees@view" election.uuid %}">Trustees ({{trustees|length}})</a>
 </p>
 
 {% if admin_p %}
@@ -181,7 +182,9 @@ Once you do this, the tally will visible to you, the administrator, only.
 {% else %}
 
 {% if election.voting_has_started %}
+<div class="flex_center">
 <a class="button" href="{{test_cookie_url}}">Vote in this {{election.election_type}} </a>
+</div>
 <br />
 <br />
 {% if election.voting_extended_until %}
@@ -277,8 +280,8 @@ Anyone can vote in this election.
 {% endif %}
 
 <p style="font-size: 1.3em;">
-<a href="{% url "election@voters@list-pretty" election.uuid %}">Ballot Tracking Center</a> &nbsp;| &nbsp;
-<a href="{% url "election@audited-ballots" election.uuid %}">Audited Ballots</a>
+<a class="button_class" href="{% url "election@voters@list-pretty" election.uuid %}">Ballot Tracking Center</a> &nbsp; &nbsp;
+<a class="button_class" href="{% url "election@audited-ballots" election.uuid %}">Audited Ballots</a>
 </p>
 
 {% endif %}
@@ -298,7 +301,6 @@ verify <a target="_blank" href="/verifier/verify.html?election_url={% url "elect
 
 review the <a href="{{vote_url}}">voting booth</a>.
 </p>
-
 {% endif %}
 
 </div>

@@ -1,22 +1,24 @@
 
-<h3 style="text-align: center;">Step 1 of 2 in Auditing your Ballot</h3>
+<h3 style="text-align: center;">Step 1 of 2 in Verifying your Ballot</h3>
 
 <p>
-<b><u>IMPORTANT</u></b>: this ballot, now that it being audited, <em>will not be tallied</em>.<br />
-To cast the current ballot, you must click the "Back to Voting" button below, re-encrypt it, and choose "cast" instead of "audit."
+<b><u>IMPORTANT</u></b>: This ballot, now that it being verified, <em><b>will not be tallied</em>.</b><br /><br>
+To cast the current ballot, you must click the "Back to Voting" button below, and then choose to "Submit this Ballot" instead of "Spoil & Verify Ballot". <br><br> 
+When you click on "Back to Voting", you may notice that your ballot tracker number has changed. <b>This is normal</b>, as the system automatically generates a new tracker number for your ballot by encrypting it again.
 </p>
 
 <p>
-<b>Why?</b> Helios prevents you from auditing and casting the same ballot to provide you with some protection against coercion.
+<b>Why?</b> Helios prevents you from verifying and casting the same ballot to provide you with some protection against coercion.
 </p>
 
 <p>
-<b>Now what?</b> <a onclick="$('#audit_trail').select(); return false;" href="#">Select your ballot audit info</a>, copy it to your clipboard, then use the <a target="_blank" href="single-ballot-verify.html?election_url={$T.election_url}">ballot verifier</a> to verify it.<br />
-Once you're satisfied, click the "back to voting" button to re-encrypt and cast your ballot.
+<b>Next Step: </b> <a onclick="$('#audit_trail').select(); return false;" href="#">Select your ballot audit info (i.e., the text below)</a>, copy it to your clipboard, then go to the <a target="_blank" href="single-ballot-verify.html?election_url={$T.election_url}">ballot verifier</a> to verify it.<br /><br>
+You can verify your ballot as many times as you please, and once you're fully satisfied with the results, you can click the "Back to Voting" button to cast your ballot, as explained above.
 </p>
 
-<form action="#">
-<textarea name="audit_trail" id="audit_trail" cols="80" rows="10" wrap="soft">
+<form action="#" class="center" >
+<textarea name="audit_trail" id="audit_trail" rows="10" wrap="soft" style="width: 100%;
+resize: vertical;">
 {$T.audit_trail}
 </textarea>
 <br /><br />

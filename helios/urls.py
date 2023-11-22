@@ -33,4 +33,6 @@ urlpatterns = [
   url(r'^elections/voted$', views.elections_voted, name=names.ELECTIONS_VOTED),
   
   url(r'^elections/(?P<election_uuid>[^/]+)', include('helios.election_urls')),
+
+  # url('upload-pk/<uuid:election_uuid>/<uuid:trustee_uuid>/', views.trustee_upload_pk, name="election@trustee@upload-pk"),
 ]

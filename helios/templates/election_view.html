@@ -7,8 +7,13 @@
     <table class="election_overview">
       <tr>
         <th>Election Name:</th>
+
+        {% if election.is_archived %}
+        <td>{{ election.name }} (Archived)</td>
+        {% else %}
         <td>{{ election.name }}</td>
-        <th>Owner:</th>
+        {% endif %}
+        <th>Election Owner:</th>
         <td>{{ election.admin.name }}</td>
         <th>Election Type:</th>
         <td>
@@ -16,13 +21,19 @@
         </td>
         <th>Help Email:</th>
         <td>{{ election.help_email }}</td>
+        
+      </tr>
+      <tr>
+        <th>Election starts at:</th>
+        <td>{% if election.voting_start_at %}{{election.voting_start_at}}<br />{% else %}  --:-- am/pm {% endif %}  </td>
+        <th>Election ends at:</th>
+        <td>{% if election.voting_end_at %}{{election.voting_end_at}}<br />{% else %}--:-- am/pm{% endif %}</td>
+        
+        
         <th>Action:</th>
         <td>
           {% if admin_p and not election.frozen_at %}
             <a class="button_class" href="{% url "election@edit" election.uuid %}">Edit</a> |
-          {% endif %}
-          {% if election.is_archived %}
-            [archived] |
           {% endif %}
           {% if admin_p %}
             <a onclick="return window.confirm('Are you sure you want to copy this election?');" href="{% url "election@copy" election_uuid=election.uuid %}">Make copy of election</a> |
@@ -32,23 +43,20 @@
               <a href="{% url "election@archive" election_uuid=election.uuid %}?archive_p=1">Archive election</a>
             {% endif %}
           {% endif %}
-        </td>
-        
+        </td>    
       </tr>
     </table>
     
-    
-
 <br />
 {% if admin_p %}
 {% if not election.private_p %}
 {% if election.featured_p %}
-this {{election.election_type}} is featured on the front page.
+Note: this {{election.election_type}} is featured on the front page.
 {% if can_feature_p %}
 [<a href="{% url "election@set-featured" election.uuid %}?featured_p=0">unfeature it</a>]
 {% endif %}
 {% else %}
-this {{election.election_type}} is <u>not</u> featured on the front page.
+Note: this {{election.election_type}} is <u>not</u> featured on the front page.
 {% if can_feature_p %}
 [<a href="{% url "election@set-featured" election.uuid %}?featured_p=1">feature it</a>]
 {% endif %}
@@ -63,26 +71,54 @@ this {{election.election_type}} is <u>not</u> featured on the front page.
 <br />
 
 <br clear="left" />
+{% if election.description_bleached %}
 
-<div style="margin-bottom: 25px; line-height: 1.3;">
-{{election.description_bleached|safe}}
+<div id="descriptionContainer">
+  <div class="header-with-icon" onclick="toggleDescription()">
+    <h4>Election Description  </h2>
+    <span class="header-icon">▼</span> 
+  </div>
+  <textarea id="descriptionTextArea">{{election.description_bleached|safe}}</textarea>
 </div>
+{% endif %}
+<script>
+  function toggleDescription() {
+    var descriptionTextArea = document.getElementById("descriptionTextArea");
+    var headerIcon = document.querySelector(".header-icon");
 
-<p>
-{% if election.voting_start_at %}Voting start at {{election.voting_start_at}}<br />{% endif %}
-{% if election.voting_end_at %}Voting end at {{election.voting_end_at}}<br />{% endif %}
-</p>
+    if (descriptionTextArea.style.display === "none") {
+      descriptionTextArea.style.display = "block";
+      headerIcon.innerText = "▲"; // Change to an upward arrow when expanded
+      // Set height to "auto" to adjust based on content
+      descriptionTextArea.style.height = "auto";
+    } else {
+      descriptionTextArea.style.display = "none";
+      headerIcon.innerText = "▼"; // Change back to a downward arrow when collapsed
+      // Set a fixed height or adjust as needed when collapsed
+      descriptionTextArea.style.height = "50px"; // Example height when collapsed
+    }
+  }
+</script>
+
+
+
 
 {% if election.election_info_url %}
 <p style="font-size:1.5em;">[<a target="_blank" href="{{election.election_info_url}}" rel="noopener noreferrer">download candidate bios &amp; statements</a>]</p>
 {% endif %}
+<div class="req-container">
+  <div class="req_card question_div what-and-why">
+      <a href="{% url "election@questions" election.uuid %}">Questions ({% if election.questions %}{{election.questions|length}}{% else %}0{% endif %})</a>
+  </div>
 
-<p align="center" style="font-size: 1.5em;">
-<a href="{% url "election@questions" election.uuid %}">questions ({% if election.questions %}{{election.questions|length}}{% else %}0{% endif %})</a>
-&nbsp;&nbsp;|&nbsp;&nbsp;
-<a href="{% url "election@voters@list-pretty" election.uuid %}">voters &amp; ballots</a>
-&nbsp;&nbsp;|&nbsp;&nbsp;
-<a href="{% url "election@trustees@view" election.uuid %}">trustees ({{trustees|length}})</a>
+  <div class="req_card voters_div what-and-why">
+    <a href="{% url "election@voters@list-pretty" election.uuid %}">Voters &amp; Ballots</a>
+  </div>
+
+  <div class="req_card trustee_div what-and-why">
+    <a href="{% url "election@trustees@view" election.uuid %}">Trustees ({{trustees|length}})</a>
+  </div>
+</div>
 </p>
 
 {% if admin_p %}
@@ -106,15 +142,16 @@ this {{election.election_type}} is <u>not</u> featured on the front page.
 <!-- election complete, no next step -->
 
 {% else %}
-<b>Next Step:</b>
+<b>Recommended Next Step:</b>
 <span style="font-size: 1.3em;">
 {% if not election.frozen_at %}
 {% if election.issues_before_freeze %}
 {% for issue in election.issues_before_freeze %}
-{{issue.action}}{% if forloop.last %}{% else %}, and{% endif %}<br />
+{{issue.action}}{% if forloop.last %}{% else %}, and{% endif %}
+<br />
 {% endfor %}
 {% else %}
-<a href="{% url "election@freeze" election.uuid %}">freeze ballot and open election.</a>
+<a href="{% url "election@freeze" election.uuid %}">Freeze ballot and open election.</a>
 <br />
 {% if election.voting_starts_at %}
 once you do this, the election will be ready for voting and will open automatically<br />
@@ -125,8 +162,8 @@ once you do this, the election will be immediately open for voting.
 {% endif %}
 
 {% else %}
-
 {% if not election.encrypted_tally %}
+
 {% if election.tallying_started_at %}
 Tally computation is under way.<br />
 Reload this page in a couple of minutes.
@@ -319,13 +356,7 @@ verify <a target="_blank" href="/verifier/verify.html?election_url={% url "elect
 
 review the <a href="{{vote_url}}">voting booth</a>.
 </p>
-
 {% endif %}
-
 </div>
 </div>
-
-
-
-
 {% endblock %}

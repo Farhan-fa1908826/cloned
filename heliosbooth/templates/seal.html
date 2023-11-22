@@ -1,28 +1,30 @@
-<h3>Review your Ballot</h3>
+<h3 class="center">Review your Ballot</h3>
 
 <div style="padding: 10px; margin-bottom: 10px; background-color: #eee; border: 1px #ddd solid;">
 {#foreach $T.questions as question}
 
-Question #{$T.question$index + 1}: {$T.question.short_name}<br>
+Question No. {$T.question$index + 1}: {$T.question.short_name}<br><br>
 {#if $T.choices[$T.question$index].length == 0}
 <div style="margin-left: 15px;">&#x2610; <b><i>No choice selected</i></b></div>
 {#/if}
 {#foreach $T.choices[$T.question$index] as choice}
 <div style="margin-left: 15px;">&#x2713; <b>{$T.choice}</b></div>
 {#/for}
+<br>
 {#if $T.choices[$T.question$index].length < $T.question.max}
-[{$T.choices[$T.question$index].length} selections out of possible {$T.question.min}-{$T.question.max}]<br />
+Selected {$T.choices[$T.question$index].length} out of the allowed range of options: {$T.question.min}-{$T.question.max}<br /><br>
 {#/if}
-[<a onclick="BOOTH.show_question({$T.question$index}); return false;" href="#">Change this option</a>]
+<a class="button_class_table" onclick="BOOTH.show_question({$T.question$index}); return false;" href="#">Change this option</a>
 {#if !$T.question$last}<br><br>{#/if}
 {#/for}
 </div>
 
-<p>Your ballot tracker is <b><tt style="font-size: 1.5em; word-break: break-all;">{$T.encrypted_vote_hash}</tt></b>.
-  <p><b> <u> Note</u>: Ballot tracker </b> uniquely identifies your ballot from others and is used for later verification purposes.
+<p class="center">Your ballot tracker is <b><tt style="font-size: 1.5em; word-break: break-all;">{$T.encrypted_vote_hash}</tt></b>.
+  <p class="center"><b> <u> Note</u>: A Ballot tracker </b> uniquely identifies your ballot from others and is used for later (optional) verification purposes.
 
-<p>  
-  <button id="proceed_button" onclick="BOOTH.cast_ballot();">Submit this Vote</button><span id="loading_div"><img src="loading.gif" id="proceed_loading_img" /></span><br />
+    <!-- NOTE THIS IS FROM chatGPT: -->
+<p class="center">  
+  <button class="button_class" id="proceed_button" onclick="BOOTH.cast_ballot();">Submit this Ballot</button><span id="loading_div"><img src="loading.gif" id="proceed_loading_img" /></span><br />
 </p>
 
 
@@ -35,8 +37,8 @@ Question #{$T.question$index + 1}: {$T.question.short_name}<br>
 </form>
 
 {#if $T.election_metadata.use_advanced_audit_features}
-<div style="background: lightyellow; padding: 10px; border: 1px solid #ddd; max-width: 340px;">
-<h4 style="padding: 0px; margin:0px;"><a onclick="$('#auditbody').slideToggle(250);" href="#">Spoil & Verify Ballot</a> <span style="font-size: 0.8em; color: #444">[optional]</span></h4>
+<div style="  background-color: #eee; padding: 10px; border: 1px solid #ddd; max-width: 100%; width:fit-content;">
+<h4 style="padding: 0px; margin:0px;"><a onclick="$('#auditbody').slideToggle(250);" href="#">Spoil & Verify Ballot</a> <span style="font-size: 0.8em; color: #444">(Optional)</span></h4>
 <div id="auditbody" style="display:none;">
 <p>
 If you choose to 'spoil & verify' this ballot, your selected choices for each question will be displayed.<br><br>
@@ -48,7 +50,7 @@ all voters against coercion.<br><br>
 when ready, you can then proceed to cast your ballot by clicking the 'Submit this Vote' button.</br><br>
 It is important to stress that this verification process is optional.
 </p>
-<button onclick="BOOTH.audit_ballot();" class="pretty">Spoil &amp; Verify</button>
+<button class="button_class" onclick="BOOTH.audit_ballot();" class="pretty">Spoil &amp; Verify</button>
 </p>
 </div>
 </div>

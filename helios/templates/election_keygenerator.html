@@ -91,6 +91,7 @@ function download_sk_to_file(filename) {
 }
 
 function show_pk() {
+    console.log('show_pk')
     $('#sk_download').hide();
     $('#pk_content').hide();
     $('#pk_hash').show();
@@ -119,49 +120,54 @@ If you've already generated a keypair, you can <a href="javascript:show_key_reus
 </p>
 </div>
 </div>
-<div id="reuse">
+<div id="reuse" class="flex_center">
 <h3>Reusing a Key</h3>
 
+<div class="what-and-why">    
 <p>
 Enter your complete secret key below:
 </p>
-<form onsubmit="reuse_key(this.secret_key.value); return false;">
+<form class="flex_center" onsubmit="reuse_key(this.secret_key.value); return false;">
 <textarea cols="80" rows="5" wrap="soft" name="secret_key">
 </textarea>
 <br />
-<input type="submit" value="reuse" />
+<input type="submit" class="button_class" value="Reuse this secret key" />
 </form>
+</div>
 </div>
 
 <div id="sk_download">
-<h3>Your Secret Key</h3>
+<h3 class="center">Your Secret Key</h3>
+<div class="what-and-why your-secret-key important-info-trustee">
 <span id="clear_button">
-Your key has been generated, but you may choose to<br /><a href="javascript:clear_keys();">clear it from memory and start from scratch</a> if you prefer.<br />
+Your key has been generated, but you have the option to <a href="javascript:clear_keys();">clear it from memory and start from scratch</a> if you prefer.<br>
 </span>
 
 <p>
-    <button style="font-size:16pt;" onclick="download_sk(); $('#pk_link').show();">Show my secret key</button>
+    <button class="button_class" style="font-size:16pt;" onclick="download_sk(); $('#pk_link').show();">Show my secret key</button>
 </p>
-</div>
+
 
 <div style="display:none;" id="pk_content">
-    <p>Bellow is your trustee secret key content. Please copy its content and save it securely. <br>
-       You can also click to dowload it to a file.
-       And please don't lose it! Otherwise it will not be possible to decrypt the election tally.<br>
+
+    <p class="center"><span>Below is your (trustee) secret key.</span> <br> <span>Please copy, save, and store it securely. </span> <br> <span>You can also choose to dowload it to a file. </span><br><br>
+       <b>Note: It is extremely important not to lose it. <br> Losing it will result in not being able to decrypt and calculate the final election tally.</b><br>
     </p>
+
     <textarea id="sk_content" rows="5" wrap="soft" cols="50" style="height: 25em;"></textarea>
 </div>
 
-<div style="display:none;" id="pk_link">
+<div class="flex_center" style="display:none;" id="pk_link">
 <p>
-<a id="download_to_file" href="javascript:download_sk_to_file('trustee_key_for_{{election.name}}.txt');">download private key to a file</a>
+<a class="button_class" id="download_to_file" href="javascript:download_sk_to_file('trustee_key_for_{{election.name}}.txt');">Download private (i.e., secret) key to a file</a>
 </p>
 <p>
-  <a href="javascript:show_pk();">ok, I've saved the key, let's move on</a>
+  <a class="button_class" href="javascript:show_pk();">I have saved the key and am ready to go to the next step</a>
 </p>
 </div>
+</div>
 
-<form method="post" id="pk_form" action="{% url "election@trustee@upload-pk" election.uuid trustee.uuid %}">
+<form method="POST" id="pk_form" action="{% url "election@trustee@upload-pk" election.uuid trustee.uuid %}">
 <h3>Your Public Key</h3>
 <p>
     It's time to upload the public key to the server.

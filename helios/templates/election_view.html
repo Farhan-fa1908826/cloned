@@ -239,7 +239,9 @@ Once you do this, the tally will visible to you, the administrator, only.
 {% else %}
 
 {% if election.voting_has_started %}
+<div class="flex_center">
 <a class="button" href="{{test_cookie_url}}">Vote in this {{election.election_type}} </a>
+</div>
 <br />
 <br />
 {% if election.voting_extended_until %}
@@ -335,8 +337,8 @@ Anyone can vote in this election.
 {% endif %}
 
 <p style="font-size: 1.3em;">
-<a href="{% url "election@voters@list-pretty" election.uuid %}">Ballot Tracking Center</a> &nbsp;| &nbsp;
-<a href="{% url "election@audited-ballots" election.uuid %}">Audited Ballots</a>
+<a class="button_class" href="{% url "election@voters@list-pretty" election.uuid %}">Ballot Tracking Center</a> &nbsp; &nbsp;
+<a class="button_class" href="{% url "election@audited-ballots" election.uuid %}">Audited Ballots</a>
 </p>
 
 {% endif %}

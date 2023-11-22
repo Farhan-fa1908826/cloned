@@ -7,7 +7,8 @@ from django import forms
 from django.core.mail import send_mail
 from django.conf import settings
 from django.http import HttpResponseRedirect
-from django.conf.urls import url
+from django.urls import re_path as url
+
 
 from helios_auth import url_names
 

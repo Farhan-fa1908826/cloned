@@ -9,7 +9,8 @@ import ldap
 from django_auth_ldap.config import LDAPSearch
 
 #I ADDED THIS
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/Untitled' + '/helios'
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/Untitled' + '/helios'
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 print("BASE_DIR: ", BASE_DIR)
 
 TESTING = 'test' in sys.argv
@@ -61,8 +62,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',  # or 'django.db.backends.postgresql' depending on your setup
         'NAME': 'helios',
-        'USER': 'postgres',
-        'PASSWORD': 'lightening789',  # Replace with your actual password
+        'USER': 'farhan',
+        'PASSWORD': '123',  # Replace with your actual password
         'HOST': 'localhost',  # This is the default if your PostgreSQL is running on the same machine
         'PORT': '5432',  # This is the default PostgreSQL port
         'CONN_MAX_AGE': 600,  # Optional setting for database connection timeout
@@ -195,6 +196,7 @@ INSTALLED_APPS = (
     'helios',
     'server_ui',
     'django_extensions',
+    'bootstrap_datepicker_plus',
 )
 
 ANYMAIL = {
@@ -299,8 +301,12 @@ CLEVER_CLIENT_ID = get_from_env('CLEVER_CLIENT_ID', "")
 CLEVER_CLIENT_SECRET = get_from_env('CLEVER_CLIENT_SECRET', "")
 
 # GitHub
-GH_CLIENT_ID = get_from_env('GH_CLIENT_ID', '')
-GH_CLIENT_SECRET = get_from_env('GH_CLIENT_SECRET', '')
+# GH_CLIENT_ID = get_from_env('GH_CLIENT_ID', '')
+# GH_CLIENT_SECRET = get_from_env('GH_CLIENT_SECRET', '')
+
+#Farhan's GitHub authentication credentials
+GH_CLIENT_ID = get_from_env('GH_CLIENT_ID', '959e5397fac8e9728100')
+GH_CLIENT_SECRET = get_from_env('GH_CLIENT_SECRET', '778390484623caaf97d78cde14f797b2f8e71abd')
 
 # email server
 # EMAIL_HOST = get_from_env('EMAIL_HOST', 'localhost')

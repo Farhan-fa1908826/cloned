@@ -33,7 +33,7 @@
         <th>Action:</th>
         <td>
           {% if admin_p and not election.frozen_at %}
-            <a class="button_class" href="{% url "election@edit" election.uuid %}">Edit</a> |
+            <a  href="{% url "election@edit" election.uuid %}">Edit</a> |
           {% endif %}
           {% if admin_p %}
             <a onclick="return window.confirm('Are you sure you want to copy this election?');" href="{% url "election@copy" election_uuid=election.uuid %}">Make copy of election</a> |

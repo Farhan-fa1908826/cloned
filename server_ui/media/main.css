@@ -815,7 +815,7 @@ margin: 50px;
   border: none;
   border-right: silver 1px solid;
 }
-.election_overview td:nth-child(10){
+.election_overview td:last-child{
   border: none;
 }
 
@@ -827,10 +827,44 @@ margin: 50px;
 }
 .election_overview{
   height: 3.5rem;
+  text-align: left;
 }
 
 .election_info_container{
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+.req-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px; 
+  text-align: center;
+}
+
+.req_card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 0 10px; 
+  text-align: center;
+  height: 100px;
+  display: flex;
+  align-items: center;
+}
+
+.req_card a {
+  font-size: 1.5em; 
+  text-decoration: none;
+}
+#descriptionTextArea{
+  display: none;
+  height: 200px;
+  
+}
+.header-with-icon{
+  display: flex;
+  flex-direction: row;
   align-items: center;
 }

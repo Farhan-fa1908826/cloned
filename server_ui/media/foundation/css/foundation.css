@@ -4518,10 +4518,10 @@ ul.pagination {
 table {
   background: white;
   margin-bottom: 1.25em;
-  border: solid 1px #dddddd; }
+  border: solid 1px transparent; }
   table thead,
   table tfoot {
-    background: whitesmoke;
+    background: transparent;
     font-weight: bold; }
     table thead tr th,
     table thead tr td,
@@ -4537,7 +4537,7 @@ table {
     font-size: 0.875em;
     color: #222222; }
   table tr.even, table tr.alt, table tr:nth-of-type(even) {
-    background: #f9f9f9; }
+    background: transparent; }
   table thead tr th,
   table tfoot tr th,
   table tbody tr td,
@@ -4725,3 +4725,16 @@ a.th {
     max-width: 500px; }
   .f-dropdown.large {
     max-width: 800px; }
+.form_footer{
+  display: block;
+}
+.answer_table{
+  display: flex;
+  align-items: center;
+}
+.form_body{
+  display: block;
+}
+.dropdown_dev{
+  text-align: left;
+}

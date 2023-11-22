@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e  # Exit immediately if a command exits with a non-zero status.
-dropdb helios
-createdb helios
+dropdb helios2
+createdb helios2
 #python manage.py makemigrations
 python3 manage.py makemigrations
 #python manage.py migrate

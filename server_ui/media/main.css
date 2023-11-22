@@ -37,7 +37,7 @@ body{
   overflow: hidden;
   margin-left: 460px;
   width: 290px;
-  height: 200px;
+  height: fit-content;
   /* justify-content: space-between; */
   /* border: 1px solid red; */
   /* height: 100px; */
@@ -737,4 +737,28 @@ margin: 50px;
 .csv-table-container td {
   border: 2px solid #ddd; 
   padding: 15px; 
+}
+
+.election_overview td{
+  border: none;
+  border-right: silver 1px solid;
+}
+.election_overview td:nth-child(10){
+  border: none;
+}
+
+.election_info{
+  width: max-content;
+  /* border: #000000 1px solid; */
+  text-align: center;
+  white-space: nowrap;
+}
+.election_overview{
+  height: 3.5rem;
+}
+
+.election_info_container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

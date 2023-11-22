@@ -1,22 +1,44 @@
 {% extends TEMPLATE_BASE %}
 {% block title %}{{election.name}}{% endblock %}
 {% block content %}
-<div style="float: left; margin-right: 50px;">
-  <h3 class="title">{{ election.name }}
-{% if admin_p %}
-{% if not election.frozen_at %}
-<small><a class="button_class" href="{% url "election@edit" election.uuid %}">edit</a></small>
-{% endif %}
-{% endif %}</h3>
-<p style="padding-top:0px; margin-top:0px">
-<em>{% if election.private_p %}private{%else%}public{% endif %}</em> {{ election.election_type }}{% if settings.SHOW_USER_INFO %} created by <u><b>{{election.admin.display_html_small|safe}}</b></u>{% endif %}
-{% if election.is_archived %}
-[archived]
-{% endif %}
-{% if admin_p %}
-&nbsp;{% if election.is_archived %}<a class="button_class" href="{% url "election@archive" election_uuid=election.uuid %}?archive_p=0">unarchive it</a>{% else %}<a class="small button" href="{% url "election@archive" election_uuid=election.uuid %}?archive_p=1">archive it</a>{% endif %}
-<a class="button_class" onclick="return window.confirm('Are you sure you want to copy this election?');" href="{% url "election@copy" election_uuid=election.uuid %}">copy</a>
-{% endif %}
+<div class="election_info_container">
+<div class="election_info">
+  <h2>Election Overview</h2>
+    <table class="election_overview">
+      <tr>
+        <th>Election Name:</th>
+        <td>{{ election.name }}</td>
+        <th>Owner:</th>
+        <td>{{ election.admin.name }}</td>
+        <th>Election Type:</th>
+        <td>
+          <em>{% if election.private_p %}Private{% else %}Public{% endif %}</em>
+        </td>
+        <th>Help Email:</th>
+        <td>{{ election.help_email }}</td>
+        <th>Action:</th>
+        <td>
+          {% if admin_p and not election.frozen_at %}
+            <a class="button_class" href="{% url "election@edit" election.uuid %}">Edit</a> |
+          {% endif %}
+          {% if election.is_archived %}
+            [archived] |
+          {% endif %}
+          {% if admin_p %}
+            <a onclick="return window.confirm('Are you sure you want to copy this election?');" href="{% url "election@copy" election_uuid=election.uuid %}">Make copy of election</a> |
+            {% if election.is_archived %}
+              <a href="{% url "election@archive" election_uuid=election.uuid %}?archive_p=0">Unarchive it</a>
+            {% else %}
+              <a href="{% url "election@archive" election_uuid=election.uuid %}?archive_p=1">Archive election</a>
+            {% endif %}
+          {% endif %}
+        </td>
+        
+      </tr>
+    </table>
+    
+    
+
 <br />
 {% if admin_p %}
 {% if not election.private_p %}
@@ -36,7 +58,7 @@ this {{election.election_type}} is <u>not</u> featured on the front page.
 </p>
 
 </div>
-
+</div>
 
 <br />
 
@@ -47,7 +69,6 @@ this {{election.election_type}} is <u>not</u> featured on the front page.
 </div>
 
 <p>
-{% if election.help_email and admin_p%}Help Email Address: {{election.help_email}}<br />{% endif %}
 {% if election.voting_start_at %}Voting start at {{election.voting_start_at}}<br />{% endif %}
 {% if election.voting_end_at %}Voting end at {{election.voting_end_at}}<br />{% endif %}
 </p>

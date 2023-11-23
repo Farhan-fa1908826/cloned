@@ -152,8 +152,9 @@ Voters {{voters_page.start_index}} - {{voters_page.end_index}} (of {{total_voter
 </table>
 
 {% else %}
-<br /><br />
-<em>no voters.</em>
+<br />
+<em>As of now, there have been no participating voters.</em>
+<br><br><br>
 {% endif %}
 
 <button class="button_class next_button" onclick="redirectToTrustees()">Proceed</button>
@@ -172,7 +173,7 @@ Voters {{voters_page.start_index}} - {{voters_page.end_index}} (of {{total_voter
     // Check if the previous URL contains 'view'
     if (previousURL.includes('view')) {
       nextButton.style.display = 'none';
-      viewButton.innerText = 'Back';
+      
     }
     else {
       backButton.style.display = 'none';

@@ -747,6 +747,7 @@ margin: 50px;
   width: fit-content;
   font-weight: normal;
   /* height: 40px; */
+  font-size: unset;
 }
 
 .button_class:hover{
@@ -892,11 +893,12 @@ margin: 50px;
 }
 .card_with_options{
   flex-direction: column;
+  order: 1;
 }
 .action_div{
   width: 100%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   
 }
 .td_action{
@@ -939,6 +941,18 @@ margin: 50px;
 .select_numbers{
   width: 40px;
 }
-small_button{
-  width: ;
+.edit_question_div{
+  order: 0;
+  width: max-content;
+  margin-left: 100px;
+  text-align: left;
+}
+.add_button_center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.5rem;  
+}
+.footer_action *{
+  border: none;
 }

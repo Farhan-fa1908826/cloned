@@ -78,7 +78,8 @@
   function question_edit(q_num) {
     $('#question_form').hide();
     $('#q_edit_'+q_num).show();
-
+    $('.questions_cards').hide();
+    
     // set the default values for this question
     var form = $('#question_edit_' + q_num + '_form');
     var q_data = QUESTIONS[q_num];
@@ -104,6 +105,8 @@
   function question_edit_cancel(q_num) {
     $('#q_edit_'+q_num).hide();
     $('#q_view_'+q_num).show();
+    $('#question_form').show();
+    $('.questions_cards').show();
   }
 
   function question_update(q_num, form) {
@@ -158,7 +161,7 @@
         // Check if the previous URL contains 'view'
         if (previousURL.includes('view')) {
           nextButton.style.display = 'none';
-          backButton.innerText = 'Back';
+          
         }
         
       });

@@ -76,9 +76,10 @@
   }
 
   function question_edit(q_num) {
-    $('#q_view_'+q_num).hide();
+    $('#question_form').hide();
     $('#q_edit_'+q_num).show();
-
+    $('.questions_cards').hide();
+    
     // set the default values for this question
     var form = $('#question_edit_' + q_num + '_form');
     var q_data = QUESTIONS[q_num];
@@ -104,6 +105,8 @@
   function question_edit_cancel(q_num) {
     $('#q_edit_'+q_num).hide();
     $('#q_view_'+q_num).show();
+    $('#question_form').show();
+    $('.questions_cards').show();
   }
 
   function question_update(q_num, form) {
@@ -112,12 +115,12 @@
       save_questions(refresh);
   }
 
-  var DEFAULT_NUM_ANSWERS = 2;
+  var DEFAULT_NUM_ANSWERS = 3;
 
   function add_answer(el) {
     el = $(el);
     var num_answers = el.find('input.answer').length + 1;
-    el.find('tbody').append('<tr class="tr_class"><th>Answer #' + num_answers + '</th><td><input type="text" class="answer" name="answer_' + num_answers + '" size="70" /><br /><nobr>Link (optional, <tt>http</tt> or <tt>https</tt> only): <input type="url" name="answer_url_' + num_answers + '" width="50%" /></nobr></td></tr>');
+    el.find('tbody').append('<tr class="tr_class"><th>Choice #' + num_answers + '</th><td><input type="text" class="answer" name="answer_' + num_answers + '" size="70" /><br /><nobr>Link (optional, <tt>http</tt> or <tt>https</tt> only): <input type="url" name="answer_url_' + num_answers + '" width="50%" /></nobr></td></tr>');
     
   }
 
@@ -146,7 +149,7 @@
   </div>
 					
   <div id="back_div">
-    <button class="button_class back_button" onclick="goToPreviousPage()">Election View<span id="pageType"></span></button>
+    <button class="button_class back_button" onclick="goToPreviousPage()">Election Homepage<span id="pageType"></span></button>
     <button class="button_class next_button" onclick="redirectToNextPage()">Proceed<span id="pageType"></span></button>
     
     <script>
@@ -158,7 +161,7 @@
         // Check if the previous URL contains 'view'
         if (previousURL.includes('view')) {
           nextButton.style.display = 'none';
-          backButton.innerText = 'Back';
+          
         }
         
       });

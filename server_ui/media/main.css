@@ -7,7 +7,7 @@ body{
   margin: 0;
   padding: 0;
   /* background-image: url('./background_Helios3.png'); */
-  background-color: rgb(195, 195, 195);
+  /* background-color: rgb(195, 195, 195); */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: top;
@@ -86,9 +86,6 @@ body{
   margin-top: 0.5rem;
   /* width: 50%; */
 
-}
-
-.logged-in:hover{
 }
 
 .large-9{
@@ -501,10 +498,6 @@ button {
   align-items: center;
 }
 
-.send-login-btn{
-  /* margin-top: 1rem; */
-}
-
 .delete-btn{
   left: 0;
   margin-left: auto;
@@ -665,8 +658,9 @@ button {
 }
 
 table {
-  width: 100%;
+  width: 80%;
   border: none;
+  border-collapse: collapse;
 }
 
 td {
@@ -753,6 +747,7 @@ margin: 50px;
   width: fit-content;
   font-weight: normal;
   /* height: 40px; */
+  font-size: unset;
 }
 
 .button_class:hover{
@@ -867,4 +862,97 @@ margin: 50px;
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+#questions{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.Add_question{
+  text-align: center;
+  
+  margin: 0 auto; /* Center the form */
+  text-align: left; /* Align text to the left */
+  order: 0;
+  width: 60%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.Add_question h4 {
+  text-align: center; /* Center the heading */
+}
+
+#answer_table input[type="text"] , .answer_table input[type="text"]{
+  width: 100%; 
+  box-sizing: border-box; 
+}
+.card_with_options{
+  flex-direction: column;
+  order: 1;
+}
+.action_div{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  
+}
+.td_action{
+  width: 100%;  
+  display: block;
+}
+.answer_table{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.footer_action{
+  width: 100%;
+}
+.questions_cards {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px;
+  width: 100%;
+  font-size: 12px;
+}
+.questions_container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  order: 1;
+  width: 35%;
+}
+.question_options_div{
+  width: 100%;
+  display: flex;
+  text-align: left;
+  font-size: 12px;
+  
+}
+.question_options_div ul{
+  align-items: center;
+  font-size: 16px;
+}
+.select_numbers{
+  width: 40px;
+}
+.edit_question_div{
+  order: 0;
+  width: max-content;
+  margin-left: 100px;
+  text-align: left;
+}
+.add_button_center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.5rem;  
+}
+.footer_action *{
+  border: none;
 }

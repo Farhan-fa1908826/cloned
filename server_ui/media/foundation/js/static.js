@@ -1,8 +1,4 @@
 
-
-
-
-
 document.addEventListener('DOMContentLoaded', function () {
     const election_form = document.querySelector('.pretty');
     if (election_form){
@@ -18,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
         for (var i = 0; i < childrenDivs.length; i++) {
             var childDiv = childrenDivs[i];
             if(childDiv.classList.contains('question_card')){
-                // childDiv.classList.add('what-and-why');
+                childDiv.classList.add('what-and-why');
             }
         
             console.log(childDiv);

@@ -33,7 +33,7 @@
         <th>Action:</th>
         <td>
           {% if admin_p and not election.frozen_at %}
-            <a  href="{% url "election@edit" election.uuid %}">Edit</a> |
+            <a href="{% url "election@edit" election.uuid %}">Edit</a> |
           {% endif %}
           {% if admin_p %}
             <a onclick="return window.confirm('Are you sure you want to copy this election?');" href="{% url "election@copy" election_uuid=election.uuid %}">Make copy of election</a> |
@@ -107,15 +107,15 @@ Note: this {{election.election_type}} is <u>not</u> featured on the front page.
 <p style="font-size:1.5em;">[<a target="_blank" href="{{election.election_info_url}}" rel="noopener noreferrer">download candidate bios &amp; statements</a>]</p>
 {% endif %}
 <div class="req-container">
-  <div class="what-and-why req_card question_div">
+  <div class="req_card question_div what-and-why">
       <a href="{% url "election@questions" election.uuid %}">Questions ({% if election.questions %}{{election.questions|length}}{% else %}0{% endif %})</a>
   </div>
 
-  <div class="what-and-why req_card voters_div">
+  <div class="req_card voters_div what-and-why">
     <a href="{% url "election@voters@list-pretty" election.uuid %}">Voters &amp; Ballots</a>
   </div>
 
-  <div class="what-and-why req_card trustee_div">
+  <div class="req_card trustee_div what-and-why">
     <a href="{% url "election@trustees@view" election.uuid %}">Trustees ({{trustees|length}})</a>
   </div>
 </div>
@@ -168,7 +168,7 @@ once you do this, the election will be immediately open for voting.
 Tally computation is under way.<br />
 Reload this page in a couple of minutes.
 {% else %}
-<a href="{% url "election@compute-tally" election.uuid %}">compute encrypted tally</a><br />
+<a href="{% url "election@compute-tally" election.uuid %}">Compute encrypted tally</a><br />
 The encrypted votes will be combined into an encrypted tally. Once this is done,<br />
 trustees will be asked to provide their share of the decryption.
 {% endif %}

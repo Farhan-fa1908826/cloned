@@ -3,14 +3,14 @@
 {% block title %}Voters &amp; Ballot Tracking Center for {{election.name}}{% endblock %}
 {% block content %}
 
-<h3 class="title">{{election.name}} &mdash; Voters and Ballot Tracking Center <span style="font-size:0.7em;"></span></h3>
+<h3 class="title">Election: {{election.name}} &mdash; Voters and Ballot Tracking Center <span style="font-size:0.7em;"></span></h3>
 
 <p>
   <b>Who can vote?</b>
   {% if election.private_p %}
     {{election.pretty_eligibility|safe}}
   {% else %}
-    <em>Only the voters listed here</em>.
+    <em>Only the voters listed here</em>. 
   {% endif %}
 </p>
 
@@ -21,8 +21,8 @@
     <form method="post" action="{% url "election@voters@eligibility" election.uuid %}">
 
       <input type="hidden" name="csrf_token" value="{{csrf_token}}" />
-      <input type="radio" name="eligibility" value="openreg" {% if election.openreg and not election.eligibility %}CHECKED{% endif %} /> anyone can vote<br />
-      <input type="radio" name="eligibility" value="closedreg" {% if not election.openreg %}CHECKED{% endif %} /> only voters listed explicitly below can vote<br />
+      <input type="radio" name="eligibility" value="openreg" {% if election.openreg and not election.eligibility %}CHECKED{% endif %} /> Anyone can vote<br />
+      <input type="radio" name="eligibility" value="closedreg" {% if not election.openreg %}CHECKED{% endif %} /> Only voters listed explicitly below can vote<br />
 
       {% if categories %}
         <input type="radio" name="eligibility" value="limitedreg" {% if election.eligibility %}CHECKED{% endif %} /> only voters who are members of 
@@ -33,7 +33,7 @@
         </select>
         <br />
       {% endif %}
-      <input class="button" type="submit" value="update" />
+      <input class="button" type="submit" value="Update" />
     </form>
 
   {% endif %}
@@ -96,71 +96,85 @@
     {% if election.num_cast_votes %}
       {{election.num_cast_votes}} cast vote{% ifequal election.num_cast_votes 1 %}{% else %}s{% endifequal %}
     {% else %}
-      no votes yet
+      No votes yet
     {% endif %}
 </b>
 </p>
 
 {% if voters_page.has_previous %}
-<a href="{% url "election@voters@list-pretty" election.uuid %}?page={{voters_page.previous_page_number}}&limit={{limit}}&q={{q|urlencode}}">previous {{limit}}</a> &nbsp;&nbsp;
+<a href="{% url "election@voters@list-pretty" election.uuid %}?page={{voters_page.previous_page_number}}&limit={{limit}}&q={{q|urlencode}}">Previous {{limit}}</a> &nbsp;&nbsp;
 {% endif %}
 
 
 Voters {{voters_page.start_index}} - {{voters_page.end_index}} (of {{total_voters}})&nbsp;&nbsp;
 
 {% if voters_page.has_next %}
-<a href="{% url "election@voters@list-pretty" election.uuid %}?page={{voters_page.next_page_number}}&limit={{limit}}&q={{q|urlencode}}">next {{limit}}</a> &nbsp;&nbsp;
+<a href="{% url "election@voters@list-pretty" election.uuid %}?page={{voters_page.next_page_number}}&limit={{limit}}&q={{q|urlencode}}">Next {{limit}}</a> &nbsp;&nbsp;
 {% endif %}
-
 <table>
-<tr>
-{% if admin_p or not election.use_voter_aliases %}
-{% if admin_p %}
-<th>Actions</th>
-<th>Login</th>
-<th>Email Address</th>
-{% endif %}
-<th>Name</th>
-{% endif %}
+  <tr>
+    {% if admin_p or not election.use_voter_aliases %}
+      {% if admin_p %}
+      <th>#</th>
+        <th>Login</th>
+        <th>Email Address</th>
+      {% endif %}
+      <th>Name</th>
+    {% endif %}
 
-{% if election.use_voter_aliases %}
-<th>Alias</th>
-{% endif %}
-<th>Smart Ballot Tracker</th>
-</tr>
-{% for voter in voters %}
-<tr>
-{% if admin_p or not election.use_voter_aliases %}
-{% if admin_p %}
-<td style="white-space: nowrap;">
-{% if election.frozen_at %}
-[<a href="{% url "election@voters@email" election.uuid %}?voter_id={{voter.voter_login_id}}">email</a>]
-{% endif %}
-[<a onclick="return confirm('are you sure you want to remove {{voter.name}} ?');" href="{% url "election@voter@delete" election.uuid voter.uuid %}">x</a>]
-</td>
-<td class="center">{{voter.voter_type}}</td>
-<td>{{voter.voter_id}}</td>
-{% endif %}
-<td><img class="small-logo" src="/static/auth/login-icons/{{voter.voter_type}}.png" alt="{{voter.voter_type}}" /> {{voter.name}}</td>
-{% endif %}
-{% if election.use_voter_aliases %}
-<td>{{voter.alias}}</td>
-{% endif %}
-<td><tt style="font-size: 1.4em;">{% if voter.vote_hash %}{{voter.vote_hash}} <span style="font-size:0.8em;"><!-- no link for now --></span>{% else %}&mdash;{% endif %}</tt></td>
-</tr>
-{% endfor %}
+    {% if election.use_voter_aliases %}
+      <th>Alias</th>
+    {% endif %}
+    
+    <th>Smart Ballot Tracker</th>
+
+    {% if admin_p %}
+      <th>Actions</th>
+    {% endif %}
+  </tr>
+
+  {% for voter in voters %}
+    <tr>
+      <td>{{forloop.counter}}</td>
+      {% if admin_p or not election.use_voter_aliases %}
+        {% if admin_p %}
+          <td class="center">{{voter.voter_type}}</td>
+          <td>{{voter.voter_id}}</td>
+        {% endif %}
+        <td><img class="small-logo" src="/static/auth/login-icons/{{voter.voter_type}}.png" alt="{{voter.voter_type}}" /> {{voter.name}}</td>
+      {% endif %}
+      
+      {% if election.use_voter_aliases %}
+        <td>{{voter.alias}}</td>
+      {% endif %}
+      
+      <td><tt style="font-size: 1.4em;">{% if voter.vote_hash %}{{voter.vote_hash}} <span style="font-size:0.8em;"><!-- no link for now --></span>{% else %}&mdash;{% endif %}</tt></td>
+  
+
+      {% if admin_p %}
+        <td style="white-space: nowrap;">
+          {% if election.frozen_at %}
+            <a href="{% url "election@voters@email" election.uuid %}?voter_id={{voter.voter_login_id}}">Email</a> |
+          {% endif %}
+          <a onclick="return confirm('are you sure you want to remove {{voter.name}} ?');" href="{% url "election@voter@delete" election.uuid voter.uuid %}">Delete</a>
+        </td>
+      {% endif %}
+    </tr>
+  {% endfor %}
 </table>
+
 
 {% else %}
 <br />
 <em>As of now, there have been no participating voters.</em>
 <br><br><br>
 {% endif %}
+<div id="back_div">
 
-<button class="button_class next_button" onclick="redirectToTrustees()">Proceed</button>
+  <button class="button_class next_button" onclick="redirectToTrustees()">Proceed</button>
 
   <!-- Button to go back based on the previous URL -->
-<button class="button_class view_back" onclick="goBack()">Election Homepage</button>
+  <button class="button_class view_back" onclick="goBack()">Election Homepage</button>
 
 
 <script>
@@ -171,12 +185,12 @@ Voters {{voters_page.start_index}} - {{voters_page.end_index}} (of {{total_voter
     var viewButton = document.querySelector('.view_back');
 
     // Check if the previous URL contains 'view'
-    if (previousURL.includes('view')) {
-      nextButton.style.display = 'none';
+    if (previousURL.includes('question') || previousURL.includes('voters') ) {
+      nextButton.style.display = 'block';
       
     }
     else {
-      backButton.style.display = 'none';
+      nextButton.style.display = 'none';
     }
   });
   function redirectToTrustees() {
@@ -190,5 +204,6 @@ Voters {{voters_page.start_index}} - {{voters_page.end_index}} (of {{total_voter
     
   }
 </script>
+</div>
 <link rel="stylesheet" type="text/css" href="/static/boothcss/forms.css">
 {% endblock %}

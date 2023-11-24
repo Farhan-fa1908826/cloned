@@ -1,7 +1,9 @@
 {% extends TEMPLATE_BASE %}
 
 {% block content %}
-  <h2 class="title">{{election.name}} &mdash; Bulk Upload Voters <span style="font-size:0.7em;">[<a href="{% url "election@view" election.uuid %}">back to election</a>]</span></h2>
+  <h2 class="title">Election: {{election.name}} &mdash; Bulk Upload Voters 
+    
+  </h2>
 
  <form method="post" action="" id="upload_form" enctype="multipart/form-data">
 <p>
@@ -56,18 +58,24 @@
 
 <div class="buttons-container"> 
 <a href="{% url "election@view" election.uuid %}"> <button> Back to Election </button> </a>
-<form method="post" action="" id="upload_form" enctype="multipart/form-data">
- {% if error %}
-  <div style="color: red;">{{error}}</div>
-  {% endif %}
-    <input type="hidden" name="csrf_token" value="{{csrf_token}}" />
 
-    <input type="file" name="voters_file" />
-     {% comment %} <input type="submit" value="go" /> {% endcomment %}
-<button type="submit"> Proceed </button>
+<form method="post" action="" id="upload_form" enctype="multipart/form-data">
+  {% if error %}
+    <div style="color: red;">{{error}}</div>
+    {% endif %}
+      <input type="hidden" name="csrf_token" value="{{csrf_token}}" />
+
+      <input type="file" name="voters_file" />
+      {% comment %} <input type="submit" value="go" /> {% endcomment %}
+  <button type="submit"> Proceed </button>
 </form>
 </div>
-
+<div class="back_div">
+  <span style="font-size:0.7em;">
+    <a class="button_class" href="{% url "election@view" election.uuid %}">Election Homepage</a>
+  </span>
+  
+</div>
 {% comment %} <link = rel="stylesheet" type="text/css" href="/static/boothcss/forms.css"> {% endcomment %}
 
 {% endblock %}

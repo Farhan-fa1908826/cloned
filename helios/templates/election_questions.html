@@ -157,14 +157,31 @@
         var previousURL = document.referrer;
         var nextButton = document.querySelector('.next_button');
         var backButton = document.querySelector('.back_button');
+        var addquestion = document.querySelector('#question_form');
+        var questions_container = document.querySelector('#questions');
     
         // Check if the previous URL contains 'view'
-        if (previousURL.includes('view')) {
-          nextButton.style.display = 'none';
+        if (previousURL.includes('question')) {
+          nextButton.style.display = 'block';
           
+        } else {
+          nextButton.style.display = 'none';
         }
-        
-      });
+        var frozenAtString = "{{ election.frozen_at|default:'null' }}";
+        var regex = /\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\. \d{1,2}, \d{4}, \d{1,2}:\d{2} [apm]+\b/i;
+
+        if (regex.test(frozenAtString)) {
+          // The variable has a value similar to "Nov. 24, 2023, 1:02 p.m."
+          addquestion.style.display = 'none';
+          questions_container.classList.add('reg_open');
+        } else {
+          // The variable does not have a value similar to "Nov. 24, 2023, 1:02 p.m."
+          addquestion.style.display = 'block';
+          questions_container.classList.remove('reg_open');
+          console.log("9999");
+        }
+       });
+
       function redirectToNextPage() {
         var redirectURL = "{% url 'election@voters@list-pretty' election.uuid %}";
         window.location.href = redirectURL;

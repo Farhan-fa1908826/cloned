@@ -811,7 +811,7 @@ margin: 50px;
   border-right: silver 1px solid;
 }
 .election_overview td:last-child{
-  border: none;
+  /* border: none; */
 }
 
 .election_info{
@@ -946,7 +946,7 @@ margin: 50px;
   order: 0;
   width: max-content;
   margin-left: 100px;
-  text-align: left;
+  text-align: center;
 }
 .add_button_center{
   display: flex;
@@ -964,6 +964,56 @@ margin: 50px;
 #back_div{
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   margin-top: 1rem;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid #dddddd;
+  text-align: center; /* Center the text */
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+.election_overview {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.election_overview th, .election_overview td {
+  border: 1px solid #dddddd;
+  text-align: center; /* Center the text */
+  padding: 8px;
+}
+
+.election_overview tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+.reg_open {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.reg_open > div {
+  margin: 5px; /* Adjust the margin as needed */
+  width: fit-content;
+}
+.reg_open > div:first-child {
+  flex-direction: row;
+}
+.reg_open > div:first-child {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.reg_open > div:first-child > div {
+  flex-basis: calc(33.333% - 10px); /* 10px is for margins, adjust as needed */
+  margin: 5px; /* Adjust the margin as needed */
 }

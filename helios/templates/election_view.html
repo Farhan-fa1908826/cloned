@@ -3,7 +3,7 @@
 {% block content %}
 <div class="election_info_container">
 <div class="election_info">
-  <h2>Election Overview</h2>
+  <h2>Election Homepage</h2>
     <table class="election_overview">
       <tr>
         <th>Election Name:</th>
@@ -27,7 +27,7 @@
         <td>{% if election.voting_end_at %}{{election.voting_end_at}}<br />{% else %}--:-- am/pm{% endif %}</td>
         <th>Archived:</th>
         {% if election.is_archived %}
-        td>Yes</td>
+        <td>Yes</td>
         {% else %}
         <td>No</td>
         {% endif %}

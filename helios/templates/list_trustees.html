@@ -4,7 +4,7 @@
 {% block title %}Trustees for {{election.name}}{% endblock %}
 
 {% block content %}
-  <h3 class="title what_and_wa">{{election.name}} &mdash; Trustees <span style="font-size:0.7em;"></span></h3>
+  <h3 class="title what_and_wa">Election: {{election.name}} &mdash; Trustees <span style="font-size:0.7em;"></span></h3>
 
 <div class="what-and-why trustee-home">
 
@@ -52,8 +52,12 @@
       <th>Name</th>
       <th>Email</th>
       <th>Public Key Fingerprint</th>
-      <th>Tally Status</th>
-      <th>Actions</th>
+      {% if election.encrypted_tally %}
+        <th>Tally Status</th>
+      {% endif %}
+      {% if not election.frozen_at %}
+        <th>Actions</th>
+      {% endif %}
     </tr>
   </thead>
   <tbody>
@@ -77,7 +81,7 @@
               <em>waiting for this trustee's tally</em>
             {% endif %}
           {% endif %}
-          N/A
+
         </td>
         <td>
           {% if admin_p %}

@@ -134,7 +134,7 @@ body{
 
 .login-container{
   position: relative;
-  border: 1px solid green;
+  /* border: 1px solid green;   */
   height: fit-content;
 }
 
@@ -319,7 +319,7 @@ button {
   /* width: 800px; */
   display: flex;
   gap: 0rem;
-  border: 1px solid red;
+  /* border: 1px solid red; */
   /* justify-content: flex-end; */
   /* transition: height 0.3s; */
 }
@@ -328,7 +328,7 @@ button {
 } */
 .question{
   text-align: left;
-  border: 1px red solid;
+  /* border: 1px red solid; */
 }
 
 /* .log-in:hover + .hidden-login-options {
@@ -367,7 +367,7 @@ button {
 .privacy{
   width: fit-content;
   height: fit-content;
-  border: 1px solid rebeccapurple;
+  /* border: 1px solid rebeccapurple; */
 
 }
 
@@ -481,7 +481,7 @@ button {
   /* flex-direction: column; */
   justify-content: space-between;
   align-items: center;
-  border: 1px solid red;
+  /* border: 1px solid red; */
   /* max-width: 1500px; The main content will span the whole page width */
 }
 
@@ -508,7 +508,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid red;
+  
   /* height: fit-content; */
 }
 
@@ -518,7 +518,7 @@ button {
   height: 1.5rem; 
   display: flex; 
   align-items: center; 
-  border: 1px solid red; 
+  /* border: 1px solid red;  */
 }
 .back-to-election a{
   margin: 0 auto; 
@@ -614,7 +614,7 @@ button {
 }
 
 .generate-btn{
-  border: 1px solid red;
+  /* border: 1px solid red; */
   margin-left: 4rem;
 }
 
@@ -1016,4 +1016,33 @@ tr:nth-child(even) {
 .reg_open > div:first-child > div {
   flex-basis: calc(33.333% - 10px); /* 10px is for margins, adjust as needed */
   margin: 5px; /* Adjust the margin as needed */
+}
+.audit_p{
+  margin-top: 1rem;
+  font-size: small;
+}
+.last_line{
+  margin-right: 1rem;
+}
+.kh{
+  display: block;
+  margin-top: 100px;
+}
+#instructions{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.comp_button{
+  border: navy 1px solid;
+  width: 100%;
+  align-items: center;
+}
+.send_div{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 1rem;
 }

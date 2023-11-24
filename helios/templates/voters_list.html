@@ -113,9 +113,9 @@ Voters {{voters_page.start_index}} - {{voters_page.end_index}} (of {{total_voter
 {% endif %}
 <table>
   <tr>
+    <th>#</th>
     {% if admin_p or not election.use_voter_aliases %}
       {% if admin_p %}
-      <th>#</th>
         <th>Login</th>
         <th>Email Address</th>
       {% endif %}

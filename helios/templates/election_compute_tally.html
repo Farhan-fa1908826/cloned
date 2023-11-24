@@ -8,17 +8,17 @@
 <div id="instructions">
 {% if election.num_cast_votes %}
 <p>
-    You are about to compute the encrypted tally for election <b>{{election.name}}</b>.
+You are about to compute the encrypted tally for election <b>{{election.name}}</b>.
 </p>
 
 <p>
-    Once you do this, voters will no longer be able to cast a ballot.
+Once you do this, voters will no longer be able to cast a ballot.
 </p>
 
-<form method="post" action="" onsubmit="alert('ok, tally has begun')" class="pretty">
+<form method="post" action="" onsubmit="alert('ok, tally has begun')" >
 <input type="hidden" name="csrf_token" value="{{csrf_token}}" />
     
-<input class="button" type="submit" value="compute encrypted tally!" />
+<input class="button comp_button" type="submit" value="Compute encrypted tally!" />
 <button onclick="document.location='{% url "election@view" election.uuid %}'; return false;">never mind</button>
 </form>
 {% endif %}

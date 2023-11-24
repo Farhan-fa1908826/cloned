@@ -36,14 +36,14 @@
         <th>Action:</th>
         <td>
           {% if admin_p and not election.frozen_at %}
-            <a href="{% url "election@edit" election.uuid %}">Edit</a> |
+            <a class="button_class_table" href="{% url "election@edit" election.uuid %}">Edit</a> |
           {% endif %}
           {% if admin_p %}
-            <a onclick="return window.confirm('Are you sure you want to copy this election?');" href="{% url "election@copy" election_uuid=election.uuid %}">Make copy of election</a> |
+            <a class="button_class_table" onclick="return window.confirm('Are you sure you want to copy this election?');" href="{% url "election@copy" election_uuid=election.uuid %}">Copy election</a> |
             {% if election.is_archived %}
-              <a href="{% url "election@archive" election_uuid=election.uuid %}?archive_p=0">Unarchive it</a>
+              <a class="button_class_table" href="{% url "election@archive" election_uuid=election.uuid %}?archive_p=0">Unarchive it</a>
             {% else %}
-              <a href="{% url "election@archive" election_uuid=election.uuid %}?archive_p=1">Archive election</a>
+              <a class="button_class_table" href="{% url "election@archive" election_uuid=election.uuid %}?archive_p=1">Archive election</a>
             {% endif %}
           {% endif %}
         </td>
@@ -272,6 +272,7 @@ This election is <em>private</em>. You are signed in as eligible voter <em>{{vot
 </div>
 
 {% else %}
+
 <span class="highlight-box round">
   voting is not yet open
 </span> 
@@ -319,7 +320,7 @@ Anyone can vote in this election.
 {% endif %}
 
 {% if admin_p and election.voting_ends_at and not election.tallying_started_at %}
-<br /><a href="{% url "election@extend" election.uuid %}">extend voting</a><br />
+<br /><a class="extend_button" href="{% url "election  @extend" election.uuid %}">Extend voting</a><br />
 {% endif %}
 
 <div style="background: lightyellow; padding:5px; padding-left: 10px; margin-top: 15px; border: 1px solid #aaa;" class="round">
@@ -350,7 +351,7 @@ Anyone can vote in this election.
 {% if not election.voting_has_started %}
 <p style="font-size: 1.2em;">
   <br>
-  <a href="{{SECURE_URL_HOST}}/booth/vote.html?election_url={% url "election@home" election.uuid %}">preview booth</a>
+  <a href="{{SECURE_URL_HOST}}/booth/vote.html?election_url={% url "election@home" election.uuid %}">Preview booth</a>
 </p>
 {% endif %}  
 

@@ -45,8 +45,8 @@
 
 {% else %}
 
-<table class="trustee-table">
-  <thead>
+<table class="election_overview">
+  
     <tr>
       <th>Trustee Number</th>
       <th>Name</th>
@@ -59,8 +59,7 @@
         <th>Actions</th>
       {% endif %}
     </tr>
-  </thead>
-  <tbody>
+  
     {% for t in trustees %}
       <tr>
         <td>{{ forloop.counter }}</td>
@@ -73,16 +72,15 @@
             No public key uploaded yet.
           {% endif %}
         </td>
-        <td>
-          {% if election.encrypted_tally %}
+        {% if election.encrypted_tally %}
+          <td>
             {% if t.decryption_factors %}
               <b>tally recorded for this trustee.</b>
             {% else %}
               <em>waiting for this trustee's tally</em>
             {% endif %}
-          {% endif %}
-
-        </td>
+          </td>
+        {% endif %}
         <td>
           {% if admin_p %}
             {% if t.secret_key %}
@@ -99,8 +97,9 @@
         </td>
       </tr>
     {% endfor %}
-  </tbody>
+  
 </table>
+
 
 
 

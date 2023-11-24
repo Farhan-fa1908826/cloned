@@ -932,6 +932,7 @@ margin: 50px;
   display: flex;
   text-align: left;
   font-size: 12px;
+  flex-direction: column;
   
 }
 .question_options_div ul{
@@ -955,4 +956,14 @@ margin: 50px;
 }
 .footer_action *{
   border: none;
+}
+.ul_div{
+  margin-left: 50px;
+  
+}
+#back_div{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
 }

@@ -2,16 +2,17 @@
   {#foreach $T.questions as question}
     <div id="q_view_{$T.question$index}" class="card questions_cards card_with_options">
       <h4>
-
         Question {$T.question$index + 1}:{$T.question.question} <br>
-        Question parameters: ({$T.question.choice_type}, select between {$T.question.min} and
-        {#if $T.question.max != null}{$T.question.max}{#else}unlimited{#/if} 
-        choices, result type {$T.question.result_type}{#if $T.question.randomize_answer_order}, random choice Order{#/if}.)
-    
+        
+        Question parameters: <ul class="ul_div">
+          <li>Voter can select between {$T.question.min} and {#if $T.question.max != null}{$T.question.max}{#else}unlimited{#/if} choices</li>
+          <li>Result type: {$T.question.result_type}</li>
+          <li>Random choices: {#if $T.question.randomize_answer_order}Yes{#else}No{#/if}</li>
+        </ul>
       </h4>
       <div class="question_options_div">
         <h4>Question choices:</h4>
-        <ul>
+        <ul class="ul_div">
           {#foreach $T.question.answers as answer}
             <li> 
               {$T.answer}

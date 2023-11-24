@@ -1003,7 +1003,7 @@ tr:nth-child(even) {
 
 .reg_open > div {
   margin: 5px; /* Adjust the margin as needed */
-  width: fit-content;
+  width: 100%;
 }
 .reg_open > div:first-child {
   flex-direction: row;

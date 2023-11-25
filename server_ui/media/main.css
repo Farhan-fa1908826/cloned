@@ -1113,3 +1113,16 @@ tr:nth-child(even) {
 .election_title{
   margin-bottom: 2rem;
 }
+.rotate {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease; /* Optional: Add a smooth transition effect */
+}
+.header-with-icon {
+  cursor: pointer;
+  color: black; /* Set the default color of the text */
+  transition: color 0.3s ease; /* Add a smooth transition effect for the color change */
+}
+
+.header-with-icon:hover {
+  color: #2ba6cb; /* Set the color to change to when hovered */
+}

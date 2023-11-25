@@ -57,7 +57,7 @@
 
 {% if admin_p %}
   <!-- Add a Voter: WORK HERE-->
-  {% if upload_p and not election.openreg and election.private_p%}
+  {% if upload_p and election.private_p  %}
     <p>
       <a class="button" href="{% url "election@voters@upload" election_uuid=election.uuid %}">Bulk upload voters</a>
     </p>

@@ -46,17 +46,17 @@ SHOW_LOGIN_OPTIONS = (get_from_env('SHOW_LOGIN_OPTIONS', '1') == '1')
 # to display who created the election
 SHOW_USER_INFO = (get_from_env('SHOW_USER_INFO', '1') == '1')
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',  # or 'django.db.backends.postgresql' depending on your setup
-#         'NAME': 'helios',
-#         'USER': 'postgres',
-#         'PASSWORD': 'lightening789',  # Replace with your actual password
-#         'HOST': 'localhost',  # This is the default if your PostgreSQL is running on the same machine
-#         'PORT': '5432',  # This is the default PostgreSQL port
-#         'CONN_MAX_AGE': 600,  # Optional setting for database connection timeout
-#     },
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',  # or 'django.db.backends.postgresql' depending on your setup
+        'NAME': 'helios',
+        'USER': 'postgres',
+        'PASSWORD': 'lightening789',  # Replace with your actual password
+        'HOST': 'localhost',  # This is the default if your PostgreSQL is running on the same machine
+        'PORT': '5432',  # This is the default PostgreSQL port
+        'CONN_MAX_AGE': 600,  # Optional setting for database connection timeout
+    },
+}
 
 # DATABASES = {
 #     'default': {
@@ -70,17 +70,17 @@ SHOW_USER_INFO = (get_from_env('SHOW_USER_INFO', '1') == '1')
 #     },
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',  # or 'django.db.backends.postgresql' depending on your setup
-        'NAME': 'helios',
-        'USER': 'farhan',
-        'PASSWORD': '123',  # Replace with your actual password
-        'HOST': 'localhost',  # This is the default if your PostgreSQL is running on the same machine
-        'PORT': '5432',  # This is the default PostgreSQL port
-        'CONN_MAX_AGE': 600,  # Optional setting for database connection timeout
-    },
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',  # or 'django.db.backends.postgresql' depending on your setup
+#         'NAME': 'helios',
+#         'USER': 'farhan',
+#         'PASSWORD': '123',  # Replace with your actual password
+#         'HOST': 'localhost',  # This is the default if your PostgreSQL is running on the same machine
+#         'PORT': '5432',  # This is the default PostgreSQL port
+#         'CONN_MAX_AGE': 600,  # Optional setting for database connection timeout
+#     },
+# }
 #lightening789',
 
 

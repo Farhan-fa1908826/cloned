@@ -80,13 +80,13 @@
             <tr><th>Question:</th><td><input type="text" name="question" size="70" /></td></tr>
           </tbody>
           <tfoot class="footer_action"> 
-            <tr class="add_button_center"><td><a class="button_class" href="javascript:add_answers($('#answer_table_{$T.question$index}'),1)">Add 1 more choice</a></tr></td>
+            <tr class="add_button"><td><a class="button_class_table" href="javascript:add_answers($('#answer_table_{$T.question$index}'),1)">Add 1 more choice</a></tr></td>
             
             <tr class="td_action">
                 <td class="td_action">
                   <div class="action_div">
-                    <input class="button_class" type="reset" value="cancel" onclick="question_edit_cancel({$T.question$index});" />
-                    <input class="button_class" type="submit" value="update question" /> 
+                    <input class="button_class_table" type="reset" value="cancel" onclick="question_edit_cancel({$T.question$index});" />
+                    <input class="button_class_table" type="submit" value="update question" /> 
                   </div>
                 </td>
             </tr>
@@ -154,8 +154,8 @@
 
       </table>
       <div class="action_div">
-        <a class="button_class" href="javascript:add_answers($('#answer_table'), 1)">Add 1 more choice</a>
-        <input class="button_class" type="submit" value="Add question" />
+        <a class="button_class_table" href="javascript:add_answers($('#answer_table'), 1)">Add 1 more choice</a>
+        <input class="button_class_table" type="submit" value="Add question" />
       </div>
       
     </form>

@@ -1086,12 +1086,7 @@ tr:nth-child(even) {
   width: 100%;
   justify-content: space-around;
 }
-.trustee_parent_div{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
+
 .trustee_div{
   display: flex;
   flex-direction: column;
@@ -1108,4 +1103,13 @@ tr:nth-child(even) {
 }
 .cast_button{
   margin-top: 1rem;
+}
+.voters_parent_div{
+  border: 1px solid red;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.election_title{
+  margin-bottom: 2rem;
 }

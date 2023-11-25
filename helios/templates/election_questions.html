@@ -161,11 +161,11 @@
         var questions_container = document.querySelector('#questions');
     
         // Check if the previous URL contains 'view'
-        if (previousURL.includes('elections')) {
+        if (previousURL.includes('elections/new')) {
           nextButton.style.display = 'block';
-          
         } else {
           nextButton.style.display = 'none';
+          
         }
         var frozenAtString = "{{ election.frozen_at|default:'null' }}";
         var regex = /\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\. \d{1,2}, \d{4}, \d{1,2}:\d{2} [apm]+\b/i;
@@ -183,7 +183,12 @@
        });
 
       function redirectToNextPage() {
-        var redirectURL = "{% url 'election@voters@list-pretty' election.uuid %}";
+        //if election is private redirect to voters list
+        //if not redirect to trustee page
+        if ("{{election.private_p}}" == "True")
+          var redirectURL = "{% url 'election@voters@list-pretty' election.uuid %}";
+        else
+          var redirectURL = "{% url 'election@trustees@view' election.uuid %}";
         window.location.href = redirectURL;
       }
     

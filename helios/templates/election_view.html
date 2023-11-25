@@ -36,10 +36,10 @@
         <th>Action:</th>
         <td>
           {% if admin_p and not election.frozen_at %}
-            <a class="button_class_table" href="{% url "election@edit" election.uuid %}">Edit</a> |
+            <a class="button_class_table" href="{% url "election@edit" election.uuid %}">Edit</a> 
           {% endif %}
           {% if admin_p %}
-            <a class="button_class_table" onclick="return window.confirm('Are you sure you want to copy this election?');" href="{% url "election@copy" election_uuid=election.uuid %}">Copy election</a> |
+            <a class="button_class_table" onclick="return window.confirm('Are you sure you want to copy this election?');" href="{% url "election@copy" election_uuid=election.uuid %}">Copy election</a>
             {% if election.is_archived %}
               <a class="button_class_table" href="{% url "election@archive" election_uuid=election.uuid %}?archive_p=0">Unarchive it</a>
             {% else %}
@@ -155,13 +155,13 @@ Note: this {{election.election_type}} is <u>not</u> featured on the front page.
 <br />
 {% endfor %}
 {% else %}
-<a href="{% url "election@freeze" election.uuid %}">Freeze ballot and open election.</a>
+<a href="{% url "election@freeze" election.uuid %}">Freeze and open election.</a>
 <br />
 {% if election.voting_starts_at %}
-once you do this, the election will be ready for voting and will open automatically<br />
+Once you do this, the election will be ready for voting and will open automatically<br />
 at {{election.voting_starts_at}}, as per your settings.
 {% else %}
-once you do this, the election will be immediately open for voting.
+Once you do this, the election will be immediately open for voting.
 {% endif %}
 {% endif %}
 

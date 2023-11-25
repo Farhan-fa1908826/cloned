@@ -509,9 +509,13 @@ form.prettyform {
 }
 
 .trustee-home{
-    width: 100%;
+    width: fit-content;
     /* border: 1px solid red; */
     margin-top: 0.5rem;
+    background: none;
+    box-shadow: none;
+    border: 1px solid #ccc;
+    border-radius: 30px;
 }
 
 .one-trustee{

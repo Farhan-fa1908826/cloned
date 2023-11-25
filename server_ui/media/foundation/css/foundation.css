@@ -4740,3 +4740,15 @@ a.th {
 .dropdown_dev{
   text-align: left;
 }
+.back_div{
+  display: flex;
+  justify-content: space-around;
+}
+.consistent-style {
+  width: 150px;
+  height: 40px;
+  font-size: 14px;
+  font-family: 'Arial', sans-serif; /* Set your preferred font-family */
+  text-align: center;
+  /* Add other styles as needed */
+}

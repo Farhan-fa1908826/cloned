@@ -9,7 +9,7 @@ voter_id = '{{voter.voter_id}}';
 {% endif %}
 </script>
 
-  <h2 class="title">{{election.name}} &mdash; Contact Voters <span style="font-size:0.7em;">[<a href="{% url "election@view" election.uuid %}">back to election</a>]</span></h2>
+  <h2 class="title">Election: {{election.name}} &mdash; Contact Voters </h2>
 
 {% if voter %}  
   <p>
@@ -18,7 +18,7 @@ voter_id = '{{voter.voter_id}}';
 {% endif %}
 
 <p>
-<b>Templates</b>:
+<b>Email templates</b>:
 
 {% for template_option in templates %}
 {% if template_option.0 == template %}
@@ -43,11 +43,12 @@ You may tweak the subject and add a custom message using the form below.
     <input type="hidden" name="csrf_token" value="{{csrf_token}}" />
     <input type="hidden" name="template" value="{{template}}" />
     <input type="hidden" name="voter_id" value="{{voter.voter_login_id}}" />
-    <table class="pretty">
+    <table>
      {{email_form.as_table}}
      </table>
-  <div>
-  <label for="">&nbsp;</label><input type="submit" value="Send" id="send_button" class="button" />
+  <div class="send_div back_div">
+  <a class="button_class" href="{% url "election@view" election.uuid %}">Election Homepage</a>
+  <input type="submit" value="Send Email" id="send_button" class="button_class" />
   </div>
   </form>
   
@@ -55,7 +56,7 @@ You may tweak the subject and add a custom message using the form below.
   </div>
   
   <div id="done" style="display:none;">
-    Done, go <a href="{% url "election@view" election.uuid %}">back to election</a>.
+    Done, go <a href="{% url "election@view" election.uuid %}">Back to election</a>.
   </div>
 
   <div id="error" style="display:none;">

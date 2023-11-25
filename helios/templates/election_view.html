@@ -3,16 +3,13 @@
 {% block content %}
 <div class="election_info_container">
 <div class="election_info">
-  <h2>Election Overview</h2>
+  <h2>Election Homepage</h2>
     <table class="election_overview">
       <tr>
         <th>Election Name:</th>
 
-        {% if election.is_archived %}
-        <td>{{ election.name }} (Archived)</td>
-        {% else %}
         <td>{{ election.name }}</td>
-        {% endif %}
+        
         <th>Election Owner:</th>
         <td>{{ election.admin.name }}</td>
         <th>Election Type:</th>
@@ -28,22 +25,29 @@
         <td>{% if election.voting_start_at %}{{election.voting_start_at}}<br />{% else %}  --:-- am/pm {% endif %}  </td>
         <th>Election ends at:</th>
         <td>{% if election.voting_end_at %}{{election.voting_end_at}}<br />{% else %}--:-- am/pm{% endif %}</td>
+        <th>Archived:</th>
+        {% if election.is_archived %}
+        <td>Yes</td>
+        {% else %}
+        <td>No</td>
+        {% endif %}
         
-        
+        {% if admin_p %}
         <th>Action:</th>
         <td>
           {% if admin_p and not election.frozen_at %}
-            <a href="{% url "election@edit" election.uuid %}">Edit</a> |
+            <a class="button_class_table" href="{% url "election@edit" election.uuid %}">Edit</a> |
           {% endif %}
           {% if admin_p %}
-            <a onclick="return window.confirm('Are you sure you want to copy this election?');" href="{% url "election@copy" election_uuid=election.uuid %}">Make copy of election</a> |
+            <a class="button_class_table" onclick="return window.confirm('Are you sure you want to copy this election?');" href="{% url "election@copy" election_uuid=election.uuid %}">Copy election</a> |
             {% if election.is_archived %}
-              <a href="{% url "election@archive" election_uuid=election.uuid %}?archive_p=0">Unarchive it</a>
+              <a class="button_class_table" href="{% url "election@archive" election_uuid=election.uuid %}?archive_p=0">Unarchive it</a>
             {% else %}
-              <a href="{% url "election@archive" election_uuid=election.uuid %}?archive_p=1">Archive election</a>
+              <a class="button_class_table" href="{% url "election@archive" election_uuid=election.uuid %}?archive_p=1">Archive election</a>
             {% endif %}
           {% endif %}
-        </td>    
+        </td>
+        {% endif %}    
       </tr>
     </table>
     
@@ -250,15 +254,15 @@ but has been extended until {{ election.voting_extended_until }} (UTC).
 {% else %}
 {% if election.voting_ends_at %}
 <br />
-This {{election.election_type}} is scheduled to end at {{election.voting_ends_at}} (UTC).
+
 {% else %}
 This {{election.election_type}} ends at the administrator's discretion.
 {% endif %}
-<br />
+
 {% endif %}
 
 {% if election.private_p and voter %}
-<br />
+
 This election is <em>private</em>. You are signed in as eligible voter <em>{{voter.name}}</em>.
 {% endif %}
 
@@ -266,11 +270,12 @@ This election is <em>private</em>. You are signed in as eligible voter <em>{{vot
   You do not have Java installed in your browser.<br />At this time, Helios requires Java.<br />
   Visit <a target="_new" href="http://java.sun.com">java.sun.com</a> to install it.
 </div>
-<br />
+
 {% else %}
+
 <span class="highlight-box round">
   voting is not yet open
-</span> <br /><br />
+</span> 
 {% endif %}
 
 {% if user %}
@@ -293,7 +298,7 @@ You are <em>not eligible</em> to vote in this {{election.election_type}}.
 {% endif %}
 {% else %}
 You are <em>not eligible</em> to vote in this {{election.election_type}}.
-<br />
+
 {% endif %}
 {% endif %}
 {% endif %}
@@ -315,7 +320,7 @@ Anyone can vote in this election.
 {% endif %}
 
 {% if admin_p and election.voting_ends_at and not election.tallying_started_at %}
-<br /><a href="{% url "election@extend" election.uuid %}">extend voting</a><br />
+<br /><a class="extend_button" href="{% url "election  @extend" election.uuid %}">Extend voting</a><br />
 {% endif %}
 
 <div style="background: lightyellow; padding:5px; padding-left: 10px; margin-top: 15px; border: 1px solid #aaa;" class="round">
@@ -336,7 +341,7 @@ Anyone can vote in this election.
 </p>
 {% endif %}
 
-<p style="font-size: 1.3em;">
+<p class="audit_p">
 <a class="button_class" href="{% url "election@voters@list-pretty" election.uuid %}">Ballot Tracking Center</a> &nbsp; &nbsp;
 <a class="button_class" href="{% url "election@audited-ballots" election.uuid %}">Audited Ballots</a>
 </p>
@@ -346,7 +351,7 @@ Anyone can vote in this election.
 {% if not election.voting_has_started %}
 <p style="font-size: 1.2em;">
   <br>
-  <a href="{{SECURE_URL_HOST}}/booth/vote.html?election_url={% url "election@home" election.uuid %}">preview booth</a>
+  <a href="{{SECURE_URL_HOST}}/booth/vote.html?election_url={% url "election@home" election.uuid %}">Preview booth</a>
 </p>
 {% endif %}  
 

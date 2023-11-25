@@ -4,7 +4,7 @@
 {% block title %}Trustees for {{election.name}}{% endblock %}
 
 {% block content %}
-  <h3 class="title what_and_wa">{{election.name}} &mdash; Trustees <span style="font-size:0.7em;"></span></h3>
+  <h3 class="title what_and_wa">Election: {{election.name}} &mdash; Trustees <span style="font-size:0.7em;"></span></h3>
 
 <div class="what-and-why trustee-home">
 
@@ -45,18 +45,21 @@
 
 {% else %}
 
-<table class="trustee-table">
-  <thead>
+<table class="election_overview">
+  
     <tr>
       <th>Trustee Number</th>
       <th>Name</th>
       <th>Email</th>
       <th>Public Key Fingerprint</th>
-      <th>Tally Status</th>
-      <th>Actions</th>
+      {% if election.encrypted_tally %}
+        <th>Tally Status</th>
+      {% endif %}
+      {% if not election.frozen_at %}
+        <th>Actions</th>
+      {% endif %}
     </tr>
-  </thead>
-  <tbody>
+  
     {% for t in trustees %}
       <tr>
         <td>{{ forloop.counter }}</td>
@@ -69,15 +72,15 @@
             No public key uploaded yet.
           {% endif %}
         </td>
-        <td>
-          {% if election.encrypted_tally %}
+        {% if election.encrypted_tally %}
+          <td>
             {% if t.decryption_factors %}
               <b>tally recorded for this trustee.</b>
             {% else %}
               <em>waiting for this trustee's tally</em>
             {% endif %}
-          {% endif %}
-        </td>
+          </td>
+        {% endif %}
         <td>
           {% if admin_p %}
             {% if t.secret_key %}
@@ -94,8 +97,9 @@
         </td>
       </tr>
     {% endfor %}
-  </tbody>
+  
 </table>
+
 
 
 
@@ -109,7 +113,7 @@
 
     // Check if the previous URL contains 'view'
     if (previousURL.includes('view')) {
-      nextButton.innerText = 'Back';
+      nextButton.innerText = 'Election Homepage';
       
     }
  

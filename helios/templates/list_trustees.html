@@ -4,6 +4,9 @@
 {% block title %}Trustees for {{election.name}}{% endblock %}
 
 {% block content %}
+<div class="trustee_parent_div">
+  
+
   <h3 class="title what_and_wa">Election: {{election.name}} &mdash; Trustees <span style="font-size:0.7em;"></span></h3>
 
 <div class="what-and-why trustee-home">
@@ -21,14 +24,14 @@
   You may add additional trustees if you want, and you can even remove the Helios trustee.<br />
   <b>However, we recommend you do this only if you have a solid understanding of the trustee's role.</b>
 </p>
-
+<p>
+  <a class="button_class_table" style="color: #ecf0f1;" onclick="return(confirm('Adding your own trustee requires a good bit more work to tally the election.\nYou will need to have trustees generate keypairs and safeguard their secret key.\n\nIf you are not sure what that means, we strongly recommend\nclicking Cancel and letting Helios tally the election for you.'));" href="{% url "election@trustees@new" election.uuid %}">Add a Trustee</a>
+</p>
 </div>
-
+</div>
 {% if admin_p %}
 <div class="add-trustee-container">
-<p>
-    <a class="button_class" style="color: #ecf0f1;" onclick="return(confirm('Adding your own trustee requires a good bit more work to tally the election.\nYou will need to have trustees generate keypairs and safeguard their secret key.\n\nIf you are not sure what that means, we strongly recommend\nclicking Cancel and letting Helios tally the election for you.'));" href="{% url "election@trustees@new" election.uuid %}">Add a Trustee</a>
-</p>
+
 </div>
 {% if not election.has_helios_trustee %}
 <div class="add-trustee-container">
@@ -114,7 +117,6 @@
     // Check if the previous URL contains 'view'
     if (previousURL.includes('view')) {
       nextButton.innerText = 'Election Homepage';
-      
     }
  
   });

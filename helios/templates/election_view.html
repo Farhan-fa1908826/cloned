@@ -36,10 +36,10 @@
         <th>Action:</th>
         <td>
           {% if admin_p and not election.frozen_at %}
-            <a class="button_class_table" href="{% url "election@edit" election.uuid %}">Edit</a> |
+            <a class="button_class_table" href="{% url "election@edit" election.uuid %}">Edit</a> 
           {% endif %}
           {% if admin_p %}
-            <a class="button_class_table" onclick="return window.confirm('Are you sure you want to copy this election?');" href="{% url "election@copy" election_uuid=election.uuid %}">Copy election</a> |
+            <a class="button_class_table" onclick="return window.confirm('Are you sure you want to copy this election?');" href="{% url "election@copy" election_uuid=election.uuid %}">Copy election</a>
             {% if election.is_archived %}
               <a class="button_class_table" href="{% url "election@archive" election_uuid=election.uuid %}?archive_p=0">Unarchive it</a>
             {% else %}
@@ -78,9 +78,9 @@ Note: this {{election.election_type}} is <u>not</u> featured on the front page.
 {% if election.description_bleached %}
 
 <div id="descriptionContainer">
-  <div class="header-with-icon" onclick="toggleDescription()">
-    <h4>Election Description  </h2>
-    <span class="header-icon">▼</span> 
+  <div class="header-with-icon"  onclick="toggleDescription()">
+    <h4 onmouseover="this.style.color='#2ba6cb'" onmouseout="this.style.color='black'">Election Description</h4>
+    &nbsp;&nbsp;<span class="header-icon">⋁</span>
   </div>
   <textarea id="descriptionTextArea">{{election.description_bleached|safe}}</textarea>
 </div>
@@ -88,16 +88,16 @@ Note: this {{election.election_type}} is <u>not</u> featured on the front page.
 <script>
   function toggleDescription() {
     var descriptionTextArea = document.getElementById("descriptionTextArea");
-    var headerIcon = document.querySelector(".header-icon");
+    var headerIcon = document.querySelector(".header-icon  ");
 
-    if (descriptionTextArea.style.display === "none") {
+    if (descriptionTextArea.style.display === "none" || descriptionTextArea.style.display === "") {
       descriptionTextArea.style.display = "block";
-      headerIcon.innerText = "▲"; // Change to an upward arrow when expanded
+      headerIcon.classList.add("rotate"); // Add the 'rotate' class to rotate the arrow
       // Set height to "auto" to adjust based on content
       descriptionTextArea.style.height = "auto";
     } else {
       descriptionTextArea.style.display = "none";
-      headerIcon.innerText = "▼"; // Change back to a downward arrow when collapsed
+      headerIcon.classList.remove("rotate"); // Remove the 'rotate' class to reset the arrow
       // Set a fixed height or adjust as needed when collapsed
       descriptionTextArea.style.height = "50px"; // Example height when collapsed
     }
@@ -155,13 +155,13 @@ Note: this {{election.election_type}} is <u>not</u> featured on the front page.
 <br />
 {% endfor %}
 {% else %}
-<a href="{% url "election@freeze" election.uuid %}">Freeze ballot and open election.</a>
+<a href="{% url "election@freeze" election.uuid %}">Freeze and open election.</a>
 <br />
 {% if election.voting_starts_at %}
-once you do this, the election will be ready for voting and will open automatically<br />
+Once you do this, the election will be ready for voting and will open automatically<br />
 at {{election.voting_starts_at}}, as per your settings.
 {% else %}
-once you do this, the election will be immediately open for voting.
+Once you do this, the election will be immediately open for voting.
 {% endif %}
 {% endif %}
 
@@ -292,6 +292,9 @@ Your voter alias is {{voter.alias}}.
 {% else %}
 {% if election.openreg %}
 {% if eligible_p %}
+<br>
+<br>
+<br>
 You are eligible to vote in this election.
 {% else %}
 You are <em>not eligible</em> to vote in this {{election.election_type}}.
@@ -322,9 +325,12 @@ Anyone can vote in this election.
 {% if admin_p and election.voting_ends_at and not election.tallying_started_at %}
 <br /><a class="extend_button" href="{% url "election  @extend" election.uuid %}">Extend voting</a><br />
 {% endif %}
+<br>
+<br>
 
-<div style="background: lightyellow; padding:5px; padding-left: 10px; margin-top: 15px; border: 1px solid #aaa;" class="round">
+<div style="background-color: #f2f2f2; padding:5px; padding-left: 10px; margin-top: 15px; border: 1px solid #aaa;" class="round">
 <a href="#" onclick="$('#auditbody').slideToggle(250);">Audit Info</a>
+
 <div id="auditbody" style="display:none; word-wrap: break-word;">
 <br />Election URL:<br />
 <a href="{{election.url}}">{{election.url}}</a>
@@ -351,7 +357,7 @@ Anyone can vote in this election.
 {% if not election.voting_has_started %}
 <p style="font-size: 1.2em;">
   <br>
-  <a href="{{SECURE_URL_HOST}}/booth/vote.html?election_url={% url "election@home" election.uuid %}">Preview booth</a>
+  <a class="button_class_table" href="{{SECURE_URL_HOST}}/booth/vote.html?election_url={% url "election@home" election.uuid %}">Preview booth</a>
 </p>
 {% endif %}  
 

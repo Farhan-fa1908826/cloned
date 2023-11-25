@@ -23,13 +23,13 @@
           {#/for}
         </ul> 
       </div>
-      <div class="action_div">
+      <div class="action_div_card">
         {#if $T.admin_p}
           {#if $T.question$index > 0}
-            <a class="button_class" href="javascript:question_move_up({$T.question$index});">Shift Up</a>
+            <a class="button_class_table" href="javascript:question_move_up({$T.question$index});">Shift Up</a>
           {#/if}
-          <a class="button_class" onclick="return confirm('Are you sure you want to remove this question?');" href="javascript:question_remove({$T.question$index})">Delete</a> 
-          <a class="button_class" href="javascript:question_edit({$T.question$index})">Edit</a>
+          <a class="button_class_table" onclick="return confirm('Are you sure you want to remove this question?');" href="javascript:question_remove({$T.question$index})">Delete</a> 
+          <a class="button_class_table" href="javascript:question_edit({$T.question$index})">Edit</a>
         {#/if}
       </div>
     </div>
@@ -103,7 +103,7 @@
 </div>
 
 
-<div class="Add_question card" id="question_form">
+<div class="card Add_question" id="question_form">
   {#if $T.admin_p}
     <h4>Add a Question:</h4>
     <form id="question_form" onsubmit="question_add(this); return false;" action="#">
@@ -153,6 +153,7 @@
         </tbody>
 
       </table>
+      <a  href="javascript:add_answers($('#answer_table'), 1)">Add 1 more choice</a>
       <div class="action_div">
         <a class="button_class_table" href="javascript:add_answers($('#answer_table'), 1)">Add 1 more choice</a>
         <input class="button_class_table" type="submit" value="Add question" />

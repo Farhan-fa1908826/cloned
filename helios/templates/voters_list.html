@@ -2,7 +2,7 @@
 
 {% block title %}Voters &amp; Ballot Tracking Center for {{election.name}}{% endblock %}
 {% block content %}
-
+<div class="trustee_parent_div">
 <h3 class="title">Election: {{election.name}} &mdash; Voters and Ballot Tracking Center <span style="font-size:0.7em;"></span></h3>
 
 <p>
@@ -10,7 +10,7 @@
   {% if election.private_p %}
     {{election.pretty_eligibility|safe}}
   {% else %}
-    <em>Only the voters listed here</em>. 
+    <em>Given that your election is public, participation is open to everyone</em>. 
   {% endif %}
 </p>
 
@@ -21,8 +21,8 @@
     <form method="post" action="{% url "election@voters@eligibility" election.uuid %}">
 
       <input type="hidden" name="csrf_token" value="{{csrf_token}}" />
-      <input type="radio" name="eligibility" value="openreg" {% if election.openreg and not election.eligibility %}CHECKED{% endif %} /> Anyone can vote<br />
-      <input type="radio" name="eligibility" value="closedreg" {% if not election.openreg %}CHECKED{% endif %} /> Only voters listed explicitly below can vote<br />
+      {% comment %} <input type="radio" name="eligibility" value="openreg" {% if election.openreg and not election.eligibility %}CHECKED{% endif %} /> Anyone can vote<br />
+      <input type="radio" name="eligibility" value="closedreg" {% if not election.openreg %}CHECKED{% endif %} /> Only voters listed explicitly below can vote<br /> {% endcomment %}
 
       {% if categories %}
         <input type="radio" name="eligibility" value="limitedreg" {% if election.eligibility %}CHECKED{% endif %} /> only voters who are members of 
@@ -33,7 +33,7 @@
         </select>
         <br />
       {% endif %}
-      <input class="button" type="submit" value="Update" />
+      {% comment %} <input class="button" type="submit" value="Update" /> {% endcomment %}
     </form>
 
   {% endif %}
@@ -57,9 +57,9 @@
 
 {% if admin_p %}
   <!-- Add a Voter: WORK HERE-->
-  {% if upload_p and not election.openreg %}
+  {% if upload_p and election.private_p  %}
     <p>
-      <a class="button" href="{% url "election@voters@upload" election_uuid=election.uuid %}">bulk upload voters</a>
+      <a class="button" href="{% url "election@voters@upload" election_uuid=election.uuid %}">Bulk upload voters</a>
     </p>
 
     {% if voter_files %}
@@ -200,6 +200,7 @@ Voters {{voters_page.start_index}} - {{voters_page.end_index}} (of {{total_voter
     
   }
 </script>
+</div>
 </div>
 <link rel="stylesheet" type="text/css" href="/static/boothcss/forms.css">
 {% endblock %}

@@ -20,8 +20,9 @@
 </iframe>
 {% endif %}
 
+<div class="back_div">
 <p style="font-size: 1.4em;">
-[ <a href="{% url "election@view" election.uuid %}">return to election info</a> ]
+<a class="button_class" href="{% url "election@view" election.uuid %}">Election Homepage</a> 
 </p>
-
+</div>
 {% endblock %}

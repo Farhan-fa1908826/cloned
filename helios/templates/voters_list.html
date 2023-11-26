@@ -41,7 +41,7 @@
 
 
 {% if email_voters and election.frozen_at and admin_p %}
-  <p><a class="button" href="{% url "election@voters@email" election.uuid %}">email voters</a></p>
+  <p><a class="button_class" href="{% url "election@voters@email" election.uuid %}">Email voters</a></p>
 {% endif %}
 
 {% if election.num_voters > 20 %}
@@ -154,9 +154,9 @@ Voters {{voters_page.start_index}} - {{voters_page.end_index}} (of {{total_voter
       {% if admin_p %}
         <td style="white-space: nowrap;">
           {% if election.frozen_at %}
-            <a href="{% url "election@voters@email" election.uuid %}?voter_id={{voter.voter_login_id}}">Email</a> |
+            <a class="button_class_table" href="{% url "election@voters@email" election.uuid %}?voter_id={{voter.voter_login_id}}">Email</a> |
           {% endif %}
-          <a onclick="return confirm('are you sure you want to remove {{voter.name}} ?');" href="{% url "election@voter@delete" election.uuid voter.uuid %}">Delete</a>
+          <a class="button_class_table" onclick="return confirm('are you sure you want to remove {{voter.name}} ?');" href="{% url "election@voter@delete" election.uuid voter.uuid %}">Delete</a>
         </td>
       {% endif %}
     </tr>

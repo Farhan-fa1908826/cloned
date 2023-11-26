@@ -227,37 +227,39 @@ def election_new(request):
         error = "No special characters allowed in the short name."
     
   return render_template(request, "election_new", {'election_form': election_form, 'error': error})
-  
 @election_admin(frozen=False)
 def one_election_edit(request, election):
 
-  error = None
-  RELEVANT_FIELDS = ['short_name', 'name', 'description', 'use_voter_aliases', 'election_type', 'private_p', 'help_email', 'randomize_answer_order', 'voting_starts_at', 'voting_ends_at']
-  # RELEVANT_FIELDS += ['use_advanced_audit_features']
+    error = None
+    RELEVANT_FIELDS = ['short_name', 'name', 'description', 'use_voter_aliases', 'election_type', 'private_p', 'help_email', 'randomize_answer_order', 'voting_starts_at', 'voting_ends_at']
+    # RELEVANT_FIELDS += ['use_advanced_audit_features']
 
-  if settings.ALLOW_ELECTION_INFO_URL:
-    RELEVANT_FIELDS += ['election_info_url']
-  
-  if request.method == "GET":
-    values = {}
-    for attr_name in RELEVANT_FIELDS:
-      values[attr_name] = getattr(election, attr_name)
-    election_form = forms.ElectionForm(values)
-  else:
-    check_csrf(request)
-    election_form = forms.ElectionForm(request.POST)
-    
-    if election_form.is_valid():
-      clean_data = election_form.cleaned_data
-      for attr_name in RELEVANT_FIELDS:
-        setattr(election, attr_name, clean_data[attr_name])
-      try:
-        election.save()
-        return HttpResponseRedirect(settings.SECURE_URL_HOST + reverse(url_names.election.ELECTION_VIEW, args=[election.uuid]))
-      except IntegrityError:
-        error = "An election with short name %s already exists" % clean_data['short_name']
+    if settings.ALLOW_ELECTION_INFO_URL:
+        RELEVANT_FIELDS += ['election_info_url']
 
-  return render_template(request, "election_edit", {'election_form' : election_form, 'election' : election, 'error': error})
+    if request.method == "GET":
+        values = {}
+        for attr_name in RELEVANT_FIELDS:
+            values[attr_name] = getattr(election, attr_name)
+
+        # Initialize the form with the initial values
+        election_form = forms.ElectionForm(initial=values)
+    else:
+        check_csrf(request)
+        election_form = forms.ElectionForm(request.POST)
+
+        if election_form.is_valid():
+            clean_data = election_form.cleaned_data
+            for attr_name in RELEVANT_FIELDS:
+                setattr(election, attr_name, clean_data[attr_name])
+            try:
+                election.save()
+                return HttpResponseRedirect(settings.SECURE_URL_HOST + reverse(url_names.election.ELECTION_VIEW, args=[election.uuid]))
+            except IntegrityError:
+                error = "An election with short name %s already exists" % clean_data['short_name']
+
+    return render_template(request, "election_edit", {'election_form': election_form, 'election': election, 'error': error})
+
 
 @election_admin(frozen=False)
 def one_election_schedule(request, election):

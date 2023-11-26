@@ -11,6 +11,7 @@
   
   <!-- Include Flatpickr stylesheet -->
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
   <form class="prettyform" action="" method="POST" id="edit_election_form">
     <input type="hidden" name="csrf_token" value="{{csrf_token}}" />
@@ -29,25 +30,11 @@
   
           // Determine the redirect URL based on the action type and the previous URL
           if (actionType === 'cancel') {
-              if (previousURL.includes('home')) {
-                  redirectURL = "/";  // Replace with the appropriate home URL
-              } else if (previousURL.includes('questions')) {
-                redirectURL = "{% url 'election@questions' election.uuid %}";
-                window.location.href = redirectURL;
-              } else if (previousURL.includes('view')) {
-                  redirectURL = "{% url 'election@view' election.uuid %}";
-              } 
+            redirectURL = "{% url 'election@view' election.uuid %}";
           } else if (actionType === 'update') { 
-                if (previousURL.includes('view')) {
-                  redirectURL = "{% url 'election@view' election.uuid %}";  // Replace with the appropriate home URL
-                } else{
-                  alert("Please update the questions for this election")
-                  redirectURL = "{% url 'election@questions' election.uuid %}";
-                  window.location.href = redirectURL;        
-                }
+            redirectURL = "{% url 'election@view' election.uuid %}";  // Replace with the appropriate home URL
           }
-          
-      }
+          window.location.href = redirectURL;
   </script>
   
   </form>
@@ -57,7 +44,6 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <!-- Flatpickr script -->
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <link rel="stylesheet" type="text/css" href="/static/boothcss/forms.css">
 
 {% endblock %}

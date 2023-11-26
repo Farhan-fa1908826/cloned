@@ -396,12 +396,13 @@ button {
 .what-and-why-logged{
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   padding-left: 3rem;
-  gap: 2rem;
+  /* gap: 2rem; */
   /* border: 1px solid blue; */
   margin-left: 3rem;
   width: fit-content;
+  border: 1px solid red;
 }
 
 /* .logged-right-box{
@@ -450,7 +451,6 @@ button {
 }
 .large-3{
   margin-right: -9rem;
-
   /* border: 10px solid orange ; */
   width: 50%;
 }
@@ -645,7 +645,7 @@ button {
   padding: 20px; 
   margin: 20px;
   border-radius: 30px;
-  box-shadow: 0 1px 1px rgba(0,0,0,.05); 
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2); /* Add a subtle shadow on hover 
   transition: transform 0.2s; /* Add a smooth transition effect */
   display: flex;
   flex-direction: row;

@@ -377,6 +377,7 @@ form.prettyform {
   #question_form{
       align-items: center;
       text-align: center;
+      width: 100%;
   }
   
   #contentbody{
@@ -445,7 +446,7 @@ form.prettyform {
       margin-right: 72px;
   }
   #answer_table {
-      width: 80%; /* Adjust the percentage to your preference */
+      width: 100%; /* Adjust the percentage to your preference */
       margin: auto; /* Center the table on the page */
       border-collapse: collapse;
       background-color: transparent;

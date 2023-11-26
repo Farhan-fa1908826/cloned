@@ -387,7 +387,7 @@ form.prettyform {
       align-items: center;
   }
   #questions{
-      border: brown 1px solid;
+      /* border: brown 1px solid; */
       width: 100%;
       display: flex;
       flex-direction: row;

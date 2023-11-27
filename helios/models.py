@@ -400,7 +400,7 @@ class Election(HeliosModel):
             'action': 'Have trustee %s generate a keypair' % t.name
             })
 
-    if self.voter_set.count() == 0 and not self.openreg:
+    if self.voter_set.count() == 0 and  self.private_p:
       issues.append({
           "type" : "voters",
           "action" : 'Enter your voter list (or open registration to the public).'

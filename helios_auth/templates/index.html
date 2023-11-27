@@ -1,6 +1,7 @@
 {% extends TEMPLATE_BASE %}
 
 {% block content %}
+<div class="login_container">
 <h1>Authentication</h1>
 
 {% if user %}
@@ -8,10 +9,12 @@
     You are currently logged in as<br /><b>{{user.user_id}}</b> via <b>{{user.user_type}}</b>.
 </p>
 <p>
-    <a href="{% url "auth@logout" %}">logout</a>
+    {% comment %} <a href="{% url "auth@logout" %}">logout</a> {% endcomment %}
+    <a href="/" class="button_class">Helios Homepage</a>
 </p>
 
 {% else %}
 {% include "login_box.html" %}
 {% endif %}
+</div>
 {% endblock %}

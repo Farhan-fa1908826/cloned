@@ -323,7 +323,7 @@ Anyone can vote in this election.
 {% endif %}
 
 {% if admin_p and election.voting_ends_at and not election.tallying_started_at %}
-<br /><a class="extend_button" href="{% url "election  @extend" election.uuid %}">Extend voting</a><br />
+<br /><a class="extend_button" href="{% url "election@extend" election.uuid %}">Extend voting</a><br />
 {% endif %}
 <br>
 <br>
@@ -339,12 +339,14 @@ Anyone can vote in this election.
 <br />
 <br />Election ID:<br />
 <tt style="font-size: 1.3em; font-weight: bold;">{{election.hash}}</tt>
-
+<br>
+<br>
 
 {% if votes %}
-<p>Your ballot tracker:<br />
-<tt style="font-size:14pt; font-weight: bold;">{{votes.0.vote_hash}}</tt>
-</p>
+Your ballot tracker:<br />
+<tt style="font-size:14pt; font-weight: bold; display: black;">{{votes.0.vote_hash}}</tt>
+<br>
+<br>
 {% endif %}
 
 <p class="audit_p">

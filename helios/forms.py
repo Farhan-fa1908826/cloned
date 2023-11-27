@@ -66,7 +66,7 @@ class ElectionForm(forms.Form):
         help_text='UTC date and time when voting ends',
         widget=forms.SplitDateTimeWidget(
             date_attrs={'type': 'date', 'input_formats': ['%Y-%m-%d']},
-            time_attrs={'type': 'time', 'input_formats': ['%H:%M:%S']},
+            time_attrs={'type': 'time', 'input_formats': ['%H:%M']},
         ),
         required=False
     )

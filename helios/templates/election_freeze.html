@@ -1,12 +1,12 @@
 {% extends TEMPLATE_BASE %}
 
 {% block content %}
-  <h2 class="title">{{election.name}} &mdash; Freeze Election</h2>
-<p>
+  <h2 class="title">Freeze Election: {{election.name}}</h2>
+<p class="paragraph">
 Once an election is frozen, the questions, options, and trustees can no longer be modified.<br />
 </p>
 
-<p>
+<p class="paragraph">
 {% if election.openreg %}
 Registration for your election is currently <b>open</b>, which means anyone can vote after you freeze the election.
 {% else %}

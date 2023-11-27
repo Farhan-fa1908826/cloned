@@ -383,14 +383,14 @@ class Election(HeliosModel):
     if self.questions is None or len(self.questions) == 0:
       issues.append(
         {'type': 'questions',
-         'action': "Add questions to the ballot"}
+         'action': "Add questions to the election."}
         )
   
     trustees = Trustee.get_by_election(self)
     if len(trustees) == 0:
       issues.append({
           'type': 'trustees',
-          'action': "Add at least one trustee"
+          'action': "Add at least one trustee."
           })
 
     for t in trustees:
@@ -403,7 +403,7 @@ class Election(HeliosModel):
     if self.voter_set.count() == 0 and not self.openreg:
       issues.append({
           "type" : "voters",
-          "action" : 'Enter your voter list (or open registration to the public)'
+          "action" : 'Enter your voter list (or open registration to the public).'
           })
 
     return issues    
@@ -528,7 +528,7 @@ class Election(HeliosModel):
     election is frozen when the voter registration, questions, and trustees are finalized
     """
     if len(self.issues_before_freeze) > 0:
-      raise Exception("cannot freeze an election that has issues")
+      raise Exception("Cannot freeze an election that has issues")
 
     self.frozen_at = datetime.datetime.utcnow()
     

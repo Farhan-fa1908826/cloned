@@ -102,6 +102,12 @@ select {
   max-width: 62.5em;
   zoom: 1; 
 }
+#question_form{
+  text-align: center;
+}
+.paragraph{
+  text-align: center;
+}
   .row:before, .row:after {
     content: " ";
     display: table; }

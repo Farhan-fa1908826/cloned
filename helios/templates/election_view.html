@@ -172,14 +172,14 @@ Once you do this, the election will be immediately open for voting.
 Tally computation is under way.<br />
 Reload this page in a couple of minutes.
 {% else %}
-<a href="{% url "election@compute-tally" election.uuid %}">Compute encrypted tally</a><br />
+<a href="{% url "election@compute-tally" election.uuid %}">Compute encrypted tally.</a><br />
 The encrypted votes will be combined into an encrypted tally. Once this is done,<br />
-trustees will be asked to provide their share of the decryption.
+trustees will be asked to provide their share of the decryption (unless Helios is the only trustee).
 {% endif %}
 {% else %}
 
 {% if election.result %}
-<a href="{% url "election@release-result" election.uuid %}">release result</a><br />
+<a href="{% url "election@release-result" election.uuid %}">Release result.</a><br />
 The result displayed below is visible only to you.<br />
 Once you release the result, it will be visible to everyone.
 {% else %}
@@ -187,9 +187,9 @@ Once you release the result, it will be visible to everyone.
 {% if election.ready_for_decryption_combination %}
 <a href="{% url "election@combine-decryptions" election.uuid %}">
 {% if election.num_trustees == 1 %}
-compute results
+Compute results
 {% else %}
-combine trustee decryptions and compute results
+Combine trustee decryptions and compute results
 {% endif %}
 </a><br />
 {% if election.num_trustees == 1 %}
@@ -236,7 +236,8 @@ Once you do this, the tally will visible to you, the administrator, only.
 
 {% else %}
 
-{% if election.voting_has_stopped %}
+{% comment %} {% if election.voting_has_stopped %} {% endcomment %}
+{% if voting_ended_at %}
 <span class="highlight-box round">
     Election closed. Results will be released soon.
 </span><br /><br />
@@ -274,7 +275,7 @@ This election is <em>private</em>. You are signed in as eligible voter <em>{{vot
 {% else %}
 
 <span class="highlight-box round">
-  voting is not yet open
+  Voting is not yet open
 </span> 
 {% endif %}
 
@@ -296,6 +297,7 @@ Your voter alias is {{voter.alias}}.
 <br>
 <br>
 You are eligible to vote in this election.
+<br>
 {% else %}
 You are <em>not eligible</em> to vote in this {{election.election_type}}.
 {% endif %}

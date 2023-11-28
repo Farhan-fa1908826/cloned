@@ -1,14 +1,19 @@
 """Generic resource pool implementation."""
-from __future__ import absolute_import, unicode_literals
+
+from __future__ import annotations
 
 import os
-
 from collections import deque
+from queue import Empty
+from queue import LifoQueue as _LifoQueue
+from typing import TYPE_CHECKING
 
 from . import exceptions
-from .five import Empty, LifoQueue as _LifoQueue
 from .utils.compat import register_after_fork
 from .utils.functional import lazy
+
+if TYPE_CHECKING:
+    from types import TracebackType
 
 
 def _after_fork_cleanup_resource(resource):
@@ -25,7 +30,7 @@ class LifoQueue(_LifoQueue):
         self.queue = deque()
 
 
-class Resource(object):
+class Resource:
     """Pool of resources."""
 
     LimitExceeded = exceptions.LimitExceeded
@@ -62,12 +67,14 @@ class Resource(object):
         """Acquire resource.
 
         Arguments:
+        ---------
             block (bool): If the limit is exceeded,
                 then block until there is an available item.
             timeout (float): Timeout to wait
                 if ``block`` is true.  Default is :const:`None` (forever).
 
-        Raises:
+        Raises
+        ------
             LimitExceeded: if block is false and the limit has been exceeded.
         """
         if self._closed:
@@ -98,6 +105,7 @@ class Resource(object):
             """Release resource so it can be used by another thread.
 
             Warnings:
+            --------
                 The caller is responsible for discarding the object,
                 and to never use the resource again.  A new resource must
                 be acquired if so needed.
@@ -174,7 +182,7 @@ class Resource(object):
         if (self._dirty and 0 < limit < self._limit) and not ignore_errors:
             if not force:
                 raise RuntimeError(
-                    "Can't shrink pool when in use: was={0} now={1}".format(
+                    "Can't shrink pool when in use: was={} now={}".format(
                         self._limit, limit))
             reset = True
         self._limit = limit
@@ -192,7 +200,12 @@ class Resource(object):
             def __enter__(self):
                 pass
 
-            def __exit__(self, type, value, traceback):
+            def __exit__(
+                self,
+                exc_type: type,
+                exc_val: Exception,
+                exc_tb: TracebackType
+            ) -> None:
                 pass
 
         resource = self._resource
@@ -217,22 +230,22 @@ class Resource(object):
 
         _next_resource_id = 0
 
-        def acquire(self, *args, **kwargs):  # noqa
+        def acquire(self, *args, **kwargs):
             import traceback
             id = self._next_resource_id = self._next_resource_id + 1
-            print('+{0} ACQUIRE {1}'.format(id, self.__class__.__name__))
+            print(f'+{id} ACQUIRE {self.__class__.__name__}')
             r = self._orig_acquire(*args, **kwargs)
             r._resource_id = id
-            print('-{0} ACQUIRE {1}'.format(id, self.__class__.__name__))
+            print(f'-{id} ACQUIRE {self.__class__.__name__}')
             if not hasattr(r, 'acquired_by'):
                 r.acquired_by = []
             r.acquired_by.append(traceback.format_stack())
             return r
 
-        def release(self, resource):  # noqa
+        def release(self, resource):
             id = resource._resource_id
-            print('+{0} RELEASE {1}'.format(id, self.__class__.__name__))
+            print(f'+{id} RELEASE {self.__class__.__name__}')
             r = self._orig_release(resource)
-            print('-{0} RELEASE {1}'.format(id, self.__class__.__name__))
+            print(f'-{id} RELEASE {self.__class__.__name__}')
             self._next_resource_id -= 1
             return r

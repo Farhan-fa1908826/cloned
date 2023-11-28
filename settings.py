@@ -328,12 +328,19 @@ GH_CLIENT_SECRET = get_from_env('GH_CLIENT_SECRET', '778390484623caaf97d78cde14f
 # EMAIL_USE_TLS = (get_from_env('EMAIL_USE_TLS', '0') == '1')
 
 #ADDED BY KHALID
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'  # Use the SMTP server of your email service
+# EMAIL_PORT = 587  # Use the appropriate port
+# EMAIL_USE_TLS = True  # Use TLS for secure connection
+# EMAIL_HOST_USER = 'khaled.abd.2002@gmail.com'  # Your email address
+# EMAIL_HOST_PASSWORD = 'lightening789'  # Your email password or app-specific password
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # Use the SMTP server of your email service
-EMAIL_PORT = 587  # Use the appropriate port
-EMAIL_USE_TLS = True  # Use TLS for secure connection
-EMAIL_HOST_USER = 'khaled.abd.2002@gmail.com'  # Your email address
-EMAIL_HOST_PASSWORD = 'lightening789'  # Your email password or app-specific password
+EMAIL_HOST = 'localhost'  # Use the SMTP server of your email service
+EMAIL_PORT = 1025  # Use the appropriate port
+EMAIL_USE_TLS = False  # Use TLS for secure connection
+EMAIL_HOST_USER = ''  # Your email address
+EMAIL_HOST_PASSWORD = ''  # Your email password or app-specific password
 
 # to use AWS Simple Email Service
 # in which case environment should contain

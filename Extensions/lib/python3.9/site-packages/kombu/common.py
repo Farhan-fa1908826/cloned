@@ -1,31 +1,22 @@
 """Common Utilities."""
-from __future__ import absolute_import, unicode_literals
+
+from __future__ import annotations
 
 import os
 import socket
 import threading
-
 from collections import deque
 from contextlib import contextmanager
 from functools import partial
 from itertools import count
-from uuid import uuid5, uuid4, uuid3, NAMESPACE_OID
+from uuid import NAMESPACE_OID, uuid3, uuid4, uuid5
 
 from amqp import ChannelError, RecoverableConnectionError
 
 from .entity import Exchange, Queue
-from .five import bytes_if_py2, range
 from .log import get_logger
 from .serialization import registry as serializers
 from .utils.uuid import uuid
-
-try:
-    from _thread import get_ident
-except ImportError:                             # pragma: no cover
-    try:                                        # noqa
-        from thread import get_ident            # noqa
-    except ImportError:                         # pragma: no cover
-        from dummy_thread import get_ident      # noqa
 
 __all__ = ('Broadcast', 'maybe_declare', 'uuid',
            'itermessages', 'send_reply',
@@ -48,8 +39,8 @@ def get_node_id():
 
 
 def generate_oid(node_id, process_id, thread_id, instance):
-    ent = bytes_if_py2('%x-%x-%x-%x' % (
-        node_id, process_id, thread_id, id(instance)))
+    ent = '{:x}-{:x}-{:x}-{:x}'.format(
+        node_id, process_id, thread_id, id(instance))
     try:
         ret = str(uuid3(NAMESPACE_OID, ent))
     except ValueError:
@@ -61,7 +52,7 @@ def oid_from(instance, threads=True):
     return generate_oid(
         get_node_id(),
         os.getpid(),
-        get_ident() if threads else 0,
+        threading.get_ident() if threads else 0,
         instance,
     )
 
@@ -75,6 +66,7 @@ class Broadcast(Queue):
     and both the queue and exchange is configured with auto deletion.
 
     Arguments:
+    ---------
         name (str): This is used as the name of the exchange.
         queue (str): By default a unique id is used for the queue
             name for every consumer.  You can specify a custom
@@ -96,10 +88,10 @@ class Broadcast(Queue):
                  alias=None,
                  **kwargs):
         if unique:
-            queue = '{0}.{1}'.format(queue or 'bcast', uuid())
+            queue = '{}.{}'.format(queue or 'bcast', uuid())
         else:
-            queue = queue or 'bcast.{0}'.format(uuid())
-        super(Broadcast, self).__init__(
+            queue = queue or f'bcast.{uuid()}'
+        super().__init__(
             alias=alias or name,
             queue=queue,
             name=queue,
@@ -132,7 +124,7 @@ def _ensure_channel_is_bound(entity, channel):
     if not is_bound:
         if not channel:
             raise ChannelError(
-                "Cannot bind channel {} to entity {}".format(channel, entity))
+                f"Cannot bind channel {channel} to entity {entity}")
         entity = entity.bind(channel)
         return entity
 
@@ -146,7 +138,7 @@ def _maybe_declare(entity, channel):
     if channel is None:
         if not entity.is_bound:
             raise ChannelError(
-                "channel is None and entity {} not bound.".format(entity))
+                f"channel is None and entity {entity} not bound.")
         channel = entity.channel
 
     declared = ident = None
@@ -212,7 +204,8 @@ def eventloop(conn, limit=None, timeout=None, ignore_timeouts=False):
 
     ``eventloop`` is a generator.
 
-    Examples:
+    Examples
+    --------
         >>> from kombu.common import eventloop
 
         >>> def run(conn):
@@ -228,7 +221,8 @@ def eventloop(conn, limit=None, timeout=None, ignore_timeouts=False):
         for _ in eventloop(connection, limit=1, timeout=1):
             pass
 
-    See Also:
+    See Also
+    --------
         :func:`itermessages`, which is an event loop bound to one or more
         consumers, that yields any messages received.
     """
@@ -245,6 +239,7 @@ def send_reply(exchange, req, msg,
     """Send reply for request.
 
     Arguments:
+    ---------
         exchange (kombu.Exchange, str): Reply exchange
         req (~kombu.Message): Original request, a message with
             a ``reply_to`` property.
@@ -318,6 +313,7 @@ def ignore_errors(conn, fun=None, *args, **kwargs):
 
 
     Note:
+    ----
         Connection and channel errors should be properly handled,
         and not ignored.  Using this function is only acceptable in a cleanup
         phase, like when a connection is lost or at shutdown.
@@ -353,16 +349,18 @@ def insured(pool, fun, args, kwargs, errback=None, on_revive=None, **opts):
         return retval
 
 
-class QoS(object):
+class QoS:
     """Thread safe increment/decrement of a channels prefetch_count.
 
     Arguments:
+    ---------
         callback (Callable): Function used to set new prefetch count,
             e.g. ``consumer.qos`` or ``channel.basic_qos``.  Will be called
             with a single ``prefetch_count`` keyword argument.
         initial_value (int): Initial prefetch count value..
 
     Example:
+    -------
         >>> from kombu import Consumer, Connection
         >>> connection = Connection('amqp://')
         >>> consumer = Consumer(connection)
@@ -405,6 +403,7 @@ class QoS(object):
         """Increment the value, but do not update the channels QoS.
 
         Note:
+        ----
             The MainThread will be responsible for calling :meth:`update`
             when necessary.
         """
@@ -417,6 +416,7 @@ class QoS(object):
         """Decrement the value, but do not update the channels QoS.
 
         Note:
+        ----
             The MainThread will be responsible for calling :meth:`update`
             when necessary.
         """

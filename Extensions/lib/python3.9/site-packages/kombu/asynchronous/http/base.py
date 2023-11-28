@@ -1,20 +1,20 @@
 """Base async HTTP client implementation."""
-from __future__ import absolute_import, unicode_literals
+
+from __future__ import annotations
 
 import sys
+from http.client import responses
+from typing import TYPE_CHECKING
 
-from vine import Thenable, promise, maybe_promise
+from vine import Thenable, maybe_promise, promise
 
 from kombu.exceptions import HttpError
-from kombu.five import items, python_2_unicode_compatible
 from kombu.utils.compat import coro
 from kombu.utils.encoding import bytes_to_str
 from kombu.utils.functional import maybe_list, memoize
 
-try:  # pragma: no cover
-    from http.client import responses
-except ImportError:
-    from httplib import responses  # noqa
+if TYPE_CHECKING:
+    from types import TracebackType
 
 __all__ = ('Headers', 'Response', 'Request')
 
@@ -40,15 +40,16 @@ class Headers(dict):
 
 
 @Thenable.register
-@python_2_unicode_compatible
-class Request(object):
+class Request:
     """A HTTP Request.
 
     Arguments:
+    ---------
         url (str): The URL to request.
         method (str): The HTTP method to use (defaults to ``GET``).
 
     Keyword Arguments:
+    -----------------
         headers (Dict, ~kombu.asynchronous.http.Headers): Optional headers for
             this request
         body (str): Optional body for this request.
@@ -68,7 +69,7 @@ class Request(object):
         auth_password (str): Password for HTTP authentication.
         auth_mode (str): Type of HTTP authentication (``basic`` or ``digest``).
         user_agent (str): Custom user agent for this request.
-        network_interace (str): Network interface to use for this request.
+        network_interface (str): Network interface to use for this request.
         on_ready (Callable): Callback to be called when the response has been
             received. Must accept single ``response`` argument.
         on_stream (Callable): Optional callback to be called every time body
@@ -123,7 +124,7 @@ class Request(object):
         self.on_prepare = maybe_promise(on_prepare)
         self.on_header = maybe_promise(on_header)
         if kwargs:
-            for k, v in items(kwargs):
+            for k, v in kwargs.items():
                 setattr(self, k, v)
         if not isinstance(headers, Headers):
             headers = Headers(headers or {})
@@ -136,10 +137,11 @@ class Request(object):
         return '<Request: {0.method} {0.url} {0.body}>'.format(self)
 
 
-class Response(object):
+class Response:
     """HTTP Response.
 
-    Arguments:
+    Arguments
+    ---------
         request (~kombu.asynchronous.http.Request): See :attr:`request`.
         code (int): See :attr:`code`.
         headers (~kombu.asynchronous.http.Headers): See :attr:`headers`.
@@ -147,7 +149,8 @@ class Response(object):
         effective_url (str): See :attr:`effective_url`.
         status (str): See :attr:`status`.
 
-    Attributes:
+    Attributes
+    ----------
         request (~kombu.asynchronous.http.Request): object used to
             get this response.
         code (int): HTTP response code (e.g. 200, 404, or 500).
@@ -183,7 +186,8 @@ class Response(object):
     def raise_for_error(self):
         """Raise if the request resulted in an HTTP error code.
 
-        Raises:
+        Raises
+        ------
             :class:`~kombu.exceptions.HttpError`
         """
         if self.error:
@@ -194,7 +198,8 @@ class Response(object):
         """The full contents of the response body.
 
         Note:
-            Accessing this propery will evaluate the buffer
+        ----
+            Accessing this property will evaluate the buffer
             and subsequent accesses will be cached.
         """
         if self._body is None:
@@ -230,7 +235,7 @@ def header_parser(keyt=normalize_header):
             headers[key] = value.strip()
 
 
-class BaseClient(object):
+class BaseClient:
     Headers = Headers
     Request = Request
     Response = Response
@@ -260,5 +265,10 @@ class BaseClient(object):
     def __enter__(self):
         return self
 
-    def __exit__(self, *exc_info):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None
+    ) -> None:
         self.close()

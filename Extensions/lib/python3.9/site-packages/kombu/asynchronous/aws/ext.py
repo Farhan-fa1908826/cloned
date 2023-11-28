@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
 """Amazon boto3 interface."""
-from __future__ import absolute_import, unicode_literals
+
+from __future__ import annotations
 
 try:
     import boto3
@@ -10,7 +10,7 @@ try:
 except ImportError:
     boto3 = None
 
-    class _void(object):
+    class _void:
         pass
 
     class BotoCoreError(Exception):

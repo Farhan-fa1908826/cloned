@@ -623,31 +623,41 @@ def password_voter_login(request, election):
 
 @election_view()
 def one_election_cast_confirm(request, election):
+  print("===================================================")
+  print("one_election_cast_confirm")
   user = get_user(request)    
 
   # if no encrypted vote, the user is reloading this page or otherwise getting here in a bad way
   if ('encrypted_vote' not in request.session) or request.session['encrypted_vote'] is None:
+    print("no encrypted vote")
     return HttpResponseRedirect(settings.URL_HOST)
 
   # election not frozen or started
   if not election.voting_has_started():
+    print("election not started")
     return render_template(request, 'election_not_started', {'election': election})
 
   voter = get_voter(request, user, election)
+  print("voter: ", voter)
   
   # auto-register this person if the election is openreg
   if user and not voter and election.openreg:
+    print("auto-register")
     voter = _register_voter(election, user)
     
   # tallied election, no vote casting
   if election.encrypted_tally or election.result:
+    print("tallied election")
     return render_template(request, 'election_tallied', {'election': election})
     
   encrypted_vote = request.session['encrypted_vote']
   vote_fingerprint = cryptoutils.hash_b64(encrypted_vote)
+  print("vote_fingerprint: ", vote_fingerprint)
+  print("encrypted_vote: ", encrypted_vote)
 
   # if this user is a voter, prepare some stuff
   if voter:
+    print("voter is a voter")
     vote = datatypes.LDObject.fromDict(utils.from_json(encrypted_vote), type_hint='legacy/EncryptedVote').wrapped_obj
 
     if 'HTTP_X_FORWARDED_FOR' in request.META:
@@ -656,8 +666,10 @@ def one_election_cast_confirm(request, election):
       # See http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/x-forwarded-headers.html
       # and https://en.wikipedia.org/wiki/X-Forwarded-For
       cast_ip = request.META.get('HTTP_X_FORWARDED_FOR').split(',')[0].strip() or None
+      print("cast_ip: ", cast_ip)
     else:
       cast_ip = request.META.get('REMOTE_ADDR', None)
+      print("cast_ip remote: ", cast_ip)
 
     # prepare the vote to cast
     cast_vote_params = {
@@ -667,14 +679,18 @@ def one_election_cast_confirm(request, election):
       'cast_at': datetime.datetime.utcnow(),
       'cast_ip': cast_ip
     }
+    print("cast_vote_params: ", cast_vote_params)
 
     cast_vote = CastVote(**cast_vote_params)
+    print("cast_vote: ", vars(cast_vote))
   else:
+    print("voter is not a voter")
     cast_vote = None
     
   if request.method == "GET":
     if voter:
       past_votes = CastVote.get_by_voter(voter)
+      print("past_votes: ", past_votes)
       if len(past_votes) == 0:
         past_votes = None
     else:
@@ -683,23 +699,31 @@ def one_election_cast_confirm(request, election):
     if cast_vote:
       # check for issues
       issues = cast_vote.issues(election)
+      print("issues: ", issues)
     else:
+      print("no cast_vote")
       issues = None
 
     bad_voter_login = (request.GET.get('bad_voter_login', "0") == "1")
+  
 
     # status update this vote
     if voter and voter.can_update_status():
+      print("voter can update status")
       status_update_label = voter.user.update_status_template() % "your ballot tracker"
       status_update_message = "I voted in %s - my ballot tracker is %s.. #heliosvoting" % (get_election_url(election),cast_vote.vote_hash[:10])
+      print("status_update_message: ", status_update_message)
     else:
+      print("voter cannot update status")
       status_update_label = None
       status_update_message = None
 
     # do we need to constrain the auth_systems?
     if election.eligibility:
       auth_systems = [e['auth_system'] for e in election.eligibility]
+      print("auth_systems: ", auth_systems)
     else:
+      print("auth_systems: ", auth_systems)
       auth_systems = None
 
     password_only = False
@@ -715,6 +739,7 @@ def one_election_cast_confirm(request, election):
       password_login_form = None
 
     return_url = reverse(one_election_cast_confirm, args=[election.uuid])
+    print("return_url: ", return_url)
     login_box = auth_views.login_box_raw(request, return_url=return_url, auth_systems = auth_systems)
 
     return render_template(request, 'election_cast_confirm', {
@@ -727,6 +752,7 @@ def one_election_cast_confirm(request, election):
       
   if request.method == "POST":
     check_csrf(request)
+    print("===================================================")
     
     # voting has not started or has ended
     if (not election.voting_has_started()) or election.voting_has_stopped():
@@ -739,6 +765,7 @@ def one_election_cast_confirm(request, election):
     
     # don't store the vote in the voter's data structure until verification
     cast_vote.save()
+    print("cast_vote: ", cast_vote)
 
     # status update?
     if request.POST.get('status_update', False):
@@ -753,6 +780,7 @@ def one_election_cast_confirm(request, election):
     
     # remove the vote from the store
     del request.session['encrypted_vote']
+
     
     return HttpResponseRedirect(settings.SECURE_URL_HOST + reverse(one_election_cast_done, args=[election.uuid]))
   
@@ -763,6 +791,8 @@ def one_election_cast_done(request, election):
   problems if someone clicks "reload". So we need a strategy.
   We store the ballot hash in the session
   """
+  print("===================================================")
+  print("one_election_cast_done")
   user = get_user(request)
   voter = get_voter(request, user, election)
 
@@ -797,6 +827,7 @@ def one_election_cast_done(request, election):
   
   # remote logout is happening asynchronously in an iframe to be modular given the logout mechanism
   # include_user is set to False if logout is happening
+  print("logout: ", logout)
   return render_template(request, 'cast_done', {'election': election,
                                                 'vote_hash': vote_hash, 'logout': logout},
                          include_user=(not logout))

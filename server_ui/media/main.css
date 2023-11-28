@@ -916,7 +916,7 @@ margin: 50px;
 .action_div{
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   
 }
 .td_action{

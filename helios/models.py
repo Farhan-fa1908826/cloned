@@ -33,6 +33,10 @@ class HeliosModel(models.Model, datatypes.LDObjectContainer):
   class Meta:
     abstract = True
 
+#KHALID ADDED THIS FOR QR TESTING
+class QRCode(HeliosModel):
+  data = models.CharField(max_length=255)
+
 class Election(HeliosModel):
   admin = models.ForeignKey(User, on_delete=models.CASCADE)
   
@@ -400,11 +404,13 @@ class Election(HeliosModel):
             'action': 'Have trustee %s generate a keypair' % t.name
             })
 
-    if self.voter_set.count() == 0 and  self.private_p:
+    if self.voter_set.count() == 0 and self.private_p:
       issues.append({
           "type" : "voters",
           "action" : 'Enter your voter list (or open registration to the public).'
           })
+      
+      # if self.voter_set.count() == 0 and 
 
     return issues    
 

@@ -5,6 +5,7 @@ Helios Django Views
 Ben Adida (ben@adida.net)
 """
 
+import qrcode
 import base64
 import datetime
 import logging
@@ -36,6 +37,8 @@ from .security import (election_view, election_admin,
                        user_can_admin_election, user_can_feature_election)
 from .view_utils import SUCCESS, FAILURE, return_json, render_template, render_template_raw
 from .workflows import homomorphic
+from io import BytesIO
+
 
 # Parameters for everything
 ELGAMAL_PARAMS = elgamal.Cryptosystem()
@@ -252,6 +255,9 @@ def one_election_edit(request, election):
             clean_data = election_form.cleaned_data
             for attr_name in RELEVANT_FIELDS:
                 setattr(election, attr_name, clean_data[attr_name])
+                
+            election.openreg = not clean_data['private_p']
+
             try:
                 election.save()
                 return HttpResponseRedirect(settings.SECURE_URL_HOST + reverse(url_names.election.ELECTION_VIEW, args=[election.uuid]))
@@ -721,9 +727,9 @@ def one_election_cast_confirm(request, election):
     # do we need to constrain the auth_systems?
     if election.eligibility:
       auth_systems = [e['auth_system'] for e in election.eligibility]
-      print("auth_systems: ", auth_systems)
+      # print("auth_systems: ", auth_systems)
     else:
-      print("auth_systems: ", auth_systems)
+      # print("auth_systems: ", auth_systems)
       auth_systems = None
 
     password_only = False
@@ -741,6 +747,8 @@ def one_election_cast_confirm(request, election):
     return_url = reverse(one_election_cast_confirm, args=[election.uuid])
     print("return_url: ", return_url)
     login_box = auth_views.login_box_raw(request, return_url=return_url, auth_systems = auth_systems)
+    
+    # qr_code = generate_qr_code(vote_fingerprint)
 
     return render_template(request, 'election_cast_confirm', {
         'login_box': login_box, 'election' : election, 'vote_fingerprint': vote_fingerprint,
@@ -748,7 +756,9 @@ def one_election_cast_confirm(request, election):
         'return_url': return_url,
         'status_update_label': status_update_label, 'status_update_message': status_update_message,
         'show_password': show_password, 'password_only': password_only, 'password_login_form': password_login_form,
-        'bad_voter_login': bad_voter_login})
+        'bad_voter_login': bad_voter_login,
+        # 'qr_code': qr_code,
+        })
       
   if request.method == "POST":
     check_csrf(request)
@@ -1522,5 +1532,22 @@ def ballot_list(request, election):
   return [v.last_cast_vote().ld_object.short.toDict(complete=True) for v in voters]
 
 
+#KHALID ADDED THIS FOR QR TESTING
+# def generate_qr_code(data):
+#     qr = qrcode.QRCode(
+#         version=1,
+#         error_correction=qrcode.constants.ERROR_CORRECT_L,
+#         box_size=10,
+#         border=4,
+#     )
 
+    # qr.add_data(data)
+    # qr.make(fit=True)
+    # img = qr.make_image(fill_color="black", back_color="white")
 
+    # buffer = BytesIO()
+    # img.save(buffer, format="PNG")
+
+    # image_data = base64.b64encode(buffer.getvalue()).decode()
+
+    # return f"data:image/png;base64,{image_data}"

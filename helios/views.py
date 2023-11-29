@@ -1266,6 +1266,11 @@ def voters_list_pretty(request, election):
   # load a bunch of voters
   # voters = Voter.get_by_election(election, order_by=order_by)
   voters = Voter.objects.filter(election = election).order_by(order_by).defer('vote')
+  #create a list and append every vote hash from the list of voters
+  vote_hash_list = []
+  for voter in voters:
+    vote_hash_list.append(voter.vote_hash)
+  
 
   if q != '':
     if election.use_voter_aliases:
@@ -1277,6 +1282,8 @@ def voters_list_pretty(request, election):
   voters_page = voter_paginator.page(page)
 
   total_voters = voter_paginator.count
+
+  qr_code = generate_qr_code(vote_hash_list)
     
   return render_template(request, 'voters_list', 
                          {'election': election, 'voters_page': voters_page,
@@ -1286,7 +1293,8 @@ def voters_list_pretty(request, election):
                           'upload_p': VOTERS_UPLOAD, 'q' : q,
                           'voter_files': voter_files,
                           'categories': categories,
-                          'eligibility_category_id' : eligibility_category_id})
+                          'eligibility_category_id' : eligibility_category_id,
+                          'qr_code': qr_code,})
 
 @election_admin()
 def voters_eligibility(request, election):

@@ -90,10 +90,11 @@
             {% endif %}
           </p>
 
-          {{login_box|safe}}
+          {% comment %} {{login_box|safe}} {% endcomment %}
 
           <br />
-          Don't worry, we'll remember your ballot while you log in.
+          <b>To cast your ballot, you'll need to log in.<br>
+          Don't worry, we'll remember your ballot while you log in.</b>
         {% endif %}
 
     {% endif %}

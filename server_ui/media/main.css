@@ -1146,3 +1146,13 @@ tr:nth-child(even) {
   flex-direction: column;
   align-items: center;
 }
+.card .qr_code{
+  border-radius: 0rem;
+  width: 150px;
+  height: 150px;
+}
+.qr_code{
+  border-radius: 0rem;
+  width: 150px;
+  height: 150px;
+}

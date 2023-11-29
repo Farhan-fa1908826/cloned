@@ -47,9 +47,9 @@
     <br>
 
     <b class="cast_button">{{vote_fingerprint}}</b>
-    <img src="{{ qr_code }}" alt="QR Code">
+    
   </div>
-
+  <img src="{{ qr_code }}" alt="QR Code" class="qr_code">
   <div id="all_forms">
     {% if voter %}
       {% include "_castconfirm_docast.html" %}

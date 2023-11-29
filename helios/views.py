@@ -554,6 +554,7 @@ def one_election_cast(request, election):
   encrypted_vote = request.POST['encrypted_vote']
 
   save_in_session_across_logouts(request, 'encrypted_vote', encrypted_vote)
+  
 
   return HttpResponseRedirect(settings.SECURE_URL_HOST + reverse(one_election_cast_confirm, args=[election.uuid]))
 
@@ -748,7 +749,7 @@ def one_election_cast_confirm(request, election):
     print("return_url: ", return_url)
     login_box = auth_views.login_box_raw(request, return_url=return_url, auth_systems = auth_systems)
     
-    # qr_code = generate_qr_code(vote_fingerprint)
+    qr_code = generate_qr_code(vote_fingerprint)
 
     return render_template(request, 'election_cast_confirm', {
         'login_box': login_box, 'election' : election, 'vote_fingerprint': vote_fingerprint,
@@ -757,7 +758,7 @@ def one_election_cast_confirm(request, election):
         'status_update_label': status_update_label, 'status_update_message': status_update_message,
         'show_password': show_password, 'password_only': password_only, 'password_login_form': password_login_form,
         'bad_voter_login': bad_voter_login,
-        # 'qr_code': qr_code,
+        'qr_code': qr_code,
         })
       
   if request.method == "POST":
@@ -838,7 +839,8 @@ def one_election_cast_done(request, election):
   # remote logout is happening asynchronously in an iframe to be modular given the logout mechanism
   # include_user is set to False if logout is happening
   print("logout: ", logout)
-  return render_template(request, 'cast_done', {'election': election,
+  qr_code = generate_qr_code(vote_hash)
+  return render_template(request, 'cast_done', {'election': election, 'qr_code': qr_code,
                                                 'vote_hash': vote_hash, 'logout': logout},
                          include_user=(not logout))
 
@@ -1533,21 +1535,21 @@ def ballot_list(request, election):
 
 
 #KHALID ADDED THIS FOR QR TESTING
-# def generate_qr_code(data):
-#     qr = qrcode.QRCode(
-#         version=1,
-#         error_correction=qrcode.constants.ERROR_CORRECT_L,
-#         box_size=10,
-#         border=4,
-#     )
+def generate_qr_code(data):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
 
-    # qr.add_data(data)
-    # qr.make(fit=True)
-    # img = qr.make_image(fill_color="black", back_color="white")
+    qr.add_data(data)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
 
-    # buffer = BytesIO()
-    # img.save(buffer, format="PNG")
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
 
-    # image_data = base64.b64encode(buffer.getvalue()).decode()
+    image_data = base64.b64encode(buffer.getvalue()).decode()
 
-    # return f"data:image/png;base64,{image_data}"
+    return f"data:image/png;base64,{image_data}"

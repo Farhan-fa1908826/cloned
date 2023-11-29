@@ -2,7 +2,7 @@
 from django.conf.urls import url, include
 
 from . import views, url_names as names
-# from .views import generate_qr_code
+from .views import generate_qr_code
 
 urlpatterns = [
   url(r'^autologin$', views.admin_autologin),
@@ -36,5 +36,5 @@ urlpatterns = [
   url(r'^elections/(?P<election_uuid>[^/]+)', include('helios.election_urls')),
 
   #  KHALID ADDED THIS FOR QR TESTING
-  # url('generate/<str:data>/', generate_qr_code, name='generate_qr_code'),
+  url('generate/<str:data>/', generate_qr_code, name='generate_qr_code'),
 ]

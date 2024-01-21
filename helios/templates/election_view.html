@@ -325,7 +325,7 @@ Anyone can vote in this election.
 {% endif %}
 
 {% if admin_p and election.voting_ends_at and not election.tallying_started_at %}
-<br /><a class="extend_button" href="{% url "election@extend" election.uuid %}">Extend voting</a><br />
+<br /><br><br><a class="extend_button" href="{% url "election@extend" election.uuid %}">Extend voting</a><br />
 {% endif %}
 <br>
 <br>

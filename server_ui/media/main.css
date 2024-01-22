@@ -1156,3 +1156,10 @@ tr:nth-child(even) {
   width: 150px;
   height: 150px;
 }
+
+.helios_homepage_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
+}

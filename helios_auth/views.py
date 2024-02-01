@@ -5,11 +5,14 @@ Ben Adida
 2009-07-05
 """
 
+# import utils
+import json
 from urllib.parse import urlencode
-
+from django.http import JsonResponse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
-
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 import settings
 from helios_auth import DEFAULT_AUTH_SYSTEM, ENABLED_AUTH_SYSTEMS
 from helios_auth.security import get_user
@@ -18,7 +21,13 @@ from .auth_systems import AUTH_SYSTEMS, password
 from .models import User
 from .security import FIELDS_TO_SAVE
 from .view_utils import render_template, render_template_raw
-
+from .utils import is_ajax,classify_face
+import base64
+from logs.models import Log 
+from django.core.files.base import ContentFile 
+from helios_auth.models import User
+from profiles.models import Profile
+from django.contrib.auth import logout,login
 
 def index(request):
   """
@@ -161,6 +170,14 @@ def start(request, system_name):
   request.session['auth_system_name'] = system_name
   
   # where to return to when done
+  #
+
+  # if request.session['auth_return_url'] == '/':
+
+  #   request.session['auth_return_url'] = request.GET['return_url']
+  # else:
+  #   request.session['auth_return_url'] = '/'
+
   request.session['auth_return_url'] = request.GET.get('return_url', '/')
 
   return _do_auth(request)
@@ -202,9 +219,213 @@ def after(request):
   return HttpResponseRedirect(reverse(AUTH_AFTER_INTERVENTION))
 
 def after_intervention(request):
-  return_url = "/"
-  if 'auth_return_url' in request.session:
-    return_url = request.session['auth_return_url']
-    del request.session['auth_return_url']
-  return HttpResponseRedirect(settings.URL_HOST + return_url)
+  return_url = "facial_recognition"
+  # success = find_user_view(request)
+  # if success:
+  #   return HttpResponseRedirect(settings.URL_HOST + 'main')
+
+
+  # if 'auth_return_url' in request.session:
+  #   return_url = request.session['auth_return_url']
+  #   del request.session['auth_return_url']
+
+  # return HttpResponseRedirect(settings.URL_HOST + return_url)
+  return HttpResponseRedirect(return_url)
+
+
+
+
+
+#DONT KNOW YET
+def login_view(request):
+  return render_template(request, 'login', {})
+
+def logout_view(request):
+  logout(request)
+  return redirect('login')
+
+@login_required
+def home_view(request):
+  return render_template(request, 'main.html', {})
+
+from django.http import HttpResponseRedirect, JsonResponse
+from django.urls import reverse
+from django.core.exceptions import ObjectDoesNotExist
+
+# def find_user_view(request):
+#     # Retrieve the attempt counter from the session, defaulting to 0 if not present
+#     attempt_counter = request.session.get('attempt_counter', 0)
+
+#     if attempt_counter >= 3:
+#         # End the session if the maximum attempts are reached
+#         request.session.flush()
+#         return JsonResponse({'success': False, 'message': 'Maximum attempts reached. Session ended.'})
+
+#     if is_ajax(request):
+#         # Your existing code for handling AJAX request
+#         print("REQUEST IS " + str(request.body))
+#         # photo = request.POST.get('photo')
+
+#         data = json.loads(request.body.decode('utf-8'))
+
+#                 # Access the 'photo' key from the decoded JSON data
+#         photo = data.get('photo')
+
+
+#         # print(photo)
+#         _, str_img = photo.split(';base64')
+#         decoded_file = base64.b64decode(str_img)
+#         x = Log()
+#         x.photo = ContentFile(decoded_file, 'upload.png')
+#         x.save()
+#         res = classify_face(x.photo.path)
+#         user_exists = User.objects.filter(user_id=res).exists()
+#         print("REQUEST IS " + str(request.body))
+#         # photo = request.POST.get('photo')
+
+#         data = json.loads(request.body.decode('utf-8'))
+
+#                 # Access the 'photo' key from the decoded JSON data
+#         photo = data.get('photo')
+
+
+#         # print(photo)
+#         _, str_img = photo.split(';base64')
+#         decoded_file = base64.b64decode(str_img)
+#         x = Log()
+#         x.photo = ContentFile(decoded_file, 'upload.png')
+#         x.save()
+#         res = classify_face(x.photo.path)
+#         user_exists = User.objects.filter(user_id=res).exists()
+
+#         try:
+#             if user_exists:
+#                 user = User.objects.get(user_id=res)
+#                 profile = Profile.objects.get(user=user)
+#                 x.profile = profile
+#                 x.save()
+#                 login(request, user)
+#                 print("SUCCESS")
+#                 print("USER IS " + str(user))
+#                 print("SUCCESS")
+
+#                 # Reset the attempt counter on success
+#                 request.session['attempt_counter'] = 0
+
+#                 # Redirect to the main page on success
+#                 return JsonResponse({'success': True, 'redirect_url': reverse('auth@after-intervention')})
+#             else:
+#                 # Increment the attempt counter on failure
+#                 request.session['attempt_counter'] = attempt_counter + 1
+
+#                 print("FAILURE")
+#                 print("FAILURE")
+#                 print("FAILURE")
+
+#                 # Return JSON response indicating failure with a message
+#                 return JsonResponse({'success': False, 'message': 'Invalid user. Attempts remaining: {}'.format(3 - attempt_counter), 'redirect_url': reverse('facial_recognition')})
+#         except ObjectDoesNotExist:
+#             # Handle the case when the user or profile does not exist
+#             print("USER OR PROFILE DOES NOT EXIST")
+
+#             # Increment the attempt counter on failure
+#             request.session['attempt_counter'] = attempt_counter + 1
+
+#             # Return JSON response indicating failure with a message
+#             return JsonResponse({'success': False, 'message': 'Invalid user. Attempts remaining: {}'.format(3 - attempt_counter), 'redirect_url': reverse('facial_recognition')})
+#     else:
+#         # Your existing code for non-AJAX request
+
+#         try:
+#             if user_exists:
+#                 user = User.objects.get(user_id=res)
+#                 profile = Profile.objects.get(user=user)
+#                 x.profile = profile
+#                 x.save()
+#                 login(request, user)
+#                 print("SUCCESS")
+#                 print("USER IS " + str(user))
+#                 print("SUCCESS")
+
+#                 # Reset the attempt counter on success
+#                 request.session['attempt_counter'] = 0
+
+#                 # Redirect to the main page on success
+#                 return HttpResponseRedirect(reverse('auth@after-intervention'))
+#             else:
+#                 # Increment the attempt counter on failure
+#                 request.session['attempt_counter'] = attempt_counter + 1
+
+#                 print("FAILURE")
+#                 print("FAILURE")
+#                 print("FAILURE")
+
+#                 # Redirect to the login page on failure with a message
+#                 return HttpResponseRedirect(reverse('facial_recognition') + '?message=Invalid user. Attempts remaining: {}'.format(3 - attempt_counter))
+#         except ObjectDoesNotExist:
+#             # Handle the case when the user or profile does not exist
+#             print("USER OR PROFILE DOES NOT EXIST")
+
+#             # Increment the attempt counter on failure
+#             request.session['attempt_counter'] = attempt_counter + 1
+
+#             # Redirect to the login page on failure with a message
+#             return HttpResponseRedirect(reverse('facial_recognition') + '?message=Invalid user. Attempts remaining: {}'.format(3 - attempt_counter))
+
+
+def find_user_view(request):
+  attempt_counter = request.session.get('attempt_counter', 0)
+
+  if attempt_counter >= 3:
+    request.session.flush()
+    return JsonResponse({'success': False, 'message': 'Maximum attempts reached. Session ended.'})
+  if is_ajax(request):
+    # photo = request.POST.get('photo')
+
+    data = json.loads(request.body.decode('utf-8'))
+    photo = data.get('photo')
+
+
+    _, str_img = photo.split(';base64')
+    decoded_file = base64.b64decode(str_img)
+    x = Log()
+    x.photo = ContentFile(decoded_file, 'upload.png')
+    x.save()
+    res = classify_face(x.photo.path)
+    user_exists = User.objects.filter(user_id=res).exists()
+    if user_exists:
+      user = User.objects.get(user_id=res)
+      profile = Profile.objects.get(user=user)
+      x.profile = profile
+      x.save()
+      login(request,user)
+      print("SUCCESS")
+      print("USER IS " + str(user))
+      print("SUCCESS")
+      request.session['attempt_counter'] = 0
+      return JsonResponse({'success': True, 'redirect_url': reverse('auth@after')}) 
+    else:
+        request.session['attempt_counter'] = attempt_counter + 1
+        print("FAILURE")
+        print("FAILURE")
+        
+        return JsonResponse({'success': False, 'message': 'Invalid user. Attempts remaining: {}'.format(3 - attempt_counter), 'redirect_url': reverse('facial_recognition')})
+        # return HttpResponseRedirect(settings.URL_HOST + 'facial_recognition')
+
+
+def facial_recognition(request):
+  # get user from request
+  # print(request.FILES['photo'])
+  # utils.classify_face(request.FILES['photo'])
+  # user = get_user(request)
+  # print(user.name)
+  # find_user_view(request)
+
+  # success = find_user_view(request)
+  # if success:
+  #   return HttpResponseRedirect(settings.URL_HOST + 'main')
+  # else:
+  #   return render_template(request, 'facial_recognition', {})
+
+  return render_template(request, 'facial_recognition', {})
 

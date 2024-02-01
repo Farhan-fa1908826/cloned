@@ -158,3 +158,5 @@ class LDAPAuthTests(TestCase):
         print(response.content)
         self.assertContains(response, "not logged in")
         self.assertNotContains(response, "euclid")
+
+

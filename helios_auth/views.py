@@ -21,7 +21,7 @@ from .auth_systems import AUTH_SYSTEMS, password
 from .models import User
 from .security import FIELDS_TO_SAVE
 from .view_utils import render_template, render_template_raw
-from .utils import is_ajax,classify_face
+from .utils import is_ajax,classify_face, combine_shares_to_recreate_image, compare_faces
 import base64
 from logs.models import Log 
 from django.core.files.base import ContentFile 
@@ -30,6 +30,12 @@ from profiles.models import Profile
 from django.contrib.auth import logout,login
 from django.shortcuts import render
 from .signals import post_request_signal
+from django.core.serializers import serialize
+from django.core.serializers.json import DjangoJSONEncoder
+import ast
+import numpy as np
+import cv2
+
 
 
 def index(request):
@@ -377,7 +383,6 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 def find_user_view(request):
-  print("HELLLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
   # attempt_counter = request.session.get('attempt_counter', 0)
 
   # if attempt_counter >= 3:
@@ -385,8 +390,6 @@ def find_user_view(request):
   #   return JsonResponse({'success': False, 'message': 'Maximum attempts reached. Session ended.'})
   # if is_ajax(request):
   photo = request.POST.get('images')
-  print("REQUEST IS " + str(request))
-  print("PHOTO IS " + str(photo))
 
   #   data = json.loads(request.body.decode('utf-8'))
   #   photo = data.get('photo')
@@ -420,25 +423,96 @@ def find_user_view(request):
 
 
 def facial_recognition(request):
-      return render_template(request, 'facial_recognition')
+    user = get_user(request)
+    user_data = {
+        'server_user_face_share': user.server_user_face_share,
+    }
+    user_json = json.dumps(user_data, cls=DjangoJSONEncoder)
+    return render(request, 'facial_recognition.html', {'user_json': user_json})
   # render(request, 'facial_recognition.html', {})
   # response = HttpResponse()
   # post_view_signal.send(sender=facial_recognition, response=response)
   # response.custom_middleware_called = True
   # return response
 
-def facial_recognition_verify(request):
-  user = get_user(request)
-  if user.has_face_image():
-    print("USER HAS FACE IMAGE")
-    print(user.server_user_face_share)
-  else:
-    print(user.name)
-    print("USER DOES NOT HAVE FACE IMAGE")
+# def facial_recognition_verify(request):
+#   user = get_user(request)
+#   if user.has_face_image():
+#     print("USER HAS FACE IMAGE")
+#     print(user.server_user_face_share)
+
+#   else:
+#     print(user.name)
+#     print("USER DOES NOT HAVE FACE IMAGE")
   
-  if request.method == 'POST':
-        response = request.POST.get('response')
-        print(response)
-        return JsonResponse({ 'response' : response })
-  else:
-        return JsonResponse({'message': 'Data processed wrong'})
+#   if request.method == 'POST':
+#         response = request.POST.get('response')
+#         print(response)
+#         return JsonResponse({ 'response' : response })
+#   else:
+#         return JsonResponse({'message': 'Data processed wrong'})
+  
+def recombine_shares(request):
+    print(request.user.is_authenticated)
+    if request.method == 'POST':
+      data = json.loads(request.body)
+      c1_array = data.get('file1Array', [])
+      c2_array = data.get('file2Array', [])
+      server_random_array = data.get('file3Array', [])
+      base_64_str_2 = data.get('mainResponse', '')
+
+
+      user = get_user(request)
+      server_array = json.loads(user.server_user_face_share)
+      c1_random_array =  json.loads(user.random_1)
+      c2_random_array =  json.loads(user.random_2)
+
+
+      if c1_array[len(c1_array) - 1] == "r" and c2_array[len(c2_array) - 1] == "g":
+        base_64_str_1 = combine_shares_to_recreate_image(server_array, c1_array, c2_array, 1280,720, c1_random_array, c2_random_array, server_random_array)
+      elif c1_array[len(c1_array) - 1] == "r" and c2_array[len(c2_array) - 1] == "b":
+        base_64_str_1 = combine_shares_to_recreate_image(server_array, c1_array, c2_array, 1280,720, c1_random_array, server_random_array, c2_random_array)
+      elif c1_array[len(c1_array) - 1] == "g" and c2_array[len(c2_array) - 1] == "b":
+        base_64_str_1 = combine_shares_to_recreate_image(server_array, c1_array, c2_array, 1280,720, server_random_array, c1_random_array, c2_random_array)
+      
+
+      similarity_index = compare_faces(base_64_str_1, base_64_str_2)
+      print("SIMILARITY INDEX IS " + str(similarity_index))
+
+      # request.session['attempt_counter'] = 1
+
+      attempt_counter = request.session.get('attempt_counter', 0)
+      max_attempts = 3
+      attempts_left = max_attempts - attempt_counter
+
+      if similarity_index is not None and similarity_index < 0.5:
+        print("SIMILARITY INDEX IS LESS THAN 0.5")
+        request.user.is_authenticated = True
+        redirect_url = reverse('auth@index') 
+        return JsonResponse({'redirect_url': redirect_url})
+      elif similarity_index is not None and similarity_index >= 0.5:
+        if attempts_left > 0:
+            request.session['attempt_counter'] = attempt_counter + 1
+            return JsonResponse({'message': f'Authentication unsuccessful. {attempts_left} attempts left.'})
+        else:
+          request.session.clear()
+          redirect_url = '/'  # Adjust the URL name as needed
+          return JsonResponse({'redirect_url': redirect_url, 'message': 'Maximum attempts reached. Session ended.'})
+            # if 'attempt_counter' not in request.session:
+            #     request.session['attempt_counter'] = 1
+            # else:
+            #     request.session['attempt_counter'] += 1
+              
+            # if request.session['attempt_counter'] > 3:
+            #     request.session.flush()
+            #     return redirect('home_logged_out_url')
+            # else:
+            #     return redirect('initial_auth_page_url') + '?alert=unsuccessful'
+      else:
+        return JsonResponse({'message': 'Authentication unsuccessful. The scan could not be read successfully. Please try again.'}, status=200)
+
+    else:
+      return JsonResponse({'error': 'Method not allowed'}, status=405)
+    
+
+# s_list, c1_list, c2_list, width, height, r_random_list, g_random_list, b_random_list

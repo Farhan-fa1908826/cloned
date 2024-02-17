@@ -20,6 +20,8 @@ class User(models.Model):
 
   # from .auth_systems import AUTH_SYSTEMS, can_check_constraint
   server_user_face_share = models.TextField(blank=True, null=True)
+  random_1 = models.TextField(blank=True, null=True)
+  random_2 = models.TextField(blank=True, null=True)
   last_login = models.DateTimeField(auto_now=True)
   user_type = models.CharField(max_length=50)
   user_id = models.CharField(max_length=100)

@@ -24,6 +24,11 @@ import face_recognition
 import base64
 import numpy as np
 import cv2
+import os
+import json
+from django.http import JsonResponse
+from django.shortcuts import redirect
+from django.contrib import messages
 
 def compare_faces(base64_str1, base64_str2):
   try:
@@ -276,25 +281,71 @@ def classify_face(user, request, response, **kwargs):
         # else:
         #     print("Error occurred during comparison.")
         # print(user.server_user_face_share)
+    # else:
+    #     face_image, width, height = decode_base64_image(img)
+    #     server,c1,c2, r_random, g_random, b_random = generate_visual_cryptography_shares(face_image)
+    #     if c1[len(c1) - 1] == "r" and c2[len(c2) - 1] == "g":
+    #         r1_string = ' '.join(map(str, b_random))
+    #         file_path_3 = 'r3.txt'
+    #         with open(file_path_3, 'w') as file:
+    #             file.write(r1_string)
+    #         random_1 = json.dumps(r_random)
+    #         user.random_1 = random_1
+    #         user.save()
+    #         random_2 = json.dumps(g_random)
+    #         user.random_2 = random_2
+    #         user.save()
+    #     elif c1[len(c1) - 1] == "r" and c2[len(c2) - 1] == "b":
+    #         r1_string = ' '.join(map(str, g_random))
+    #         file_path_3 = 'r3.txt'
+    #         with open(file_path_3, 'w') as file:
+    #             file.write(r1_string)
+    #         random_1 = json.dumps(r_random)
+    #         user.random_1 = random_1
+    #         user.save()
+    #         random_2 = json.dumps(b_random)
+    #         user.random_2 = random_2
+    #         user.save()
+    #     elif c1[len(c1) - 1] == "g" and c2[len(c2) - 1] == "b":
+    #         r1_string = ' '.join(map(str, r_random))
+    #         file_path_3 = 'r3.txt'
+    #         with open(file_path_3, 'w') as file:
+    #             file.write(r1_string)
+    #         random_1 = json.dumps(g_random)
+    #         user.random_1 = random_1
+    #         user.save()
+    #         random_2 = json.dumps(b_random)
+    #         user.random_2 = random_2
+    #         user.save()
+    #     server_share_json = json.dumps(server)
+    #     user.server_user_face_share = server_share_json
+    #     user.save()
+    #     c1_string = ' '.join(map(str, c1))
+    #     c2_string = ' '.join(map(str, c2))
+    #     file_path_1 = 'c1.txt'
+    #     file_path_2 = 'c2.txt'
+    #     with open(file_path_1, 'w') as file:
+    #         file.write(c1_string)
+    #     with open(file_path_2, 'w') as file:
+    #         file.write(c2_string)
+    #     print("SAVING USER FACE IMAGE ON CLIENT DEVICE AND IN SERVER")
     else:
         face_image, width, height = decode_base64_image(img)
-        server,c1,c2, r_random, g_random, b_random = generate_visual_cryptography_shares(face_image)
+        server, c1, c2, r_random, g_random, b_random = generate_visual_cryptography_shares(face_image)
+
+        # Construct the desktop path
+        desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
+
         if c1[len(c1) - 1] == "r" and c2[len(c2) - 1] == "g":
             r1_string = ' '.join(map(str, b_random))
-            file_path_3 = 'r3.txt'
-            with open(file_path_3, 'w') as file:
-                file.write(r1_string)
             random_1 = json.dumps(r_random)
             user.random_1 = random_1
             user.save()
             random_2 = json.dumps(g_random)
             user.random_2 = random_2
-            user.save()
+            user.save()   
         elif c1[len(c1) - 1] == "r" and c2[len(c2) - 1] == "b":
             r1_string = ' '.join(map(str, g_random))
-            file_path_3 = 'r3.txt'
-            with open(file_path_3, 'w') as file:
-                file.write(r1_string)
             random_1 = json.dumps(r_random)
             user.random_1 = random_1
             user.save()
@@ -303,28 +354,40 @@ def classify_face(user, request, response, **kwargs):
             user.save()
         elif c1[len(c1) - 1] == "g" and c2[len(c2) - 1] == "b":
             r1_string = ' '.join(map(str, r_random))
-            file_path_3 = 'r3.txt'
-            with open(file_path_3, 'w') as file:
-                file.write(r1_string)
             random_1 = json.dumps(g_random)
             user.random_1 = random_1
             user.save()
             random_2 = json.dumps(b_random)
             user.random_2 = random_2
             user.save()
+
+        file_path_3 = os.path.join(desktop_path, 'r3.txt')
+        with open(file_path_3, 'w') as file:
+            file.write(r1_string)
+
+        # Save server_user_face_share
         server_share_json = json.dumps(server)
         user.server_user_face_share = server_share_json
         user.save()
+
+        # Save c1.txt and c2.txt on the desktop
         c1_string = ' '.join(map(str, c1))
         c2_string = ' '.join(map(str, c2))
-        file_path_1 = 'c1.txt'
-        file_path_2 = 'c2.txt'
+        file_path_1 = os.path.join(desktop_path, 'c1.txt')
+        file_path_2 = os.path.join(desktop_path, 'c2.txt')
+        
         with open(file_path_1, 'w') as file:
             file.write(c1_string)
         with open(file_path_2, 'w') as file:
             file.write(c2_string)
+
+        # Display an alert on the browser
+        messages.success(request, 'Files have been saved to your desktop.')
+
         print("SAVING USER FACE IMAGE ON CLIENT DEVICE AND IN SERVER")
 
+        # Redirect the user to the home page
+        return redirect('/')
 
     # user = get_user(response)
     # user.server_user_face_share.save('server_share.png', ContentFile(server), save=True)

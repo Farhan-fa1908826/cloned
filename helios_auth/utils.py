@@ -269,11 +269,13 @@ def classify_face(user, request, response, **kwargs):
     This function takes an image as input and returns the name of the face it contains
     """
     
-    response_data = response.content.decode('utf-8')  # Decode the bytes object to a string
-    response_dict = json.loads(response_data)  # Parse the JSON string into a Python dictionary
-    response_value = response_dict.get('response', None)
-    img = response_value
+
     if user.has_face_image():
+        response_data = response.content.decode('utf-8')  # Decode the bytes object to a string
+        response_dict = json.loads(response_data)  # Parse the JSON string into a Python dictionary
+        response_value = response_dict.get('response', None)
+        img = response_value
+
         print("USER HAS FACE IMAGE NO NEED TO SAVE ANYTHING")
         # similarity_index = compare_faces(img, base64_str3)
         # if similarity_index is not None:
@@ -330,6 +332,10 @@ def classify_face(user, request, response, **kwargs):
     #         file.write(c2_string)
     #     print("SAVING USER FACE IMAGE ON CLIENT DEVICE AND IN SERVER")
     else:
+        # img = response
+        print("RESPONSE FROM FACIAL RECOGNITION")
+        print(response)
+        img = response
         face_image, width, height = decode_base64_image(img)
         server, c1, c2, r_random, g_random, b_random = generate_visual_cryptography_shares(face_image)
 

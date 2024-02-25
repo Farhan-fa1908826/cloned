@@ -106,7 +106,7 @@
 {% endif %}
 
 
-Voters {{voters_page.start_index}} - {{voters_page.end_index}} (of {{total_voters}})&nbsp;&nbsp;
+{% comment %} Voters {{voters_page.start_index}} - {{voters_page.end_index}} (of {{total_voters}})&nbsp;&nbsp; {% endcomment %}
 
 {% if voters_page.has_next %}
 <a href="{% url "election@voters@list-pretty" election.uuid %}?page={{voters_page.next_page_number}}&limit={{limit}}&q={{q|urlencode}}">Next {{limit}}</a> &nbsp;&nbsp;
@@ -126,7 +126,7 @@ Voters {{voters_page.start_index}} - {{voters_page.end_index}} (of {{total_voter
       <th>Alias</th>
     {% endif %}
     
-    <th>Smart Ballot Tracker</th>
+    {% comment %} <th>Smart Ballot Tracker</th> {% endcomment %}
 
     {% if admin_p %}
       <th>Actions</th>
@@ -148,7 +148,7 @@ Voters {{voters_page.start_index}} - {{voters_page.end_index}} (of {{total_voter
         <td>{{voter.alias}}</td>
       {% endif %}
       
-      <td><tt style="font-size: 1.4em;">{% if voter.vote_hash %}{{voter.vote_hash}} <span style="font-size:0.8em;"><!-- no link for now --></span>{% else %}&mdash;{% endif %}</tt></td>
+      {% comment %} <td><tt style="font-size: 1.4em;">{% if voter.vote_hash %}{{voter.vote_hash}} <span style="font-size:0.8em;"><!-- no link for now --></span>{% else %}&mdash;{% endif %}</tt></td> {% endcomment %}
   
 
       {% if admin_p %}
@@ -162,7 +162,41 @@ Voters {{voters_page.start_index}} - {{voters_page.end_index}} (of {{total_voter
     </tr>
   {% endfor %}
 </table>
-<img src="{{ qr_code }}" alt="QR Code" class="qr_code">
+{% comment %} <table>
+  <tr>
+    
+    <th>Ballot Tracker</th>
+    <th>QR Code</th>
+  </tr>
+  {% for vote in castvote %}
+    <tr>
+      <td>{{ vote }}</td>
+    </tr>
+  {% endfor %}
+  <tr>
+    <td rowspan="{{ castvote|length|add:1 }}">
+      <img src="{{ qr_code }}" alt="QR Code" class="qr_code">
+    </td>
+  </tr>
+  
+</table> {% endcomment %}
+
+<table>
+  <tr>
+    <th>Ballot Tracker</th>
+    <th>QR Code</th>
+  </tr>
+  {% for vote in castvote %}
+    <tr>
+      <td>{{ vote }}</td>
+      {% if forloop.first %}
+        <td rowspan="{{ castvote|length }}">
+          <img src="{{ qr_code }}" alt="QR Code" class="qr_code">
+        </td>
+      {% endif %}
+    </tr>
+  {% endfor %}
+</table>
 
 
 {% else %}

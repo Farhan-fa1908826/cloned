@@ -65,6 +65,26 @@ function load_ballots(election_url, ballot_list, ballots, final_callback) {
         load_ballots(election_url, ballot_list, ballots, final_callback);
     });
 }
+function load_ballots2(election_url, ballot_list, ballots) {
+    result_append("")
+    result_append("")
+    result_append("<h3>Tracking numbers</h3>");
+    result_append("<p><strong>Note:</strong> Below is a comprehensive list of all ballot tracking numbers from this election, including those that may no longer be reflected in the tally due to voter replacements. This approach was implemented to allow coerced voters to revote without being detected by the absence of the coerced vote (ballot tracker) on the verification page or bulletin board.</p>");
+
+    counter =1
+    for(var i =0 ; i<ballot_list.length; i++){
+        $.get(election_url + "/ballots/" + ballot_list[i].uuid + '/all', function(result) {
+            var voter_votes = jQuery.secureEvalJSON(result);
+            //iterate through the voter_votes and print the return from the vote.hash
+            for(var j = 0; j<voter_votes.length; j++){
+                var vote = HELIOS.EncryptedVote.fromJSONObject(voter_votes[j].vote, election);
+                result_append("-- Ballot Tracking Number #"+(counter++)+": " + vote.get_hash());
+            }
+        });
+            
+    }
+    
+}
 
 // load the ballot list in increments of 50, for long ballots
 function load_ballot_list(election_url, ballot_list, after, final_callback) {
@@ -87,6 +107,7 @@ function load_ballot_list(election_url, ballot_list, after, final_callback) {
         load_ballot_list(election_url, ballot_list, after, final_callback);
     });
 }
+
 
 function load_election_and_ballots(election_url) {
         
@@ -120,9 +141,11 @@ function load_election_and_ballots(election_url) {
             // load voter list
             load_ballot_list(election_url, [], null, function(ballot_list) {
                 result_append("loaded voter list, now loading ballots for each..");
+                
 
                 // load all ballots
                 load_ballots(election_url, ballot_list, [], function(ballots) {
+                
                     result_append("");
                     result_append("<h3>Ballots</h3>");
                     // now load each ballot
@@ -134,7 +157,7 @@ function load_election_and_ballots(election_url) {
                         var vote = HELIOS.EncryptedVote.fromJSONObject(cast_vote.vote, election);
                         result_append("Voter #" + (i+1));
                         result_append("-- UUID: " + cast_vote.voter_uuid);
-                        result_append("-- Ballot Tracking Number: " + vote.get_hash());
+                        // result_append("-- Ballot Tracking Number: " + vote.get_hash());
 
                         vote.verifyProofs(election.public_key, function(answer_num, choice_num, result, choice) {
                             overall_result = overall_result && result;
@@ -150,6 +173,10 @@ function load_election_and_ballots(election_url) {
 
                         result_append("");
                     });
+                    if(overall_result){
+                        load_ballots2(election_url, ballot_list, []);
+                        result_append("");  
+                    } 
 
                     // get the election result
                     $.get(election_url + "/result", function(result) {
@@ -240,7 +267,7 @@ function load_election_and_ballots(election_url) {
                            }
                         });
                     });
-                });
+                });       
 
             });
     } catch (error) {

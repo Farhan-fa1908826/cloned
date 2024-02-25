@@ -1071,6 +1071,12 @@ class CastVote(HeliosModel):
   def datatype(self):
     return self.voter.datatype.replace('Voter', 'CastVote')
 
+  #I want a function to return all vote hash so far in castvote class
+  @classmethod
+  def get_all_vote_hash(cls, election_uuid):
+    #return all vote hash so far in castvote class where the election_uuid is equal to the election_uuid
+    return cls.objects.filter(voter__election__uuid = election_uuid).values_list('vote_hash', flat=True)
+    
   @property
   def voter_uuid(self):
     return self.voter.uuid  

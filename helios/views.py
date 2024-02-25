@@ -1270,6 +1270,17 @@ def voters_list_pretty(request, election):
   vote_hash_list = []
   for voter in voters:
     vote_hash_list.append(voter.vote_hash)
+  #Create a list of all vote hash in castvote
+  castvote_list = []
+  #I want to call this function from models.py get_all_vote_hash
+  castvote_list = CastVote.get_all_vote_hash(election.uuid)
+  print("castvote_list: ", castvote_list)
+
+  
+  #print each item in the list
+  for vote_hash in castvote_list:
+    print("Vote hash=============================-------", vote_hash)
+
   
 
   if q != '':
@@ -1283,7 +1294,7 @@ def voters_list_pretty(request, election):
 
   total_voters = voter_paginator.count
 
-  qr_code = generate_qr_code(vote_hash_list)
+  qr_code = generate_qr_code(castvote_list)
     
   return render_template(request, 'voters_list', 
                          {'election': election, 'voters_page': voters_page,

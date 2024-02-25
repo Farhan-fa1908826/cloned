@@ -35,8 +35,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 import ast
 import numpy as np
 import cv2
-
-
+from django.contrib import messages
 
 def index(request):
   """
@@ -146,6 +145,7 @@ def logout(request):
   """
 
   return_url = request.GET.get('return_url',"/")
+  request.session['authentication_step'] = 0
   response = do_complete_logout(request, return_url)
   if response:
     return response
@@ -247,6 +247,7 @@ def after_intervention(request):
 
 #DONT KNOW YET
 def login_view(request):
+  request.session['authentication_step'] = 1
   return render_template(request, 'login', {})
 
 def logout_view(request):
@@ -425,6 +426,7 @@ def find_user_view(request):
 def facial_recognition(request):
     user = get_user(request)
     user_data = {
+        'name': user.name,
         'server_user_face_share': user.server_user_face_share,
     }
     user_json = json.dumps(user_data, cls=DjangoJSONEncoder)
@@ -453,6 +455,7 @@ def facial_recognition(request):
 #         return JsonResponse({'message': 'Data processed wrong'})
   
 def recombine_shares(request):
+    request.session['authentication_step'] = 2
     print(request.user.is_authenticated)
     if request.method == 'POST':
       data = json.loads(request.body)
@@ -487,6 +490,7 @@ def recombine_shares(request):
 
       if similarity_index is not None and similarity_index < 0.5:
         print("SIMILARITY INDEX IS LESS THAN 0.5")
+        request.session['authentication_step'] = 3
         # request.user.is_authenticated = True
         redirect_url = reverse('auth@index') 
         return JsonResponse({'redirect_url': redirect_url})
@@ -527,12 +531,10 @@ def classify_face_view(request):
 
             # Perform face classification logic here
             # You may use a machine learning model or any other logic based on your requirements
-
-            # For demonstration purposes, let's assume the classification result is 'success'
-            result_message = 'Classification successful'
-
-            # Return a JSON response
-            return JsonResponse({'message': result_message})
+            message1 = 'You have been logged out. To log in again, scan your face and upload the three files.'
+            message2 = 'Three files have been saved to your desktop. These files need to be saved in a secure location and kept with the same names. Please do not lose them. You will need them to log in again.'
+            logout(request)
+            return JsonResponse({'redirect_url': '/', 'message1': message1, 'message2': message2})
 
         except Exception as e:
             # Handle exceptions if any

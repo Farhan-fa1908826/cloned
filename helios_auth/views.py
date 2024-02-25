@@ -41,7 +41,8 @@ def index(request):
   """
   the page from which one chooses how to log in.
   """
-  
+  print("INDEX VIEW")
+  print(request.session.get('authentication_step', 0))  
   user = get_user(request)
 
   # single auth system?
@@ -60,7 +61,8 @@ def index(request):
   return render_template(request, 'index', {'return_url' : request.GET.get('return_url', '/'),
                                             'enabled_auth_systems' : ENABLED_AUTH_SYSTEMS,
                                             'default_auth_system': DEFAULT_AUTH_SYSTEM,
-                                            'default_auth_system_obj': default_auth_system_obj})
+                                            'default_auth_system_obj': default_auth_system_obj, 
+                                            'authentication_step': request.session.get('authentication_step', 0)})
 
 def login_box_raw(request, return_url='/', auth_systems = None):
   """
@@ -247,7 +249,7 @@ def after_intervention(request):
 
 #DONT KNOW YET
 def login_view(request):
-  request.session['authentication_step'] = 1
+  # request.session['authentication_step'] = 1
   return render_template(request, 'login', {})
 
 def logout_view(request):
@@ -455,7 +457,7 @@ def facial_recognition(request):
 #         return JsonResponse({'message': 'Data processed wrong'})
   
 def recombine_shares(request):
-    request.session['authentication_step'] = 2
+    # request.session['authentication_step'] = 2
     print(request.user.is_authenticated)
     if request.method == 'POST':
       data = json.loads(request.body)
@@ -491,9 +493,14 @@ def recombine_shares(request):
       if similarity_index is not None and similarity_index < 0.5:
         print("SIMILARITY INDEX IS LESS THAN 0.5")
         request.session['authentication_step'] = 3
+        print(request.session['authentication_step'])
+        print(request.session['authentication_step'])
+        print(request.session['authentication_step'])
+        # request.user.is_authenticated = True
+        # print(request.session['authentication_step'])
         # request.user.is_authenticated = True
         redirect_url = reverse('auth@index') 
-        return JsonResponse({'redirect_url': redirect_url})
+        return JsonResponse({'redirect_url': redirect_url, 'authentication_step': request.session['authentication_step']})
       elif similarity_index is not None and similarity_index >= 0.5:
         if attempts_left > 0:
             request.session['attempt_counter'] = attempt_counter + 1

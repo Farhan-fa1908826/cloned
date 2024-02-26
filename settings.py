@@ -37,6 +37,7 @@ MANAGERS = ADMINS
 
 # is this the master Helios web site?
 MASTER_HELIOS = (get_from_env('MASTER_HELIOS', '1') == '1')
+# MASTER_HELIOS = True
 
 # show ability to log in? (for example, if the site is mostly used by voters)
 # if turned off, the admin will need to know to go to /auth/login manually

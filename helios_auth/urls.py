@@ -29,7 +29,6 @@ urlpatterns = [
     url(r'^after_intervention$', views.after_intervention, name=url_names.AUTH_AFTER_INTERVENTION),
     url(r'^facial_recognition/classify/$',find_user_view, name='classify'),
     url(r'^facial_recognition/$',views.facial_recognition, name='facial_recognition'),
-    url(r'^facial_recognition/verify/$',views.facial_recognition_verify, name='verify'),
 
 ]
 

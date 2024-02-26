@@ -1299,6 +1299,7 @@ def voters_list_pretty(request, election):
   return render_template(request, 'voters_list', 
                          {'election': election, 'voters_page': voters_page,
                           'voters': voters_page.object_list, 'admin_p': admin_p, 
+                          'castvote': castvote_list,
                           'email_voters': VOTERS_EMAIL,
                           'limit': limit, 'total_voters': total_voters,
                           'upload_p': VOTERS_UPLOAD, 'q' : q,

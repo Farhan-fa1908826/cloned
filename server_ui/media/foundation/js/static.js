@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log(window.location.pathname);
         const what_and_why_container = document.querySelector('.large-9');
         const logged_right_box = document.querySelector('.logged-right-box');
-        if(logged.textContent.trim() == "Logout"){
+        if(logged.textContent == "Logout"){
             console.log("User is logged in");
             // what_and_why_container.style.display = 'none';
             // logged_right_box.style.borderright = 'none';

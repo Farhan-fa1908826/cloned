@@ -12,7 +12,7 @@
 //     var container = document.getElementById('formContainer');
 //     container.innerHTML = formHTML;
 // }
-
+// var userData = JSON.parse(user_json|escapejs);
 const getCookie = (name) => {
   let cookieValue = null;
   if (document.cookie && document.cookie !== "") {
@@ -30,6 +30,47 @@ const getCookie = (name) => {
 
 const component = document.getElementsByTagName("face-liveness")[0];
 
+// component.settings = {
+//   locale: 'en',
+//   copyright: true,
+//   cameraId: '123',
+//   changeCamera: true,
+//   startScreen: true,
+//   closeDisabled: true,
+//   finishScreen: true,
+//   videoRecording: true,
+//   url: 'https://your-server.com',
+//   headers: {
+//       Authorization: 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=='
+//   },
+//   tag: 'sessionIdValue',
+//   retryCount: 5,
+//   customization: {
+//       fontFamily: 'Noto Sans, sans-serif',
+//       fontSize: '16px',
+//       onboardingScreenStartButtonBackground: '#7E57C5',
+//       onboardingScreenStartButtonBackgroundHover: '#7c45b4',
+//       onboardingScreenStartButtonTitle: '#FFFFFF',
+//       onboardingScreenStartButtonTitleHover: '#FFFFFF',
+//       cameraScreenFrontHintLabelBackground: '#E8E8E8',
+//       onboardingScreenIllumination: 'https://path-to-image.com',
+//       onboardingScreenAccessories: 'data:image/svg+xml;base64,PHN2...',
+//       onboardingScreenCameraLevel: importedImage,
+//       cameraScreenFrontHintLabelText: '#000000',
+//       cameraScreenSectorActive: '#7E57C5',
+//       cameraScreenSectorTarget: '#BEABE2',
+//       cameraScreenStrokeNormal: '#7E57C5',
+//       processingScreenProgress: '#7E57C5',
+//       retryScreenRetryButtonBackground: '#7E57C5',
+//       retryScreenRetryButtonBackgroundHover: '#7c45b4',
+//       retryScreenRetryButtonTitle: '#FFFFFF',
+//       retryScreenRetryButtonTitleHover: '#FFFFFF',
+//       retryScreenEnvironmentImage: 'https://path-to-image.com',
+//       retryScreenPersonImage: 'data:image/svg+xml;base64,PHN2...',
+//       successScreenImage: importedImage,
+//   }
+// };
+
 function listener(event) {
   if (
     event.detail.action === "PROCESS_FINISHED" &&
@@ -39,13 +80,23 @@ function listener(event) {
     const response = event.detail.data.response;
 
     if (userData.server_user_face_share) {
+      document.getElementById('messageContainer').innerHTML = `
+            <h1> Welcome ${userData.name} </h1>
+            <h2> Log In Step 2 : Upload your 3 files </h2>
+        `;
       component.style.display = "none";
       var formHTML = `
                 <form id="share_form" method="post" enctype="multipart/form-data">
-                    <input type="file" name="file1">
-                    <input type="file" name="file2">
-                    <input type="file" name="file3">
-                    <input type="submit" value="Submit">
+                  <label for="file1">Select file 1 (c1.txt):</label>
+                  <input type="file" name="file1" id="file1"><br><br>
+              
+                  <label for="file2">Select file 2 (c2.txt):</label>
+                  <input type="file" name="file2" id="file2"><br><br>
+              
+                  <label for="file3">Select file 3 (r3.txt):</label>
+                  <input type="file" name="file3" id="file3"><br><br>
+              
+                  <input type="submit" value="Submit">
                 </form>
             `;
 
@@ -58,81 +109,90 @@ function listener(event) {
         .getElementById("share_form")
         .addEventListener("submit", function (event) {
           event.preventDefault();
-
+          $('#loading').show();
           var file1 = this.elements.file1.files[0];
           var file2 = this.elements.file2.files[0];
           var file3 = this.elements.file3.files[0];
 
-          var reader1 = new FileReader();
-          var reader2 = new FileReader();
-          var reader3 = new FileReader();
+          if (file1 && file2 && file3) {
+            if (file1.name === 'c1.txt' && file2.name === 'c2.txt' && file3.name === 'r3.txt') {
+                var reader1 = new FileReader();
+                var reader2 = new FileReader();
+                var reader3 = new FileReader();
+                reader1.onload = function (event) {
+                  var file1Content = event.target.result;
+                  var file1ArrayInitial = file1Content.split(" "); // Assuming each line contains a number
+                  var lastElement1 = file1ArrayInitial[file1ArrayInitial.length - 1];
+                  var file1Array = file1ArrayInitial.slice(0, -1).map(Number);
+                  file1Array.push(lastElement1); 
+      
+      
+                  reader2.onload = function (event) {
+                    var file2Content = event.target.result;
+                    var file2ArrayInitial = file2Content.split(" "); // Assuming each line contains a number
+                    var lastElement2 = file2ArrayInitial[file2ArrayInitial.length - 1];
+                    var file2Array = file2ArrayInitial.slice(0, -1).map(Number);
+                    file2Array.push(lastElement2);
+        
+      
+                    reader3.onload = function (event) {
+                      var file3Content = event.target.result;
+                      var file3Array = file3Content.split(" ").map(Number); // Assuming each line contains a number
+          
+      
+                      $.ajax({
+                        type: "POST",
+                        url: "../recombine_shares/",
+                        data: JSON.stringify({
+                          file1Array: file1Array,
+                          file2Array: file2Array,
+                          file3Array: file3Array,
+                          mainResponse: response.images[0],
+                        }),
+                        success: function (data) {
+                          $('#loading').hide();
+                          if (data.redirect_url) {
+                              if (data.message) {
+                                  alert(data.message); 
+                              }
+                              window.location.href = data.redirect_url;  // Redirect to the specified URL
+                          } else {
+                              if (data.message) {
+                                  alert(data.message); 
+                                  window.location.href = '/auth/facial_recognition/';
+                              }
+                              console.log(data); 
+                          }
+                        },
+                        error: function (xhr, status, error) {
+                          // Handle errors
+                          console.error(xhr.responseText);
+                          $('#loading').hide();
+                        },
+                      });
+      
+                    };
+                    reader3.readAsText(file3);
+                  };
+      
+                  reader2.readAsText(file2);
+                };
+      
+                reader1.readAsText(file1);
+            } else {
+                alert('Please upload the files in the correct order.');
+            }
+          } else {
+              alert('Please select all three files.');
+          }
 
-          reader1.onload = function (event) {
-            var file1Content = event.target.result;
-            var file1ArrayInitial = file1Content.split(" "); // Assuming each line contains a number
-            var lastElement1 = file1ArrayInitial[file1ArrayInitial.length - 1];
-            var file1Array = file1ArrayInitial.slice(0, -1).map(Number);
-            file1Array.push(lastElement1);
-
-
-            reader2.onload = function (event) {
-              var file2Content = event.target.result;
-              var file2ArrayInitial = file2Content.split(" "); // Assuming each line contains a number
-              var lastElement2 = file2ArrayInitial[file2ArrayInitial.length - 1];
-              var file2Array = file2ArrayInitial.slice(0, -1).map(Number);
-              file2Array.push(lastElement2);
-  
-
-              reader3.onload = function (event) {
-                var file3Content = event.target.result;
-                var file3Array = file3Content.split(" ").map(Number); // Assuming each line contains a number
-    
-
-                $.ajax({
-                  type: "POST",
-                  url: "../recombine_shares/",
-                  data: JSON.stringify({
-                    file1Array: file1Array,
-                    file2Array: file2Array,
-                    file3Array: file3Array,
-                    mainResponse: response.images[0],
-                  }),
-                  success: function (data) {
-                    if (data.redirect_url) {
-                        if (data.message) {
-                            alert(data.message); 
-                        }
-                        window.location.href = data.redirect_url;  // Redirect to the specified URL
-                    } else {
-                        if (data.message) {
-                            alert(data.message); 
-                            window.location.href = '/auth/facial_recognition/';
-                        }
-                        console.log(data); 
-                    }
-                  },
-                  error: function (xhr, status, error) {
-                    // Handle errors
-                    console.error(xhr.responseText);
-                  },
-                });
-
-                // Now you have file1Array and file2Array
-                // You can proceed to retrieve the third array from the database
-                // Once you have all three arrays, you can combine them to form the original image
-                // Example: var combinedArray = file1Array.concat(file2Array, thirdArray);
-              };
-              reader3.readAsText(file3);
-            };
-
-            reader2.readAsText(file2);
-          };
-
-          reader1.readAsText(file1);
+          // var reader1 = new FileReader();
+          // var reader2 = new FileReader();
+          // var reader3 = new FileReader();
         });
     }
-
     else {
+      $('#loading').show();
       $.ajax({
         type: "POST",
         url: "../classify_face/",  // Replace with the correct URL mapping for your view
@@ -140,16 +200,17 @@ function listener(event) {
           response: response.images[0],
         },  // You can pass any necessary data to the view
         success: function (data) {
-            if (data.message) {
-                alert(data.message);
-            }
-            // You can handle the response data as needed
-            console.log(data);
-        },
-        error: function (xhr, status, error) {
-            // Handle errors
-            console.error(xhr.responseText);
-        },
+          window.location.href = data.redirect_url;  // Redirect to the specified URL
+          if (data.message1) {
+            $('#loading').hide();
+            alert(data.message2);
+            alert(data.message1);
+          }
+      },
+      error: function (xhr, status, error) {
+          // Handle errors
+          console.error(xhr.responseText);
+      },
     });
     }
 

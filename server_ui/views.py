@@ -20,6 +20,7 @@ def get_election():
   return None
   
 def home(request):
+  authentication_step = request.session.get('authentication_step', 0)
   # load the featured elections
   featured_elections = Election.get_featured()
   
@@ -47,7 +48,8 @@ def home(request):
                                             'elections_administered' : elections_administered,
                                             'elections_voted' : elections_voted,
                                             'create_p':create_p,
-                                            'login_box' : login_box})
+                                            'login_box' : login_box, 
+                                            'authentication_step': authentication_step,})
   
 def about(request):
   return render_template(request, "about")

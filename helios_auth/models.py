@@ -7,11 +7,11 @@ Ben Adida
 (ben@adida.net)
 """
 # from .jsonfield import JSONField
+
 from django.db import models
 from .jsonfield import JSONField
 from .auth_systems import can_check_constraint, AUTH_SYSTEMS
 from django.contrib.postgres.fields import ArrayField
-
 
 # an exception to catch when a user is no longer authenticated
 class AuthenticationExpired(Exception):
@@ -25,6 +25,7 @@ class User(models.Model):
   last_login = models.DateTimeField(auto_now=True)
   user_type = models.CharField(max_length=50)
   user_id = models.CharField(max_length=100)
+  basic_is_authenticated = models.BooleanField(default=False)
     
   name = models.CharField(max_length=200, null=True)
   

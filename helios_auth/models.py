@@ -6,17 +6,19 @@ GAE
 Ben Adida
 (ben@adida.net)
 """
+# from .jsonfield import JSONField
 from django.db import models
-
-from .auth_systems import can_check_constraint, AUTH_SYSTEMS
 from .jsonfield import JSONField
+from .auth_systems import can_check_constraint, AUTH_SYSTEMS
 
 
 # an exception to catch when a user is no longer authenticated
 class AuthenticationExpired(Exception):
   pass
-
 class User(models.Model):
+
+  # from .auth_systems import AUTH_SYSTEMS, can_check_constraint
+  last_login = models.DateTimeField(auto_now=True)
   user_type = models.CharField(max_length=50)
   user_id = models.CharField(max_length=100)
     
@@ -62,7 +64,7 @@ class User(models.Model):
       obj.save()
 
     return obj
-    
+  
   def can_update_status(self):
     if self.user_type not in AUTH_SYSTEMS:
       return False
@@ -172,3 +174,4 @@ class User(models.Model):
   @property
   def display_html_big(self):
     return self._display_html('big')
+

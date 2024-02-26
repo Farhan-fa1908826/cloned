@@ -41,10 +41,6 @@ def index(request):
   """
   the page from which one chooses how to log in.
   """
-  return_url = request.GET.get('return_url')
-  print("RETURN URL FROM INDEX VIEW")
-  print(return_url)
-  request.session['auth_return_url'] = return_url
   print("INDEX VIEW")
   print(request.session.get('authentication_step', 0))  
   user = get_user(request)
@@ -436,7 +432,7 @@ def facial_recognition(request):
         'server_user_face_share': user.server_user_face_share,
     }
     user_json = json.dumps(user_data, cls=DjangoJSONEncoder)
-    return render(request, 'facial_recognition.html', {'user_json': user_json, 'MASTER_HELIOS': settings.MASTER_HELIOS, 'SITE_TITLE' : settings.SITE_TITLE})
+    return render(request, 'facial_recognition.html', {'user_json': user_json})
   # render(request, 'facial_recognition.html', {})
   # response = HttpResponse()
   # post_view_signal.send(sender=facial_recognition, response=response)
@@ -503,11 +499,7 @@ def recombine_shares(request):
         # request.user.is_authenticated = True
         # print(request.session['authentication_step'])
         # request.user.is_authenticated = True
-        if request.session['auth_return_url'] != '/' and request.session['auth_return_url'] != '':
-          redirect_url = request.session['auth_return_url']
-        else:
-          redirect_url = reverse('auth@index') 
-        print("REDIRECT URL IS " + redirect_url)
+        redirect_url = reverse('auth@index') 
         return JsonResponse({'redirect_url': redirect_url, 'authentication_step': request.session['authentication_step']})
       elif similarity_index is not None and similarity_index >= 0.5:
         if attempts_left > 0:
@@ -548,13 +540,8 @@ def classify_face_view(request):
             # You may use a machine learning model or any other logic based on your requirements
             message1 = 'You have been logged out. To log in again, scan your face and upload the three files.'
             message2 = 'Three files have been saved to your desktop. These files need to be saved in a secure location and kept with the same names. Please do not lose them. You will need them to log in again.'
-            if request.session['auth_return_url'] != '/' and request.session['auth_return_url'] != '':
-              redirect_url = request.session['auth_return_url']
-            else:
-              logout(request)
-              redirect_url = '/'
-            print("REDIRECT URL IS " + redirect_url)
-            return JsonResponse({'redirect_url': redirect_url, 'message1': message1, 'message2': message2})
+            logout(request)
+            return JsonResponse({'redirect_url': '/', 'message1': message1, 'message2': message2})
 
         except Exception as e:
             # Handle exceptions if any

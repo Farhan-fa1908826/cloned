@@ -31,7 +31,6 @@ urlpatterns = [
     url(r'^facial_recognition/$',views.facial_recognition, name='facial_recognition'),
     # url(r'^facial_recognition/verify/$',views.facial_recognition_verify, name='verify'),
     url(r'^recombine_shares/$', views.recombine_shares, name="recombine_shares"),
-    url(r'^classify_face/$', views.classify_face_view, name='classify_face'),
 
 ]
 

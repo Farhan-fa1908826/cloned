@@ -36,7 +36,6 @@ function listener(event) {
     event.detail.data.status === 1
   ) {
     // hoow to get the user in the session
-    const response = event.detail.data.response;
 
     if (userData.server_user_face_share) {
       component.style.display = "none";
@@ -51,6 +50,8 @@ function listener(event) {
 
       var container = document.getElementById("formContainer");
       container.innerHTML = formHTML;
+
+      const response = event.detail.data.response;
 
 
 
@@ -131,68 +132,6 @@ function listener(event) {
           reader1.readAsText(file1);
         });
     }
-
-    else {
-      $.ajax({
-        type: "POST",
-        url: "../classify_face/",  // Replace with the correct URL mapping for your view
-        data: {
-          response: response.images[0],
-        },  // You can pass any necessary data to the view
-        success: function (data) {
-            if (data.message) {
-                alert(data.message);
-            }
-            // You can handle the response data as needed
-            console.log(data);
-        },
-        error: function (xhr, status, error) {
-            // Handle errors
-            console.error(xhr.responseText);
-        },
-    });
-    }
-
-    // else {
-    //   // else, the user is a first time user, i want to split the image and send him c1, c2, and r3
-    //   // i want to send the image to the server
-    //   // and get the shares
-    //   // and then send the shares to the server
-    //   // and then get the response from the server
-    //   // and then redirect to the next page
-
-    //   //get me the image of the user
-    //   var image = document.getElementById('img-element');
-    //   console.log("FROM LOGIN JS" + image);
-
-    //   const response = event.detail.data.response;
-    //   var reader = new FileReader();
-    //   reader.onload = function (event) {
-    //     var fileContent = event.target.result;
-    //     var fileArray = fileContent.split(" ").map(Number); // Assuming each line contains a number
-
-    //     $.ajax({
-    //       type: "POST",
-    //       url: "../split_image/",
-    //       data: JSON.stringify({ fileArray: fileArray }),
-    //       success: function (data) {
-    //         if (data.redirect_url) {
-    //           window.location.href = data.redirect_url;  // Redirect to the specified URL
-    //         } else {
-    //           console.log(data); 
-    //         }
-    //       },
-    //       error: function (xhr, status, error) {
-    //         // Handle errors
-    //         console.error(xhr.responseText);
-    //       },
-    //     });
-    //   };
-    // }
-    
-
- 
-
 
 
     // $.ajax({

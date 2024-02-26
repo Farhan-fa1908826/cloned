@@ -516,3 +516,28 @@ def recombine_shares(request):
     
 
 # s_list, c1_list, c2_list, width, height, r_random_list, g_random_list, b_random_list
+    
+def classify_face_view(request):
+    if request.method == 'POST':
+        try:
+            # Assuming your data is a JSON object, you can adjust this based on your actual data format
+            response_data = request.POST.get('response', '')
+            user = get_user(request)
+            classify_face(user, request, response_data)
+
+            # Perform face classification logic here
+            # You may use a machine learning model or any other logic based on your requirements
+
+            # For demonstration purposes, let's assume the classification result is 'success'
+            result_message = 'Classification successful'
+
+            # Return a JSON response
+            return JsonResponse({'message': result_message})
+
+        except Exception as e:
+            # Handle exceptions if any
+            return JsonResponse({'error': str(e)}, status=500)
+
+    else:
+        # Return an error response for non-POST requests
+        return JsonResponse({'error': 'Invalid request method'}, status=400)

@@ -106,6 +106,7 @@ function listener(event) {;
         const response = event.detail.data.response;
         console.log("KHALID IS RIGHT ");
         console.log(response.images[0]);
+        
         // window.location.href = window.location.origin;
         
         // $.ajax({
@@ -125,6 +126,19 @@ function listener(event) {;
         //     //     }
         //     // }
         // })
+        $.ajax({
+            type: "POST",
+            url: "../facial_recognition/verify/",
+            data: { response: response.images[0] }, // Assuming response.body contains the data to send
+            success: function(data) {
+                // Handle the success response from the server
+                console.log(data);
+            },
+            error: function(xhr, status, error) {
+                // Handle errors
+                console.error(xhr.responseText);
+            }
+        });
     }
 }
             //     else{

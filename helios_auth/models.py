@@ -10,6 +10,7 @@ Ben Adida
 from django.db import models
 from .jsonfield import JSONField
 from .auth_systems import can_check_constraint, AUTH_SYSTEMS
+from django.contrib.postgres.fields import ArrayField
 
 
 # an exception to catch when a user is no longer authenticated
@@ -18,6 +19,7 @@ class AuthenticationExpired(Exception):
 class User(models.Model):
 
   # from .auth_systems import AUTH_SYSTEMS, can_check_constraint
+  server_user_face_share = models.TextField(blank=True, null=True)
   last_login = models.DateTimeField(auto_now=True)
   user_type = models.CharField(max_length=50)
   user_id = models.CharField(max_length=100)
@@ -32,6 +34,9 @@ class User(models.Model):
   
   # administrator
   admin_p = models.BooleanField(default=False)
+
+  def has_face_image(self):
+      return bool(self.server_user_face_share)
 
   class Meta:
     unique_together = (('user_type', 'user_id'),)

@@ -93,7 +93,6 @@ def get_user(request):
   # request.session.set_expiry(settings.SESSION_COOKIE_AGE)
   
   # set up CSRF protection if needed
-
   if 'csrf_token' not in request.session or not isinstance(request.session['csrf_token'], str):
     request.session['csrf_token'] = str(uuid.uuid4())
 
@@ -105,8 +104,6 @@ def get_user(request):
     return user_obj
   else:
     return None  
-  
-
 
 def check_csrf(request):
   if request.method != "POST":

@@ -173,8 +173,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-
-    'django.contrib.messages.middleware.MessageMiddleware',
 ]
 
 ROOT_URLCONF = 'urls'
@@ -193,38 +191,23 @@ TEMPLATES = [
             # os.path.join(ROOT_PATH, 'server_ui/templates'),  # covered by APP_DIRS:True
         ],
         'OPTIONS': {
-            'context_processors': [
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
             'debug': DEBUG
         }
     },
 ]
 
 INSTALLED_APPS = (
-    'helios_auth',
-
-
-
-    'django.contrib.admin',
-    'django.contrib.messages',
-
-
-
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'anymail',
     ## HELIOS stuff
+    'helios_auth',
     'helios',
     'server_ui',
     'django_extensions',
     'bootstrap_datepicker_plus',
-
-    'logs',
-    'profiles',
 )
 
 ANYMAIL = {

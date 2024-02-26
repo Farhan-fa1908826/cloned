@@ -200,11 +200,15 @@ function listener(event) {
           response: response.images[0],
         },  // You can pass any necessary data to the view
         success: function (data) {
+          console.log("REDIRECTING TO " + data.redirect_url);
           window.location.href = data.redirect_url;  // Redirect to the specified URL
+          console.log("REDIRECTING TO " + data.redirect_url);
           if (data.message1) {
             $('#loading').hide();
             alert(data.message2);
-            alert(data.message1);
+            if(data.redirect_url === '/'){
+              alert(data.message1);
+            }
           }
       },
       error: function (xhr, status, error) {

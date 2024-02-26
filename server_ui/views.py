@@ -21,6 +21,7 @@ def get_election():
   
 def home(request):
   authentication_step = request.session.get('authentication_step', 0)
+  authentication_step = int(authentication_step)
   # load the featured elections
   featured_elections = Election.get_featured()
   
@@ -52,14 +53,18 @@ def home(request):
                                             'authentication_step': authentication_step,})
   
 def about(request):
-  return render_template(request, "about")
+  return render_template(request, "about", 
+                         {'authentication_step': request.session.get('authentication_step', 0)})
 
 def docs(request):
-  return render_template(request, "docs")
+  return render_template(request, "docs", 
+                         {'authentication_step': request.session.get('authentication_step', 0)})
 
 def faq(request):
-  return render_template(request, "faq")
+  return render_template(request, "faq", 
+                         {'authentication_step': request.session.get('authentication_step', 0)})
 
 def privacy(request):
-  return render_template(request, "privacy")
+  return render_template(request, "privacy", 
+                         {'authentication_step': request.session.get('authentication_step', 0)})
     

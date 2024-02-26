@@ -107,7 +107,6 @@ def election_params(request):
 
 def election_verifier(request):
   return render_template(request, "tally_verifier")
-
 def election_single_ballot_verifier(request):
   return render_template(request, "ballot_verifier")
 
@@ -132,16 +131,16 @@ def election_vote_shortcut(request, election_short_name):
   election = Election.get_by_short_name(election_short_name)
   if election:
     if not election.voting_has_started():
-      return render_template(request, 'election_not_started', {'election': election})      
+      return render_template(request, 'election_not_started', {'election': election, 'authentication_step': request.session.get('authentication_step', 0)})      
     if election.voting_has_stopped():
-      return render_template(request, 'election_tallied', {'election': election})      
+      return render_template(request, 'election_tallied', {'election': election, 'authentication_step': request.session.get('authentication_step', 0)})      
     return _election_vote_shortcut(request, election_uuid=election.uuid)
   else:
     raise Http404
 
 @election_view()
 def _castvote_shortcut_by_election(request, election, cast_vote):
-  return render_template(request, 'castvote', {'cast_vote' : cast_vote, 'vote_content': cast_vote.vote.toJSON(), 'the_voter': cast_vote.voter, 'election': election})
+  return render_template(request, 'castvote', {'cast_vote' : cast_vote, 'vote_content': cast_vote.vote.toJSON(), 'the_voter': cast_vote.voter, 'election': election, 'authentication_step': request.session.get('authentication_step', 0)})
   
 def castvote_shortcut(request, vote_tinyhash):
   try:
@@ -166,7 +165,7 @@ def trustee_keygenerator(request, election, trustee):
   """
   eg_params_json = utils.to_json(ELGAMAL_PARAMS_LD_OBJECT.toJSONDict())
 
-  return render_template(request, "election_keygenerator", {'eg_params_json': eg_params_json, 'election': election, 'trustee': trustee})
+  return render_template(request, "election_keygenerator", {'eg_params_json': eg_params_json, 'election': election, 'trustee': trustee, 'authentication_step': request.session.get('authentication_step', 0)})
 
 @login_required
 def elections_administered(request):
@@ -176,14 +175,14 @@ def elections_administered(request):
   user = get_user(request)
   elections = Election.get_by_user_as_admin(user)
   
-  return render_template(request, "elections_administered", {'elections': elections})
+  return render_template(request, "elections_administered", {'elections': elections, 'authentication_step': request.session.get('authentication_step', 0)})
 
 @login_required
 def elections_voted(request):
   user = get_user(request)
   elections = Election.get_by_user_as_voter(user)
   
-  return render_template(request, "elections_voted", {'elections': elections})
+  return render_template(request, "elections_voted", {'elections': elections, 'authentication_step': request.session.get('authentication_step', 0)})
     
 
 @login_required
@@ -229,7 +228,7 @@ def election_new(request):
       else:
         error = "No special characters allowed in the short name."
     
-  return render_template(request, "election_new", {'election_form': election_form, 'error': error})
+  return render_template(request, "election_new", {'election_form': election_form, 'error': error, 'authentication_step': request.session.get('authentication_step', 0)})
 @election_admin(frozen=False)
 def one_election_edit(request, election):
 
@@ -264,7 +263,7 @@ def one_election_edit(request, election):
             except IntegrityError:
                 error = "An election with short name %s already exists" % clean_data['short_name']
 
-    return render_template(request, "election_edit", {'election_form': election_form, 'election': election, 'error': error})
+    return render_template(request, "election_edit", {'election_form': election_form, 'election': election, 'error': error, 'authentication_step': request.session.get('authentication_step', 0)})
 
 
 @election_admin(frozen=False)
@@ -286,7 +285,7 @@ def one_election_extend(request, election):
         
       return HttpResponseRedirect(settings.SECURE_URL_HOST + reverse(url_names.election.ELECTION_VIEW, args=[election.uuid]))
   
-  return render_template(request, "election_extend", {'election_form' : election_form, 'election' : election})
+  return render_template(request, "election_extend", {'election_form' : election_form, 'election' : election, 'authentication_step': request.session.get('authentication_step', 0)})
 
 @election_view()
 @return_json
@@ -367,7 +366,7 @@ def one_election_view(request, election):
                           'can_feature_p': can_feature_p, 'election_url' : election_url, 
                           'vote_url': vote_url, 'election_badge_url' : election_badge_url,
                           'show_result': show_result,
-                          'test_cookie_url': test_cookie_url})
+                          'test_cookie_url': test_cookie_url, 'authentication_step': request.session.get('authentication_step', 0),})
 
 def test_cookie(request):
   continue_url = request.GET['continue_url']
@@ -405,12 +404,12 @@ def list_trustees_view(request, election):
   user = get_user(request)
   admin_p = user_can_admin_election(user, election)
   
-  return render_template(request, 'list_trustees', {'election': election, 'trustees': trustees, 'admin_p':admin_p})
+  return render_template(request, 'list_trustees', {'election': election, 'trustees': trustees, 'admin_p':admin_p, 'authentication_step': request.session.get('authentication_step', 0)})
   
 @election_admin(frozen=False)
 def new_trustee(request, election):
   if request.method == "GET":
-    return render_template(request, 'new_trustee', {'election' : election})
+    return render_template(request, 'new_trustee', {'election' : election, 'authentication_step': request.session.get('authentication_step', 0)})
   else:
     check_csrf(request)
     # get the public key and the hash, and add it
@@ -473,11 +472,11 @@ Helios
 
 @trustee_check
 def trustee_home(request, election, trustee):
-  return render_template(request, 'trustee_home', {'election': election, 'trustee':trustee})
+  return render_template(request, 'trustee_home', {'election': election, 'trustee':trustee, 'authentication_step': request.session.get('authentication_step', 0)})
   
 @trustee_check
 def trustee_check_sk(request, election, trustee):
-  return render_template(request, 'trustee_check_sk', {'election': election, 'trustee':trustee})
+  return render_template(request, 'trustee_check_sk', {'election': election, 'trustee':trustee, 'authentication_step': request.session.get('authentication_step', 0)})
   
 @trustee_check
 def trustee_upload_pk(request, election, trustee):
@@ -585,7 +584,7 @@ def password_voter_login(request, election):
                            {'election': election, 
                             'return_url' : return_url,
                             'password_login_form': password_login_form,
-                            'bad_voter_login' : bad_voter_login})
+                            'bad_voter_login' : bad_voter_login, 'authentication_step': request.session.get('authentication_step', 0)})
   
   login_url = request.GET.get('login_url', None)
 
@@ -642,7 +641,7 @@ def one_election_cast_confirm(request, election):
   # election not frozen or started
   if not election.voting_has_started():
     print("election not started")
-    return render_template(request, 'election_not_started', {'election': election})
+    return render_template(request, 'election_not_started', {'election': election, 'authentication_step': request.session.get('authentication_step', 0)})
 
   voter = get_voter(request, user, election)
   print("voter: ", voter)
@@ -655,7 +654,7 @@ def one_election_cast_confirm(request, election):
   # tallied election, no vote casting
   if election.encrypted_tally or election.result:
     print("tallied election")
-    return render_template(request, 'election_tallied', {'election': election})
+    return render_template(request, 'election_tallied', {'election': election, 'authentication_step': request.session.get('authentication_step', 0)})
     
   encrypted_vote = request.session['encrypted_vote']
   vote_fingerprint = cryptoutils.hash_b64(encrypted_vote)
@@ -759,6 +758,7 @@ def one_election_cast_confirm(request, election):
         'show_password': show_password, 'password_only': password_only, 'password_login_form': password_login_form,
         'bad_voter_login': bad_voter_login,
         'qr_code': qr_code,
+        'authentication_step': request.session.get('authentication_step', 0)
         })
       
   if request.method == "POST":
@@ -890,7 +890,7 @@ def one_election_bboard(request, election):
     
   return render_template(request, 'election_bboard', {'election': election, 'voters': voters, 'next_after': next_after,
                 'offset': offset, 'limit': limit, 'offset_plus_one': offset+1, 'offset_plus_limit': offset+limit,
-                'voter_id': request.GET.get('voter_id', '')})
+                'voter_id': request.GET.get('voter_id', ''), 'authentication_step': request.session.get('authentication_step', 0)})
 
 @election_view(frozen=True)
 def one_election_audited_ballots(request, election):
@@ -916,7 +916,7 @@ def one_election_audited_ballots(request, election):
     next_after = None
     
   return render_template(request, 'election_audited_ballots', {'election': election, 'audited_ballots': audited_ballots, 'next_after': next_after,
-                'offset': offset, 'limit': limit, 'offset_plus_one': offset+1, 'offset_plus_limit': offset+limit})
+                'offset': offset, 'limit': limit, 'offset_plus_one': offset+1, 'offset_plus_limit': offset+limit, 'authentication_step': request.session.get('authentication_step', 0)})
 
 @election_admin()
 def voter_delete(request, election, voter_uuid):
@@ -1046,7 +1046,7 @@ def one_election_questions(request, election):
   user = get_user(request)
   admin_p = user_can_admin_election(user, election)
 
-  return render_template(request, 'election_questions', {'election': election, 'questions_json' : questions_json, 'admin_p': admin_p})
+  return render_template(request, 'election_questions', {'election': election, 'questions_json' : questions_json, 'admin_p': admin_p, 'authentication_step': request.session.get('authentication_step', 0)})
 
 def _check_eligibility(election, user):
   # prevent password-users from signing up willy-nilly for other elections, doesn't make sense
@@ -1096,7 +1096,7 @@ def one_election_freeze(request, election):
   issues = election.issues_before_freeze
 
   if request.method == "GET":
-    return render_template(request, 'election_freeze', {'election': election, 'issues' : issues, 'issues_p' : len(issues) > 0})
+    return render_template(request, 'election_freeze', {'election': election, 'issues' : issues, 'issues_p' : len(issues) > 0, 'authentication_step': request.session.get('authentication_step', 0)})
   else:
     check_csrf(request)
     
@@ -1122,7 +1122,7 @@ def one_election_compute_tally(request, election):
     return HttpResponseRedirect(settings.SECURE_URL_HOST + reverse(url_names.election.ELECTION_VIEW,args=[election.election_id]))
 
   if request.method == "GET":
-    return render_template(request, 'election_compute_tally', {'election': election})
+    return render_template(request, 'election_compute_tally', {'election': election, 'authentication_step': request.session.get('authentication_step', 0)})
   
   check_csrf(request)
 
@@ -1191,7 +1191,7 @@ def release_result(request, election):
       return HttpResponseRedirect(settings.SECURE_URL_HOST + reverse(url_names.election.ELECTION_VIEW, args=[election.uuid]))
 
   # if just viewing the form or the form is not valid
-  return render_template(request, 'release_result', {'election': election})
+  return render_template(request, 'release_result', {'election': election, 'authentication_step': request.session.get('authentication_step', 0)})
 
 @election_admin(frozen=True)
 def combine_decryptions(request, election):
@@ -1306,7 +1306,8 @@ def voters_list_pretty(request, election):
                           'voter_files': voter_files,
                           'categories': categories,
                           'eligibility_category_id' : eligibility_category_id,
-                          'qr_code': qr_code,})
+                          'qr_code': qr_code,
+                          'authentication_step': request.session.get('authentication_step', 0)})
 
 @election_admin()
 def voters_eligibility(request, election):
@@ -1356,7 +1357,7 @@ def voters_upload(request, election):
   #  raise PermissionDenied()
 
   if request.method == "GET":
-    return render_template(request, 'voters_upload', {'election': election, 'error': request.GET.get('e',None)})
+    return render_template(request, 'voters_upload', {'election': election, 'error': request.GET.get('e',None), 'authentication_step': request.session.get('authentication_step', 0)})
     
   if request.method == "POST":
     if bool(request.POST.get('confirm_p', 0)):
@@ -1384,7 +1385,7 @@ def voters_upload(request, election):
           voters = []
           problems.append("your CSV file could not be processed because %s" % str(e))
 
-        return render_template(request, 'voters_upload_confirm', {'election': election, 'voters': voters, 'problems': problems})
+        return render_template(request, 'voters_upload_confirm', {'election': election, 'voters': voters, 'problems': problems, 'authentication_step': request.session.get('authentication_step', 0)})
       else:
         return HttpResponseRedirect("%s?%s" % (settings.SECURE_URL_HOST + reverse(voters_upload, args=[election.uuid]), urlencode({'e':'no voter file specified, try again'})))
 

@@ -15,52 +15,6 @@ from io import BytesIO
 from django.dispatch import Signal
 from django.core.files.base import ContentFile
 from django.contrib.auth import get_user
-import face_recognition
-import base64
-import numpy as np
-import cv2
-import io
-import face_recognition
-import base64
-import numpy as np
-import cv2
-
-def compare_faces(base64_str1, base64_str2):
-  try:
-      # Decode Base64 strings into image data
-      img_data1 = base64.b64decode(base64_str1)
-      img_data2 = base64.b64decode(base64_str2)
-
-      # Convert image data into numpy arrays
-      nparr1 = np.frombuffer(img_data1, np.uint8)
-      nparr2 = np.frombuffer(img_data2, np.uint8)
-
-      # Decode numpy arrays into RGB images
-      img1 = cv2.imdecode(nparr1, cv2.IMREAD_COLOR)
-      img2 = cv2.imdecode(nparr2, cv2.IMREAD_COLOR)
-
-      # Detect face locations in the images
-      face_locations1 = face_recognition.face_locations(img1)
-      face_locations2 = face_recognition.face_locations(img2)
-
-      # Check if exactly one face is detected in each image
-      if len(face_locations1) == 1 and len(face_locations2) == 1:
-          # Encode face encodings for comparison
-          face_encodings1 = face_recognition.face_encodings(img1, face_locations1)[0]
-          face_encodings2 = face_recognition.face_encodings(img2, face_locations2)[0]
-
-          # Compare the face encodings
-          face_distance = face_recognition.face_distance([face_encodings1], face_encodings2)[0]
-
-          # Return the face distance (0 for identical faces, higher values for more dissimilar faces)
-          return face_distance
-
-      else:
-          print("Error: Could not detect exactly one face in each image.")
-
-  except Exception as e:
-      print("Error occurred during face comparison:", e)
-      return None
 # post_classify_face_signal = Signal()
 
 
@@ -119,6 +73,8 @@ def generate_visual_cryptography_shares(original_image):
             #     draw1.point((2*x, y), (255 - pixel[0], 255 - pixel[1], 255 - pixel[2]))  # Invert pixel for share 1
             #     draw2.point((2*x+1, y), pixel)
     random_val = random.randint(1 , 3)
+    print("RANDOM VALE")
+    print(random_val)
     if random_val == 1:
         server_list = r_list
         # server_list.append("r")
@@ -150,10 +106,6 @@ def combine_shares_to_recreate_image(s_list, c1_list, c2_list, width, height, r_
     length = len(s_list) 
     last_c1 = c1_list[len(c1_list) - 1]
     last_c2 = c2_list[len(c2_list) - 1]
-    # c1_list.pop()
-    # c2_list.pop()
-    # print("size of c1 list")
-    # print(str(len(c1_list)))
     # combined_tuple = ()
     combined_tuple = ()
     combined_tuples = []
@@ -181,14 +133,33 @@ def combine_shares_to_recreate_image(s_list, c1_list, c2_list, width, height, r_
         for x in range(width):
             image.putpixel((x, y), combined_tuples[y][x])
 
-    # image.show("Reconstructed Image")  
-    image_bytes = io.BytesIO()
-    image.save(image_bytes, format='PNG')
-    image_bytes.seek(0)
-    base64_image = base64.b64encode(image_bytes.getvalue()).decode()
+    image.show("Reconstructed Image")  
+    image.save("reconstructed_image222.png")
 
-    return base64_image
+    combined_tuple = ()
+    combined_tuples = []
 
+    for i in range(height):
+        row_tuples = []
+        for j in range(width):
+            index = i * width + j
+            if last_c1 == "r" and last_c2 == "g":
+                combined_tuple = (0, 0, s_list[index])
+            elif last_c1 == "r" and last_c2 == "b":
+                combined_tuple = (0, s_list[index], 0)
+            elif last_c1 == "g" and last_c2 == "b":
+                combined_tuple = (s_list[index], 0, 0)
+            else:
+                combined_tuple = (0, 0, 0)  # Default tuple if conditions not met
+            row_tuples.append(combined_tuple)
+        combined_tuples.append(row_tuples)
+
+    image = Image.new("RGB", (width, height))
+    for y in range(height):
+        for x in range(width):
+            image.putpixel((x, y), combined_tuples[y][x])
+    image.show("Server Image")
+    image.save("server_image222.png")
 
 ## JSON
 def to_json(d):
@@ -263,68 +234,19 @@ def classify_face(user, request, response, **kwargs):
     """
     This function takes an image as input and returns the name of the face it contains
     """
+    print("CLASSIFYING FACE")
+    print("CLASSIFYING FACE")
+    print("CLASSIFYING FACE")
     
     response_data = response.content.decode('utf-8')  # Decode the bytes object to a string
     response_dict = json.loads(response_data)  # Parse the JSON string into a Python dictionary
     response_value = response_dict.get('response', None)
     img = response_value
-    if user.has_face_image():
-        print("USER HAS FACE IMAGE NO NEED TO SAVE ANYTHING")
-        # similarity_index = compare_faces(img, base64_str3)
-        # if similarity_index is not None:
-        #     print("Similarity Index:", similarity_index)
-        # else:
-        #     print("Error occurred during comparison.")
-        # print(user.server_user_face_share)
-    else:
-        face_image, width, height = decode_base64_image(img)
-        server,c1,c2, r_random, g_random, b_random = generate_visual_cryptography_shares(face_image)
-        if c1[len(c1) - 1] == "r" and c2[len(c2) - 1] == "g":
-            r1_string = ' '.join(map(str, b_random))
-            file_path_3 = 'r3.txt'
-            with open(file_path_3, 'w') as file:
-                file.write(r1_string)
-            random_1 = json.dumps(r_random)
-            user.random_1 = random_1
-            user.save()
-            random_2 = json.dumps(g_random)
-            user.random_2 = random_2
-            user.save()
-        elif c1[len(c1) - 1] == "r" and c2[len(c2) - 1] == "b":
-            r1_string = ' '.join(map(str, g_random))
-            file_path_3 = 'r3.txt'
-            with open(file_path_3, 'w') as file:
-                file.write(r1_string)
-            random_1 = json.dumps(r_random)
-            user.random_1 = random_1
-            user.save()
-            random_2 = json.dumps(b_random)
-            user.random_2 = random_2
-            user.save()
-        elif c1[len(c1) - 1] == "g" and c2[len(c2) - 1] == "b":
-            r1_string = ' '.join(map(str, r_random))
-            file_path_3 = 'r3.txt'
-            with open(file_path_3, 'w') as file:
-                file.write(r1_string)
-            random_1 = json.dumps(g_random)
-            user.random_1 = random_1
-            user.save()
-            random_2 = json.dumps(b_random)
-            user.random_2 = random_2
-            user.save()
-        server_share_json = json.dumps(server)
-        user.server_user_face_share = server_share_json
-        user.save()
-        c1_string = ' '.join(map(str, c1))
-        c2_string = ' '.join(map(str, c2))
-        file_path_1 = 'c1.txt'
-        file_path_2 = 'c2.txt'
-        with open(file_path_1, 'w') as file:
-            file.write(c1_string)
-        with open(file_path_2, 'w') as file:
-            file.write(c2_string)
-        print("SAVING USER FACE IMAGE ON CLIENT DEVICE AND IN SERVER")
-
+    face_image, width, height = decode_base64_image(img)
+    server,c1,c2, r_random, g_random, b_random = generate_visual_cryptography_shares(face_image)
+    server_share_json = json.dumps(server)
+    user.server_user_face_share = server_share_json
+    user.save()
 
     # user = get_user(response)
     # user.server_user_face_share.save('server_share.png', ContentFile(server), save=True)
@@ -371,39 +293,3 @@ def classify_face(user, request, response, **kwargs):
     #     # If no faces are found in the input image or an error occurs, return False
     #     return False
 
-def compare_faces(base64_str1, base64_str2):
-    try:
-        # Decode Base64 strings into image data
-        img_data1 = base64.b64decode(base64_str1)
-        img_data2 = base64.b64decode(base64_str2)
-
-        # Convert image data into numpy arrays
-        nparr1 = np.frombuffer(img_data1, np.uint8)
-        nparr2 = np.frombuffer(img_data2, np.uint8)
-
-        # Decode numpy arrays into RGB images
-        img1 = cv2.imdecode(nparr1, cv2.IMREAD_COLOR)
-        img2 = cv2.imdecode(nparr2, cv2.IMREAD_COLOR)
-
-        # Detect face locations in the images
-        face_locations1 = face_recognition.face_locations(img1)
-        face_locations2 = face_recognition.face_locations(img2)
-
-        # Check if exactly one face is detected in each image
-        if len(face_locations1) == 1 and len(face_locations2) == 1:
-            # Encode face encodings for comparison
-            face_encodings1 = face_recognition.face_encodings(img1, face_locations1)[0]
-            face_encodings2 = face_recognition.face_encodings(img2, face_locations2)[0]
-
-            # Compare the face encodings
-            face_distance = face_recognition.face_distance([face_encodings1], face_encodings2)[0]
-
-            # Return the face distance (0 for identical faces, higher values for more dissimilar faces)
-            return face_distance
-
-        else:
-            print("Error: Could not detect exactly one face in each image.")
-
-    except Exception as e:
-        print("Error occurred during face comparison:", e)
-        return None

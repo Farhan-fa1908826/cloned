@@ -71,18 +71,12 @@
         <li><a href="mailto:{{settings.HELP_EMAIL_ADDRESS}}">Email Us</a></li>
         <li class="divider"></li>
         <li id="login-list-item">
-          {% if user and authentication_step == 3 %}
+          {% if user %}
           <div class="centered-container">
             <b class="logged-in">{{user.display_html_small|safe}}</b>
-          {% if CURRENT_URL %}
-            <a class="custom-button custom-logged-out logged" href="{% url 'auth@logout' %}?return_url={{ CURRENT_URL }}">
+            <a class="custom-button custom-logged-out" href="{% url "auth@logout" %}?return_url={{CURRENT_URL}}">
                 <span class="logged">Logout</span>
             </a>
-          {% else %}
-            <a class="custom-button custom-logged-out logged" href="{% url 'auth@logout' %}?return_url=/">
-                <span class="logged">Logout</span>
-            </a>
-          {% endif %}
         </div>
         
           {% else %}

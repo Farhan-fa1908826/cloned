@@ -374,43 +374,42 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 def find_user_view(request):
-  print("HELLLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
-  # attempt_counter = request.session.get('attempt_counter', 0)
+  attempt_counter = request.session.get('attempt_counter', 0)
 
-  # if attempt_counter >= 3:
-  #   request.session.flush()
-  #   return JsonResponse({'success': False, 'message': 'Maximum attempts reached. Session ended.'})
-  # if is_ajax(request):
-  #   # photo = request.POST.get('photo')
+  if attempt_counter >= 3:
+    request.session.flush()
+    return JsonResponse({'success': False, 'message': 'Maximum attempts reached. Session ended.'})
+  if is_ajax(request):
+    # photo = request.POST.get('photo')
 
-  #   data = json.loads(request.body.decode('utf-8'))
-  #   photo = data.get('photo')
+    data = json.loads(request.body.decode('utf-8'))
+    photo = data.get('photo')
 
 
-  #   _, str_img = photo.split(';base64')
-  #   decoded_file = base64.b64decode(str_img)
-  #   x = Log()
-  #   x.photo = ContentFile(decoded_file, 'upload.png')
-  #   x.save()
-  #   res = classify_face(x.photo.path)
-  #   user_exists = User.objects.filter(user_id=res).exists()
-  #   if user_exists:
-  #     user = User.objects.get(user_id=res)
-  #     profile = Profile.objects.get(user=user)
-  #     x.profile = profile
-  #     x.save()
-  #     login(request,user)
-  #     print("SUCCESS")
-  #     print("USER IS " + str(user))
-  #     print("SUCCESS")
-  #     request.session['attempt_counter'] = 0
-  #     return JsonResponse({'success': True, 'redirect_url': reverse('auth@after')}) 
-  #   else:
-  #       request.session['attempt_counter'] = attempt_counter + 1
-  #       print("FAILURE")
-  #       print("FAILURE")
+    _, str_img = photo.split(';base64')
+    decoded_file = base64.b64decode(str_img)
+    x = Log()
+    x.photo = ContentFile(decoded_file, 'upload.png')
+    x.save()
+    res = classify_face(x.photo.path)
+    user_exists = User.objects.filter(user_id=res).exists()
+    if user_exists:
+      user = User.objects.get(user_id=res)
+      profile = Profile.objects.get(user=user)
+      x.profile = profile
+      x.save()
+      login(request,user)
+      print("SUCCESS")
+      print("USER IS " + str(user))
+      print("SUCCESS")
+      request.session['attempt_counter'] = 0
+      return JsonResponse({'success': True, 'redirect_url': reverse('auth@after')}) 
+    else:
+        request.session['attempt_counter'] = attempt_counter + 1
+        print("FAILURE")
+        print("FAILURE")
         
-  #       return JsonResponse({'success': False, 'message': 'Invalid user. Attempts remaining: {}'.format(3 - attempt_counter), 'redirect_url': reverse('facial_recognition')})
+        return JsonResponse({'success': False, 'message': 'Invalid user. Attempts remaining: {}'.format(3 - attempt_counter), 'redirect_url': reverse('facial_recognition')})
         # return HttpResponseRedirect(settings.URL_HOST + 'facial_recognition')
 
 

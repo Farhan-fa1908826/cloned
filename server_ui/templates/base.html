@@ -48,18 +48,14 @@
           <li><a href="{% url "stats@home" %}">Admin</a></li>
           <li class="divider"></li>
         {% endif %}
-        {% if not settings.MASTER_HELIOS and not MASTER_HELIOS %}
+        {% if not settings.MASTER_HELIOS %}
           <li><a href="http://heliosvoting.org">About Helios</a></li>
         {% endif %} 
       </ul>
       
       <ul class="top_elements">
-        {% if settings.SITE_TITLE %}
-        <li><a href="/">{{settings.SITE_TITLE }}</a></li>
-        {% else %}
-        <li><a href="/">{{SITE_TITLE }}</a></li>
-        {% endif %}
-	{% if settings.MASTER_HELIOS or MASTER_HELIOS %}
+        <li><a href="/">{{settings.SITE_TITLE}}</a></li>
+	{% if settings.MASTER_HELIOS %}
         <li class="divider"></li>
         <li class="active"><a href="/about">About</a></li>
         <li class="divider"></li>
@@ -91,20 +87,9 @@
         
           {% else %}
             {% if voter %}
-            <div class="centered-container">
-              <b class="logged-in">{{user.display_html_small|safe}}</b>
-            {% if CURRENT_URL %}
-              <a class="custom-button custom-logged-out logged" href="{% url 'auth@logout' %}?return_url={{ CURRENT_URL }}">
-                  <span class="logged">Logout</span>
-              </a>
+              You are signed in as voter <u>{% if voter.alias %}{{voter.alias}}{% else %}{{voter.name}}{% endif %}</u> in election <u>{{voter.election.name}}</u>. [<a href="{{settings.SECURE_URL_HOST}}{% url "auth@logout" %}?return_url={{CURRENT_URL}}">sign out</a>]
             {% else %}
-              <a class="custom-button custom-logged-out logged" href="{% url 'auth@logout' %}?return_url={{CURRENT_URL}}">
-                  <span class="logged">Logout</span>
-              </a>
-            {% endif %}
-              {% comment %} You are signed in as voter <u>{% if voter.alias %}{{voter.alias}}{% else %}{{voter.name}}{% endif %}</u> in election <u>{{voter.election.name}}</u>. [<a href="{{settings.SECURE_URL_HOST}}{% url "auth@logout" %}?return_url={{CURRENT_URL}}">sign out</a>] {% endcomment %}
-            {% else %}
-              {% if settings.SHOW_LOGIN_OPTIONS or MASTER_HELIOS %}
+              {% if settings.SHOW_LOGIN_OPTIONS %}
                 <div class="login-container">
                   <a class="button fixed log-in" href="{{settings.SECURE_URL_HOST}}{% url "auth@index" %}?return_url={{CURRENT_URL}}"><span class="login-text logged">Login</span></a>
                   <div class="hidden-login-options">
@@ -116,9 +101,7 @@
                 </div>
 
               {% else %}
-              {% if not MASTER_HELIOS %}
                 powered by <a href="http://heliosvoting.org">Helios Voting</a>.
-              {% endif %}
               {% endif %}
             {% endif %}
           {% endif %}

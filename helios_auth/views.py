@@ -28,9 +28,6 @@ from django.core.files.base import ContentFile
 from helios_auth.models import User
 from profiles.models import Profile
 from django.contrib.auth import logout,login
-from django.shortcuts import render
-from .signals import post_request_signal
-
 
 def index(request):
   """
@@ -384,9 +381,7 @@ def find_user_view(request):
   #   request.session.flush()
   #   return JsonResponse({'success': False, 'message': 'Maximum attempts reached. Session ended.'})
   # if is_ajax(request):
-  photo = request.POST.get('images')
-  print("REQUEST IS " + str(request))
-  print("PHOTO IS " + str(photo))
+  #   # photo = request.POST.get('photo')
 
   #   data = json.loads(request.body.decode('utf-8'))
   #   photo = data.get('photo')
@@ -420,25 +415,18 @@ def find_user_view(request):
 
 
 def facial_recognition(request):
-      return render_template(request, 'facial_recognition')
-  # render(request, 'facial_recognition.html', {})
-  # response = HttpResponse()
-  # post_view_signal.send(sender=facial_recognition, response=response)
-  # response.custom_middleware_called = True
-  # return response
+  # get user from request
+  # print(request.FILES['photo'])
+  # utils.classify_face(request.FILES['photo'])
+  # user = get_user(request)
+  # print(user.name)
+  # find_user_view(request)
 
-def facial_recognition_verify(request):
-  user = get_user(request)
-  if user.has_face_image():
-    print("USER HAS FACE IMAGE")
-    print(user.server_user_face_share)
-  else:
-    print(user.name)
-    print("USER DOES NOT HAVE FACE IMAGE")
-  
-  if request.method == 'POST':
-        response = request.POST.get('response')
-        print(response)
-        return JsonResponse({ 'response' : response })
-  else:
-        return JsonResponse({'message': 'Data processed wrong'})
+  # success = find_user_view(request)
+  # if success:
+  #   return HttpResponseRedirect(settings.URL_HOST + 'main')
+  # else:
+  #   return render_template(request, 'facial_recognition', {})
+
+  return render_template(request, 'facial_recognition', {})
+

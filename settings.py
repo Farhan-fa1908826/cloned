@@ -176,7 +176,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 
     'django.contrib.messages.middleware.MessageMiddleware',
-    'helios_auth.middleware.PostRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'urls'
@@ -205,7 +204,7 @@ TEMPLATES = [
 ]
 
 INSTALLED_APPS = (
-    'helios_auth.apps.HeliosAuthConfig',
+    'helios_auth',
 
 
 

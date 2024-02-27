@@ -487,7 +487,7 @@ def recombine_shares(request):
 
       if similarity_index is not None and similarity_index < 0.5:
         print("SIMILARITY INDEX IS LESS THAN 0.5")
-        # request.user.is_authenticated = True
+        request.user.is_authenticated = True
         redirect_url = reverse('auth@index') 
         return JsonResponse({'redirect_url': redirect_url})
       elif similarity_index is not None and similarity_index >= 0.5:
